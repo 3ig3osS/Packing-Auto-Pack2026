@@ -2926,6 +2926,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             if (!url || !navigator.onLine) { if (!navigator.onLine) { specSyncState = SYNC_STATE.OFFLINE; renderSyncDiagnostics(); } return; }
             specSyncState = SYNC_STATE.SYNCING; renderSyncDiagnostics();
             try {
+                const pullStartedAt = Date.now();
                 const res = await fetchWithRetry(url + '?action=loadSpec', { method: 'GET' });
                 const json = await res.json();
                 if (json.status === 'error') throw new Error(json.message || 'เซิร์ฟเวอร์ตอบกลับผิดพลาด');
