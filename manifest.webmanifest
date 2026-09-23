@@ -1,7 +1,7 @@
 {
   "name": "Packing Auto Pack",
   "short_name": "Packing",
-  "start_url": "./Packing_Auto_Pack_v5_55.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
