@@ -3,9 +3,9 @@
 <head>
 
 <!--
-v5.49 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - 🐛 Bug ที่ ABOSS แจ้ง: ลบแถวตรงในชีต Google Sheets โดยตรง (ไม่ผ่านปุ่มลบในแอป) พอเปิดแอปแถวนั้นฟื้นคืนชีพกลับมาอีก
-  สาเหตุ: ตอนเปิดแอปแล้ว sync อัตโนมัติ (v5.46) เครื่องที่ "ปลดล็อกแก้ไข" ไว้จะ push แคชเก่าที่ยังมีแถวนั้นค้างอยู่ขึ้นไปด้วย
+  สาเหตุ: ตอนเปิดแอปแล้ว sync อัตโนมัติ (v5.56.0) เครื่องที่ "ปลดล็อกแก้ไข" ไว้จะ push แคชเก่าที่ยังมีแถวนั้นค้างอยู่ขึ้นไปด้วย
   merge logic เห็นว่า "มีในเครื่อง ไม่มีในชีต" เลยเข้าใจว่าเป็นแถวใหม่ที่ยังไม่เคยซิงค์ แล้วเพิ่มกลับเข้าไปให้ (มีการแก้บางส่วน
   ไปแล้วก่อนหน้านี้สำหรับคนที่ "ล็อกอยู่"/ดูอย่างเดียว แต่คนที่ปลดล็อกแก้ไขไว้ เช่น ABOSS เอง ยังเจอปัญหานี้อยู่)
 - ✅ แก้แล้ว: ก่อน push ข้อมูลขึ้นไปตอนเปิดแอป จะดึงข้อมูลจริงจากชีตมาเทียบก่อนเสมอ (reconcile) เก็บเฉพาะรายการในเครื่องที่
@@ -15,8 +15,8 @@ v5.49 UPDATE BUILD
   HTML) ผู้ใช้ทั่วไปไม่ต้องกรอก/เห็น URL เลย เปิดลิงค์แล้วเห็นข้อมูลอัปเดตอัตโนมัติทันที
 - ⚠️ สำคัญ: ต้องแก้ DEFAULT_SHEETS_URL ในไฟล์ HTML ให้เป็น Web App URL จริงของคุณก่อน (หาบรรทัด "ใส่_DEPLOYMENT_ID_ของคุณตรงนี้"
   แล้วแทนด้วย URL จริง) ไม่งั้นแอปจะเตือนว่ายังไม่ได้ตั้งค่า
-v5.47 UPDATE BUILD
-- New: Edit Lock — คนที่เปิดลิงค์เข้ามาดูข้อมูลล่าสุดได้ตามปกติ (v5.46) แต่จะ "เพิ่ม/แก้ไข/ลบ/คัดลอก" อะไรไม่ได้จนกว่าจะใส่
+v5.56.0 UPDATE BUILD
+- New: Edit Lock — คนที่เปิดลิงค์เข้ามาดูข้อมูลล่าสุดได้ตามปกติ (v5.56.0) แต่จะ "เพิ่ม/แก้ไข/ลบ/คัดลอก" อะไรไม่ได้จนกว่าจะใส่
   รหัสปลดล็อกก่อน (ใช้รหัสเดียวกับ Sync Token ที่ตั้งไว้ — ไม่ต้องมีรหัสที่สอง) กดปุ่ม +, แก้ไข, ลบ, คัดลอก จุดไหนก็ได้ ถ้ายังไม่
   ปลดล็อกจะเด้งถามรหัสก่อนเสมอ ตรวจสอบผ่าน Code.gs จริง (action ใหม่: verifyToken) ไม่ใช่แค่เช็คในเครื่อง
   ปลดล็อกแล้วจะจำไว้ในเบราว์เซอร์นั้น ไม่ต้องใส่ซ้ำทุกครั้งที่เปิด — มีปุ่มสถานะล็อก/ปลดล็อกใน Settings ด้านบนสุด กดเพื่อ
@@ -25,14 +25,14 @@ v5.47 UPDATE BUILD
   verifyToken ยังไม่มีใน Code.gs เวอร์ชันเก่า)
 - ขอบเขตที่ยังไม่ครอบคลุม (แจ้งไว้ให้ทราบ): Import CSV/JSON และปุ่ม "รีเซ็ตข้อมูล" ใน Settings ยังไม่ถูกล็อก เพราะถือว่า
   Settings เป็นโซนของผู้ดูแลระบบอยู่แล้ว — ถ้าอยากให้ล็อกจุดนี้ด้วย บอกได้
-v5.46 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: เปิดลิงค์แอปแล้วดึงข้อมูลล่าสุดจาก Google Sheets ให้อัตโนมัติทันที (ถ้าตั้งค่า Web App URL ไว้แล้ว) — ไม่ต้องกด
   "ซิงค์ตอนนี้"/"โหลดจาก Google Sheets" เองอีกต่อไป หน้าจะโชว์ข้อมูลที่แคชในเครื่องก่อนทันที (เปิดไว ไม่ต้องรอเน็ต) แล้วค่อย
   merge ข้อมูลล่าสุดจากทุกคนเข้ามาทับแบบเงียบๆ เบื้องหลัง ใช้กลไก merge-sync เดิมทั้งหมด (ปลอดภัยเหมือน sync ปกติทุกอย่าง
   รวมถึง LockService และการป้องกันข้อมูลที่เพิ่งแก้ไขหาย) ถ้าออฟไลน์อยู่จะข้ามไปเงียบๆ ไม่มี error รบกวน
-v5.45 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: เปลี่ยนข้อความ "มี/ไม่มี" เป็น "✓ ใส่ / — ไม่ใส่" ทุกจุดที่ใช้ (กล่อง Packing Details ของ Customer Spec, และแถว Barcode ลูกค้า/Barcode E&E ในหน้ารายละเอียด Packing List หลัก) ให้สื่อความหมายตรงบริบทงานแพ็กมากขึ้น
-v5.44 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: Customer Spec ใช้ระบบค้นหาแบบเดียวกับ Packing List ทุกจุดแล้ว — ย้ายปุ่ม Sort เข้าไปอยู่ในช่องค้นหาแบบ collapse
   เดียวกัน (เดิม Sort อยู่แยกเป็นแถบตายตัว ไม่ได้ซ่อน/โชว์คู่กับช่องค้นหาเหมือน Packing List) เพิ่มปุ่ม "✕ ล้างตัวกรอง" ให้ด้วย
 - Fix: เจอบั๊กเล็กๆ ระหว่างทำ — ปุ่ม Sort ของ Packing List กับ Customer Spec ใช้ CSS class ชนกัน (.sort-btn) ทำให้เปลี่ยน
@@ -40,16 +40,16 @@ v5.44 UPDATE BUILD
   class เป็น packing-sort-btn / spec-sort-btn ให้ชัดเจนแล้ว
 - New: เพิ่ม Customer + Part No ซ้ำ ตอนบันทึก Customer Spec แล้ว — ถ้าซ้ำกับรายการที่มีอยู่ (ไม่นับรายการที่กำลังแก้ไข)
   จะเตือนก่อนให้ยืนยันว่าต้องการบันทึกซ้ำหรือไม่ เหมือนที่ Packing List มีอยู่แล้วสำหรับ Part No
-v5.43 UPDATE BUILD — ปรับปรุงค้นหาและจัดเรียงข้อมูลทั้ง 2 แท็บ
+v5.56.0 UPDATE BUILD — ปรับปรุงค้นหาและจัดเรียงข้อมูลทั้ง 2 แท็บ
 - New: Customer Spec เพิ่มปุ่มจัดเรียง (Sort) แล้ว — Customer (ค่าเริ่มต้น), Part No, ล่าสุดที่แก้ไข (เดิมไม่มีปุ่ม sort เลย)
 - New: ผลการค้นหาทั้ง 2 แท็บ ไฮไลต์คำที่ตรงกับที่พิมพ์ค้นหาเป็นสีเหลืองแล้ว (Customer Spec เดิมไม่ไฮไลต์เลย)
 - New: การ์ดที่ตรงกับคำค้นหาจะกางอัตโนมัติทั้ง 2 แท็บ จะได้เห็นบริบทที่ match ครบ (เช่น match อยู่ใน Note/Special
   Requirement ที่ปกติซ่อนอยู่ตอนพับ ก่อนหน้านี้ต้องกดกางเองถึงจะเห็นว่าทำไมถึง match)
 - New: ค้นหาในแท็บ Packing List ตอนนี้ครอบคลุม CustPN, Note, NoteExtra ด้วย (เดิมค้นได้แค่ Part No กับ Customer)
-v5.42 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: กล่อง Packing Details ในหน้า Customer Spec (การ์ด+หน้ารายละเอียด) ที่ "มี" ใช้งานจริง จะมีสีเขียวไฮไลต์ให้เห็นชัดแล้ว (เดิมสีเหมือนกันหมดทุกกล่อง ต้องอ่านตัวหนังสือถึงจะรู้)
 - New: หมวดบาร์โค้ด/สติ๊กเกอร์ที่ต้องติดหน้า Pack ตอนนี้แสดง "เฉพาะรายการที่เลือกใช้จริง" เท่านั้น (ตัดรายการที่ไม่ได้ใช้ "— ไม่มี" ออกจากมุมมองหลัก ลดความรก) ถ้าไม่มีรายการไหนเลยจะโชว์ข้อความแจ้งแทน
-v5.41 UPDATE BUILD — เจอบั๊กเพิ่ม 1 จุดตอนตรวจสอบให้ ABOSS (คำถาม: ข้อมูลในชีทจะไม่โดนลบใช่ไหมถ้าเครื่องใหม่ไม่มีข้อมูลกดซิงค์)
+v5.56.0 UPDATE BUILD — เจอบั๊กเพิ่ม 1 จุดตอนตรวจสอบให้ ABOSS (คำถาม: ข้อมูลในชีทจะไม่โดนลบใช่ไหมถ้าเครื่องใหม่ไม่มีข้อมูลกดซิงค์)
 - ✅ ยืนยันด้วยการจำลองสถานการณ์จริง: เครื่องใหม่ที่ไม่มีข้อมูลเลย (0 records, 0 tombstones) กดซิงค์ จะไม่ลบอะไรในชีท
   เลย — เซิร์ฟเวอร์จะส่งข้อมูลที่มีอยู่ทั้งหมดกลับมาให้เครื่องนั้นด้วยในตัว เหมือนโหลดข้อมูลให้อัตโนมัติ
 - 🐛 บั๊กที่เจอเพิ่ม (คนละจุดกับคำถาม): ปุ่ม "รีเซ็ตข้อมูล" เดิมเรียก saveData() ซึ่งถ้าเปิด auto-sync ไว้จะยิงซิงค์ข้อมูล
@@ -57,10 +57,10 @@ v5.41 UPDATE BUILD — เจอบั๊กเพิ่ม 1 จุดตอน
   (deletion ที่ถูกต้องแล้ว) จะถูกซิงค์กลับเข้าไปใหม่เพราะ merge logic ไม่รู้ว่าแถวที่หายไปนั้นถูกลบตั้งใจ ไม่ใช่แค่ไม่เคยมี
   แก้โดยเปลี่ยนเป็น saveDataLocalOnly() — "รีเซ็ตข้อมูล" ตอนนี้เป็นการกระทำเฉพาะเครื่องเท่านั้น ไม่กระทบชีทที่ใช้ร่วมกัน
   จนกว่าจะกดซิงค์เองอีกที
-v5.40 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: ซ่อนช่อง Web App URL ใน Settings ให้เป็นจุดๆ เหมือน password แล้ว (เดิมโชว์เป็นตัวอักษรเห็นชัด) กันหลุดเวลาแคปหน้าจอ/ส่งให้คนอื่นดู
 - New: เพิ่มไอคอนรูปตา 👁️ ข้างช่อง URL และ Token กดเพื่อสลับดู/ซ่อนค่าที่กรอกได้ตามต้องการ (เผื่ออยากเช็คว่าพิมพ์/วางถูกไหม)
-v5.39 UPDATE BUILD — เจอ + แก้บั๊ก race condition จริง 2 จุดจากการรีวิวโค้ด v5.38 เอง
+v5.56.0 UPDATE BUILD — เจอ + แก้บั๊ก race condition จริง 2 จุดจากการรีวิวโค้ด v5.56.0 เอง
 - 🐛 บั๊กที่ 1 (สำคัญ): ถ้าผู้ใช้แก้ไข/เพิ่มข้อมูลระหว่างที่ sync request ก่อนหน้ายังไม่ตอบกลับ (เครือข่ายช้า/กำลัง retry
   อาจกินเวลาหลายวินาที) ผลลัพธ์ merge ที่เซิร์ฟเวอร์ส่งกลับมาเป็น snapshot จากตอน "ส่งคำขอ" ไม่ใช่ตอน "ได้รับคำตอบ" —
   โค้ดเดิมเอาผลลัพธ์นั้นไปทับ packingData/CUSTOMER_SPEC_DATA ตรงๆ ทำให้การแก้ไขล่าสุดที่เพิ่งทำระหว่างรอนั้นหายไปเงียบๆ
@@ -70,7 +70,7 @@ v5.39 UPDATE BUILD — เจอ + แก้บั๊ก race condition จร�
   request ก่อนหน้ายังไม่ตอบกลับ tombstone ใหม่นั้นจะถูกล้างไปด้วยทั้งที่ไม่เคยถูกส่งไปเซิร์ฟเวอร์เลย ทำให้การลบนั้นไม่มีวัน
   ซิงค์ขึ้นไป — เปลี่ยนจาก clearTombstones() (ล้างหมด) เป็น removeSentTombstones() (ล้างเฉพาะอันที่ส่งไปแล้วจริง)
 - Fix เสริม: เพิ่มการ์ดกันยิงซิงค์ซ้อนกัน (ถ้าสถานะเป็น SYNCING อยู่แล้ว จะไม่เริ่ม sync ใหม่ซ้อนอีกรอบ)
-v5.38 UPDATE BUILD — ตามลิสต์ 10 ข้อที่ขอมา
+v5.56.0 UPDATE BUILD — ตามลิสต์ 10 ข้อที่ขอมา
 1. Server LockService: Code.gs ล็อกช่วง merge+write ด้วย LockService.getScriptLock() กัน race condition เวลาซิงค์พร้อมกันจริงๆ
 2. Auto Sync Queue: saveData()/saveSpecData() ไม่ยิงซิงค์ทันทีอีกต่อไป — debounce 4 วิ รวมการแก้หลายครั้งติดกันเป็นซิงค์เดียว
 3. Online/Offline Detection: ฟัง navigator online/offline event, ขึ้นสถานะ OFFLINE และลองซิงค์อัตโนมัติทันทีที่กลับมาออนไลน์
@@ -78,122 +78,122 @@ v5.38 UPDATE BUILD — ตามลิสต์ 10 ข้อที่ขอม�
 5. Sync State: เพิ่มสถานะ IDLE/SYNCING/SUCCESS/FAILED/OFFLINE แสดงเป็น badge สีใน Settings > Sync Diagnostics
 6. Customer Spec Undo: เพิ่มปุ่ม "ย้อนกลับ Customer Spec" เทียบเท่า Packing List ทุกจุด (ก่อนซิงค์ที่ merge ทับ/ก่อนโหลดทับ)
 7. Backup Integrity: backupBeforeOverwrite()/backupSpecBeforeOverwrite() เขียนแล้วอ่านกลับมาเทียบให้แน่ใจว่าสำรองสำเร็จจริง ถ้าล้มเหลวจะเตือนก่อนดำเนินการต่อ
-8. Version Consistency: แก้ <title> ที่ค้างเป็น v5.14 มานาน ให้ผูกกับ APP_VERSION อัตโนมัติทุกครั้งที่โหลดหน้า (document.title) กันหลุด sync กันอีกในอนาคต — เพิ่ม CODE_VERSION ใน Code.gs ด้วย
+8. Version Consistency: แก้ <title> ที่ค้างเป็น v5.56.0 มานาน ให้ผูกกับ APP_VERSION อัตโนมัติทุกครั้งที่โหลดหน้า (document.title) กันหลุด sync กันอีกในอนาคต — เพิ่ม CODE_VERSION ใน Code.gs ด้วย
 9. Input Validation: ฟอร์ม Packing List เพิ่มเช็ค Part No / Customer ห้ามว่างก่อนบันทึก (Customer Spec มีอยู่แล้ว)
 10. Sync Diagnostics: แผงใหม่ใน Settings ทั้ง Packing List และ Customer Spec โชว์ สถานะ/ซิงค์ล่าสุด/จำนวนรายการ/รายการรอลบที่ยังไม่ซิงค์/error ล่าสุด
 - Fix เพิ่มเติม: CSV Import (ทั้ง Packing List และ Customer Spec) ตอนนี้ stamp เวลาแก้ไข (_mt) ให้ทุกแถวที่นำเข้าด้วย เพื่อให้ merge sync เทียบเวลาได้ถูกต้อง (ก่อนหน้านี้แถวที่มาจาก CSV import จะไม่มี _mt ทำให้เสียเปรียบตอน merge)
 - ⚠️ ต้องอัปเดต Code.gs เป็นเวอร์ชันใหม่คู่กัน (ไฟล์ที่แนบให้) แล้ว Deploy ใหม่แบบ "New version" เพื่อให้ได้ LockService
-v5.37 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: การ์ด Customer Spec ตอนพับ (ยังไม่กางดู) แสดงจุดสีสติ๊กเกอร์ (Color Sticker) ข้างปุ่มลูกศรด้วยแล้ว เหมือนหน้า Packing List หลัก ไม่ต้องกางดูก่อนถึงจะรู้ว่ามีสติ๊กเกอร์สีอะไร
-v5.36 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: หน้า Customer Spec (การ์ดและหน้ารายละเอียด) ปรับสไตล์ Packing Details ให้เป็นกรอบตาราง 2 คอลัมน์แบบเดียวกับ Packing List หลักแล้ว
 - New: บาร์โค้ด/สติ๊กเกอร์ในหน้า Customer Spec เปลี่ยนเป็น badge สีสันแยกตามประเภท (RoHS=indigo, Barcode ลูกค้า=blue, Barcode E&E=purple, 4-W=orange) และสติ๊กเกอร์สีแสดงเป็น badge สีตามสีจริงที่เลือก (เช่น RED ก็จะเป็น badge สีแดง) เหมือนหน้า Packing List หลักทุกจุด
-v5.35 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - ★ สำคัญ: เปลี่ยนระบบซิงค์ Google Sheets จาก "เขียนทับทั้งชีท" เป็น "merge แบบทีละแถว" ปลอดภัยสำหรับใช้งานหลายคนพร้อมกันแล้ว (ทั้ง Packing List และ Customer Spec)
 - ก่อนหน้านี้: ใครกดซิงค์ล่าสุด ข้อมูลของคนนั้นจะเขียนทับทั้งชีท ถ้ายังไม่ได้โหลดของคนอื่นมาก่อน ข้อมูลคนอื่นจะหายทันที
 - ตอนนี้: แต่ละแถวมีเวลาแก้ไขล่าสุดกำกับ (_mt) เวลาซิงค์จะเทียบทีละแถวกับที่อยู่ในชีทจริง แถวไหนใหม่กว่าจะชนะ ไม่กระทบแถวอื่นที่คนอื่นเพิ่ง sync ไป — ลบรายการก็ซิงค์ตามไปด้วย (ไม่ใช่แค่ไม่เขียนทับ)
 - ซิงค์เสร็จแล้ว แอปจะดึงข้อมูลที่ merge รวมทุกคนแล้วกลับมาแทนที่ข้อมูลในเครื่องอัตโนมัติ ไม่ต้องกด "โหลดจาก Google Sheets" ซ้ำ
 - ⚠️ ต้องอัปเดต Code.gs เป็นเวอร์ชันใหม่คู่กัน (ไฟล์ที่แนบให้) แล้ว Deploy ใหม่แบบ "New version" — ถ้าไม่อัปเดต Code.gs จะยังทำงานแบบเขียนทับเหมือนเดิม (โค้ดฝั่งแอป fallback ให้ใช้งานต่อได้แต่ไม่ปลอดภัยเหมือนเดิม)
-v5.34 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: ข้อความ Special Requirement เป็นสีแดงให้ครบทุกจุด (การ์ด, หน้ารายละเอียด) ให้เข้าชุดกับป้ายกำกับในฟอร์มที่แดงอยู่แล้ว
-v5.33 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - QA: ตรวจสอบทั้งไฟล์แบบละเอียด (JS syntax, ID ซ้ำ, ฟังก์ชัน/element ที่อ้างอิงแต่ไม่มีจริง, โครงสร้างข้อมูล Customer Spec ทั้ง 100 แถว, การ mapping CSV/Google Sheets) ไม่พบข้อบกพร่อง
 - Fix: openSettingsModal() ตอนนี้เรียก renderSpecSheetsSyncStatus() ด้วยทุกครั้งที่เปิด (เดิมอัปเดตเฉพาะตอนโหลดหน้าเว็บครั้งแรก/หลังกดซิงค์ ทำให้เผื่อกรณีพลาดไม่ตรง)
-v5.32 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: การ์ด Packing List พับ/กางได้เหมือน Customer Spec แล้ว — เริ่มต้นแบบพับ โชว์แค่ Part No/Customer/จำนวน กดปุ่มลูกศรเพื่อกางดู Packing Details, บาร์โค้ด/สติ๊กเกอร์, หมายเหตุเต็มๆ (แตะที่อื่นบนการ์ดยังเปิดหน้ารายละเอียดเต็มได้เหมือนเดิม)
 - New: ซ่อนแถบ UNIT/PACK/TOTAL/DC ในการ์ด Packing List อัตโนมัติ ถ้ายังไม่มีการกรอกข้อมูลจำนวนเลย (เหมือนที่ทำใน Customer Spec)
-v5.31 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: ซ่อนแถบ UNIT/PACK/TOTAL/DC ในการ์ด Customer Spec โดยอัตโนมัติ ถ้ายังไม่มีการกรอกข้อมูลจำนวน (ทั้งหมดเป็น 0 และ DC เป็น -) ลดความรกตาสำหรับรายการที่ยังไม่ได้กรอก
 - New: การ์ด Customer Spec พับ/กางได้ — เริ่มต้นแบบพับ โชว์แค่ชื่อ Customer/P-N/จำนวน กดปุ่มลูกศรเพื่อกางดู Packing Details และบาร์โค้ด/สติ๊กเกอร์เต็มๆ (แตะที่อื่นบนการ์ดยังเปิดหน้ารายละเอียดเต็มได้เหมือนเดิม)
-v5.30 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: เพิ่มฟิลด์ SURFACE (ข้อความอิสระ เช่น OSP, Gold, ENIG) เข้าไปในหมวด Packing Details ของ Customer Spec — ฟอร์มเพิ่ม/แก้ไข, การ์ด, หน้ารายละเอียด, CSV Import/Export และ Google Sheets Sync ครบทุกจุด
-v5.29 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: หน้าต่าง Settings เลื่อนดู (scroll) ได้แล้ว เพราะเนื้อหายาวขึ้นจากหมวด Customer Spec CSV/Sync ที่เพิ่มมา ทำให้ก่อนหน้านี้เนื้อหาส่วนล่างถูกตัดมองไม่เห็น (จำกัดความสูงไว้ที่ 88vh + เลื่อนได้)
-v5.28 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: เปลี่ยนไอคอน emoji (📥📤☁️⬇️) ในปุ่ม Customer Spec CSV / Google Sheets Sync เป็นไอคอน Font Awesome แทน เพราะบางเบราว์เซอร์/ฟอนต์เรนเดอร์ emoji ไม่ตรงกัน ทำให้ดูเหมือนไอคอนซ้ำกันแยกไม่ออก
 - Fix: ข้อความแจ้งเตือนตอนซิงค์/โหลด Customer Spec ล้มเหลว แสดง error message จริงจากเซิร์ฟเวอร์ (เช่น invalid token) แทนข้อความรวมๆ ช่วยแก้ปัญหาได้ตรงจุดขึ้น
-v5.27 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: Customer Spec ซิงค์ขึ้น Google Sheets ได้แล้ว (ใช้ Web App URL/Token เดียวกับ Packing List แต่คนละ action: syncSpec/loadSpec คนละชีทแท็บ "CustomerSpec") ปุ่มอยู่ใน Settings หมวด "Customer Spec Google Sheets Sync"
 - ซิงค์อัตโนมัติ (ถ้าเปิดไว้) ครอบคลุม Customer Spec ด้วยแล้ว ไม่ใช่แค่ Packing List
 - ต้องอัปเดต Code.gs ฝั่ง Apps Script เพิ่ม เพื่อรองรับ action ใหม่ syncSpec/loadSpec (ดูไฟล์ Code_gs_v5_27_addon.gs.txt ที่แนบให้)
-v5.26 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: ย้ายปุ่ม นำเข้า/ส่งออก CSV ของ Customer Spec จากแท็บไปไว้ใน Settings แทน (หมวด "Customer Spec CSV") ทำให้หน้าแท็บโล่งขึ้น
-v5.25 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: ค้นหาในแท็บ Customer Spec ได้อีกครั้ง — กดไอคอนแว่นขยาย 🔍 ที่ header บนสุด (ปุ่มเดียวกับ Packing List) จะเปิดช่องค้นหาแบบ collapse ให้ ไม่ต้องมีช่องค้นหาแสดงตลอดเวลาเหมือนเดิม
-v5.24 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: เอาช่องค้นหาออกจากแท็บ Customer Spec (เก็บปุ่มนำเข้า/ส่งออก CSV ไว้ ขยายเต็มความกว้างแทน)
-v5.23 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: เอาปุ่ม + ที่ซ้ำกันข้างช่องค้นหาในแท็บ Customer Spec ออก (ใช้ปุ่ม + ที่ header บนสุดแทน)
-v5.22 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: เอาปุ่มดินสอ/ถังขยะบนการ์ด Customer Spec ออก (ยังแก้ไข/ลบได้ตามปกติผ่านหน้ารายละเอียด — แตะที่การ์ดแล้วกดแก้ไข/ลบจากด้านล่าง)
-v5.21 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Fix: เอาข้อความคำอธิบายคอลัมน์ CSV ใต้ช่องค้นหาในแท็บ Customer Spec ออก (รกตา)
-v5.20 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: เพิ่มกล่องข้อมูลจำนวน UNIT / PACK / TOTAL (คำนวณอัตโนมัติ) และ DC FORMAT ให้ Customer Spec เหมือนหน้า Packing List หลัก — แสดงเป็นแถบ "UNIT: x | PACK: x | TOTAL: x | DC: x" ใต้ชื่อ Customer ในการ์ด, ในหน้ารายละเอียด, ในฟอร์มเพิ่ม/แก้ไข และรองรับใน CSV Import/Export (คอลัมน์ Unit, Pack, Total, DCFormat)
-v5.19 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: หน้า Customer Spec ปรับดีไซน์การ์ดให้เหมือนหน้า Packing List หลัก — หัวข้อ "Packing Details / รายละเอียดสเปกบรรจุ" และ "บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack" เป็นแถบไล่สี (gradient banner) เหมือนกัน
 - New: แตะที่การ์ด Customer Spec เพื่อเปิดหน้ารายละเอียดแบบเต็ม (bottom sheet) พร้อมปุ่ม แก้ไข / คัดลอก / ลบ เหมือนหน้า Packing List หลัก
 - New: เพิ่มฟิลด์ "Barcode E&E" และ "4-W" ในหมวดบาร์โค้ด/สติ๊กเกอร์ของ Customer Spec (ทั้งในฟอร์ม, การ์ด, หน้ารายละเอียด และ CSV Import/Export)
-v5.18 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: จัดกลุ่มข้อมูลในการ์ด Customer Spec ให้ชัดเจนขึ้นเป็น 2 หมวด — "📦 Packing Details / รายละเอียดสเปกบรรจุ" (Heat Seal, Silica Gel, HIC 3Dot/6Dot, Sulfur Free Paper, Aluminum Foil Bag, Plastic Vacuum Bag) และ "🏷️ บาร์โค้ด/สติ๊กเกอร์ที่ต้องติดหน้า Pack" (RoHS Label, Barcode ลูกค้า, สติ๊กเกอร์สี)
 - New: เพิ่มฟิลด์ "Barcode ลูกค้า" (checkbox แยกจาก RoHS) และ "สติ๊กเกอร์สี" (dropdown พร้อมจุดสีแสดงผล เหมือนหน้า Packing List หลัก) ให้ Customer Spec แต่ละรายการ
 - อัปเดต CSV Import/Export ของ Customer Spec ให้รองรับคอลัมน์ BarcodeCust และ ColorSticker เพิ่มเติม
-v5.17 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: เพิ่มฟิลด์ PART NO ในแต่ละรายการ Customer Spec (แสดงใต้ชื่อ Customer, ค้นหาได้ด้วย)
 - New: Batch Upload — นำเข้า Customer Spec จากไฟล์ CSV ได้ (ปุ่มไอคอนอัปโหลดข้างช่องค้นหาในแท็บ Customer Spec) นำเข้าแบบผสาน (merge/upsert) ตาม Customer+PartNo ที่ตรงกัน ไม่ทับข้อมูลทั้งหมด
 - New: ปุ่มส่งออก Customer Spec เป็น CSV เพื่อแก้ไขนอกแอพแล้วนำเข้ากลับได้
-v5.16 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: แท็บ Customer Spec แก้ไขได้แล้ว — เพิ่ม/แก้ไข/ลบรายการ Customer Spec ได้จากในแอพ (ปุ่ม + ที่มุมขวาของช่องค้นหา และปุ่มดินสอ/ถังขยะในแต่ละการ์ด) ข้อมูลที่แก้ไขจะถูกบันทึกไว้ในเครื่อง (localStorage) แยกจาก Packing List เดิม
-v5.15 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - New: แท็บ "Customer Spec" — ตาราง Customer Packing Spec (Heat Seal, Silica Gel, HIC 3Dot/6Dot, Sulfur Free Paper, Aluminum Foil Bag, Plastic Vacuum Bag, RoHS Label, Special Requirement) แยกออกมาจาก Packing List เดิม พร้อมช่องค้นหาในตัว (ค้นหาด้วยชื่อ Customer หรือข้อความ Special Requirement)
 - ข้อมูลชุดนี้คัดลอกมาจากเอกสาร "Customer packing spec" (WI-QE-005-8K) — ถ่ายจากภาพถ่าย อาจมีคลาดเคลื่อนเล็กน้อยในบางช่อง แนะนำให้ตรวจทานกับเอกสารต้นฉบับอีกครั้ง
-v5.14 UPDATE BUILD
+v5.56.0 UPDATE BUILD
 - Security: ป้องกัน XSS — เพิ่ม escapeHtml() ครอบทุกฟิลด์ข้อความก่อนแสดงผลในการ์ดและหน้ารายละเอียด (กันกรณีมี HTML/script ปนมากับข้อมูลที่พิมพ์เอง, import CSV/JSON หรือซิงค์มาจาก Google Sheets)
 - Security: เพิ่ม Sync Token (รหัสลับ) สำหรับ Google Sheets Sync — ตั้งค่าใน Settings แล้วแอปจะแนบไปกับทุกคำขอ sync/load กัน URL หลุดแล้วมีคนอื่นยิงทับข้อมูลได้ (ต้องอัปเดต Code.gs ให้เช็ค token คู่กันด้วย)
 - New: แจ้งเตือนเมื่อ auto-sync ล้มเหลว — ขึ้นจุดแดงที่ปุ่ม SETTINGS และโชว์ข้อความสถานะ แทนที่จะเงียบแบบเดิม
 - New: ย้อนกลับการดำเนินการล่าสุด (Undo) — ก่อน Import CSV/JSON, โหลดจาก Google Sheets ทับ หรือ Reset ข้อมูล ระบบจะสำรองข้อมูลชุดก่อนหน้าไว้ให้ 1 ชุด กดย้อนกลับได้จาก Settings
 - Fix: เพิ่มการเช็ค Part No ซ้ำตอนบันทึก/แก้ไข — เตือนก่อนถ้าซ้ำกับรายการที่มีอยู่ ป้องกันสับสนภายหลัง
 - Change: ช่องค้นหาปรับให้ค้นหาด้วย "Part No" และ "Customer" (ตัดฟิลด์อื่นที่ปนออก ให้ผลลัพธ์ตรงจุดและเร็วขึ้น)
-v5.13 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix (สำคัญ): คอลัมน์ตอนซิงค์ Google Sheets เรียงคนละแบบกับไฟล์ Backup CSV — เพราะฝั่ง sync สร้างลำดับคอลัมน์จาก key ตามธรรมชาติของ object (ตามลำดับตอนสร้างข้อมูลในฟอร์ม) ส่วน CSV export มีการกำหนดลำดับคอลัมน์เองตายตัวไว้อีกชุด ทำให้ 2 จุดนี้ไม่ตรงกัน
   แก้ไข: สร้างค่าคงที่ FIELD_ORDER ใช้ร่วมกันทั้ง Export CSV และ Sync ส่งลำดับคอลัมน์ (fieldOrder) ไปให้ Apps Script ใช้เขียนคอลัมน์ในชีทตามลำดับเดียวกับ Backup เป๊ะ (ต้องอัปเดต Code.gs เป็นเวอร์ชันใหม่คู่กันด้วย)
-v5.13 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix (สำคัญ): ลำดับรายการใน Backup (CSV/JSON) กับตอนซิงค์ Google Sheets ไม่ตรงกับที่จอแสดง — เพราะ export/sync ดึงข้อมูลดิบจาก packingData (เรียงแบบ "ล่าสุดก่อน" เสมอ) โดยไม่ผ่านการจัดเรียงตาม Sort ที่เลือกไว้บนจอ (ล่าสุด/Part No/Customer)
   แก้ไข: ให้ exportToCSV, exportToJSON และ syncToGoogleSheets ใช้ getSortedData() ตาม Sort mode ปัจจุบันเหมือนกันหมด ทำให้จอ/ไฟล์ Backup/ชีทที่ซิงค์ เรียงตรงกันเสมอ
 - Fix: ลดตัวเลือก HUMCARD เหลือแค่ "3" กับ "6" (ตัด 3.0/6.0 ที่ซ้ำซ้อน) พร้อม normalize ค่าเก่าตอนแก้ไข/คัดลอกรายการให้เลือก dropdown ถูกช่องแม้ข้อมูลเดิมเก็บเป็น "3.0"/"6.0"
-v5.13 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix (สำคัญ): พิมพ์ค้นหาด้วยตัวเลขล้วนสั้นๆ (เช่น "330") บางครั้งไม่เจอ ทั้งที่ข้อมูลมีอยู่จริงและพิมพ์เต็ม Part No แล้วเจอปกติ
   สาเหตุ: คีย์บอร์ดมือถือบางรุ่น (เช่น Gboard บางเวอร์ชัน) จะแอบแทรกอักขระที่มองไม่เห็น (bidi isolate / zero-width) เข้าไปตอนพิมพ์ตัวเลขล้วนๆ ทำให้ค่าที่ระบบได้รับจริงไม่ตรงกับข้อมูลทั้งที่ตาเห็นเหมือนกัน
   แก้ไข: เพิ่มฟังก์ชัน cleanText() ตัดอักขระแฝงเหล่านี้ทิ้งทั้งจากคำค้นหาและข้อมูลก่อนเทียบทุกครั้ง
-v5.10 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix (สำคัญ): ช่องค้นหา "PcbSize" อ้างอิงฟิลด์ที่ไม่มีจริง — ฟิลด์นี้ถูกลบออกจากฟอร์มไปแล้ว (มีแต่ PcbWidth/PcbLength แยกกัน) มีอยู่แค่ในข้อมูลตัวอย่างชุดแรกเท่านั้น ทำให้รายการที่เพิ่ม/แก้ไขเองทุกรายการค้นหาด้วยขนาด PCB ไม่เจอเลย → เปลี่ยนไปค้นหาจาก PcbWidth + PcbLength (และ PcbWeight) จริงแทน
 - Fix: เพิ่มฟิลด์ "SizeBagging" เข้าไปในการค้นหา (มีอยู่ในการ์ดแต่ไม่เคยถูกค้นหาได้มาก่อน)
-v5.9 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix: ช่องค้นหาไม่ครอบคลุมฟิลด์ Pack Model, Bag Size, PcbSize, DC Format, สีสติ๊กเกอร์ (ColorSticker), HumCard → เพิ่มฟิลด์เหล่านี้เข้าไปในการค้นหาแล้ว ทำให้พิมพ์ค้นหาข้อมูลที่มีอยู่จริงแล้วไม่เจอเหมือนก่อนหน้านี้
 - Fix: ป้องกัน error กรณีค่าฟิลด์เป็นตัวเลขไม่ใช่ string (ครอบด้วย String() ก่อน .toLowerCase() ทุกฟิลด์)
-v5.8 BUGFIX BUILD
+v5.56.0 BUGFIX BUILD
 - Fix: ปุ่มค้นหา (searchToggleBtn) ไม่ขึ้นสีไฮไลต์ตอนกดเปิด เพราะใช้ class Tailwind แบบ dynamic (!bg-...) ที่ CDN JIT compile ไม่ทันเสมอ → เปลี่ยนไปใช้ CSS class ธรรมดา (.search-toggle-active) แทน
 - Fix: ปุ่ม Sort (ล่าสุด/Part No/Customer) มีปัญหาเดียวกัน → เปลี่ยนไปใช้ .sort-btn-active
-v5.7 UPDATE
+v5.56.0 UPDATE
 - New: Google Sheets Sync (ผ่าน Google Apps Script Web App)
   - ตั้งค่า Web App URL ใน Settings
   - ปุ่ม "ซิงค์ตอนนี้" ส่งข้อมูลทั้งหมดไปเขียนทับใน Google Sheet
   - Toggle ซิงค์อัตโนมัติทุกครั้งที่บันทึกรายการ
   - แสดงเวลาซิงค์ล่าสุด
 - New: โหลดข้อมูลกลับจาก Google Sheets (ปุ่ม "โหลดจาก Google Sheets") - ทับข้อมูลในเครื่องด้วยข้อมูลจากชีท พร้อม confirm ก่อนทับ
-v5.6 BUGFIX BUILD
-- v5.5 all features retained
+v5.56.0 BUGFIX BUILD
+- v5.56.0 all features retained
 - Fix: HumCard select options เพิ่ม "3.0" และ "6.0" ให้ match ข้อมูลเก่า
 - Fix: BagSize fallback ตอน edit/duplicate รายการที่ไม่มี PCB dimensions
 - Fix: escapeRegex character class (- ต้องอยู่ท้าย)
 - Fix: settingsContent เพิ่มใน will-change CSS
-- Fix: settingsVersion hardcode "v5.5" → ใช้ APP_VERSION จาก JS แทน
+- Fix: settingsVersion hardcode "v5.56.0" → ใช้ APP_VERSION จาก JS แทน
 - Fix: ลบ dead <span style="display:none"> ใน card template
 -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Packing Auto Pack Mobile v5.55</title>
+    <title>Packing Auto Pack Mobile v5.56.0</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#6366f1">
@@ -201,9 +201,16 @@ v5.6 BUGFIX BUILD
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Packing">
-    <!-- v5.55: Real PWA manifest -->
+    <!-- v5.56.0: Real PWA manifest -->
     <link rel="manifest" href="./manifest.webmanifest">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // v5.56.0: ผูกโหมด dark: ของ Tailwind เข้ากับ data-theme ของแอปเอง (ปุ่มธีมที่กดในแอป)
+        // แทนที่จะยึดตามค่า OS/เบราว์เซอร์ (prefers-color-scheme) แบบเดิม — เดิมนี่คือสาเหตุที่ตัวหนังสือ
+        // อาจมองไม่ชัด/มองไม่เห็นได้ เมื่อโหมด OS กับธีมที่เลือกในแอปไม่ตรงกัน (เช่น เลือก Light ในแอป
+        // แต่มือถือตั้ง OS เป็น Dark ไว้ — class dark: จะโดน trigger ทับสีจาก CSS variable ของธีม Light)
+        tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'] };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
@@ -229,6 +236,30 @@ v5.6 BUGFIX BUILD
             --border: rgba(148,163,184,0.16);
             --shadow: 0 18px 40px rgba(0,0,0,0.35);
             --premium-bg-sticky: linear-gradient(135deg,rgba(15,23,42,.92),rgba(30,41,59,.92));
+        }
+        /* v5.56.0: ธีม "อ่านง่าย" — พื้นหลังโทนกระดาษอุ่นๆ ตัวหนังสือคอนทราสต์สูงสุด อ่านสบายตา ลดแสงจ้า */
+        [data-theme="reading"] {
+            --primary: #6366f1;
+            --primary-light: #eef2ff;
+            --bg: linear-gradient(180deg, #faf6ec 0%, #f3ecd8 100%);
+            --card: rgba(255,253,246,0.97);
+            --text-main: #1b1810;
+            --text-sub: #5b5647;
+            --border: rgba(120,108,72,0.25);
+            --shadow: 0 20px 50px rgba(120,108,40,0.14);
+            --premium-bg-sticky: linear-gradient(135deg,rgba(255,253,246,.95),rgba(243,236,216,.95));
+        }
+        [data-theme="reading"] body {
+            line-height: 1.65;
+            letter-spacing: 0.005em;
+        }
+        [data-theme="reading"] .glass-panel {
+            background: rgba(255,253,246,0.9) !important;
+        }
+        /* v5.56.0: ทรานสิชันตอนสลับธีม ให้ทุกองค์ประกอบไล่สีลื่นไหลพร้อมกัน ไม่กระพริบ/สะดุด */
+        html { transition: font-size .35s cubic-bezier(0.4,0,0.2,1); }
+        .theme-transitioning, .theme-transitioning * {
+            transition: background-color .35s ease, background .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease !important;
         }
 
         #connectionBar{transition:opacity .2s ease,transform .2s ease}.connection-offline{border-color:rgba(244,63,94,.3)}.connection-slow{border-color:rgba(245,158,11,.3)}.connection-syncing{border-color:rgba(59,130,246,.3)}
@@ -699,7 +730,7 @@ v5.6 BUGFIX BUILD
         </div>
     </div>
 
-    <!-- v5.55: Public Read / Protected Write / No periodic auto-refresh -->
+    <!-- v5.56.0: Public Read / Protected Write / No periodic auto-refresh -->
     <!-- Main Tabs -->
     <div class="px-3 pt-3 flex gap-2">
         <button id="mainTabBtnPacking" onclick="switchMainTab('packing')" class="main-tab-btn main-tab-active flex-1 py-2 rounded-xl text-xs font-bold transition-all">📦 Packing List</button>
@@ -1069,13 +1100,13 @@ v5.6 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.55';
+        const APP_VERSION = 'v5.56.0';
         document.querySelectorAll('#appVersion, #settingsVersion').forEach(el => {
             if (el.id === 'appVersion') el.textContent = APP_VERSION;
             else el.textContent = 'Packing Auto Pack ' + APP_VERSION;
         });
 
-        // ─── v5.55 Offline-First / PWA Core ───────────────────────────────────
+        // ─── v5.56.0 Offline-First / PWA Core ───────────────────────────────────
         const PENDING_PACKING_KEY='packing_pending_sync_v555', PENDING_SPEC_KEY='packing_spec_pending_sync_v555';
         const STARTUP_PULL_TIMEOUT_MS=6500, SYNC_FETCH_TIMEOUT_MS=10000;
         let deferredInstallPrompt=null, connectionSlowTimer=null;
@@ -1158,7 +1189,7 @@ v5.6 BUGFIX BUILD
         ];
 
         
-        // ─── Customer Packing Spec (reference data, v5.15) ────────────────────
+        // ─── Customer Packing Spec (reference data, v5.56.0) ────────────────────
         // c=Customer, hs=Heat Seal, sg=Silica Gel, h3=HIC 3Dot, h6=HIC 6Dot,
         // sf=Sulfur Free Paper, af=Aluminum Foil Bag, pv=Plastic Vacuum Bag, rh=RoHS Label
         const CUSTOMER_SPEC_DEFAULT = [{"c": "ASL01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "BAR02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "BEN04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "CEC037321 Add HIC 3Dot 1set per pack"}, {"c": "CCP01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "STARTEAM", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "25/PACK , CML02=STARTEAM"}, {"c": "CCN01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "CNT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "CNT02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "CRS", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL12", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL19 DEL08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Gold Plate | All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL20", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL24", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL25", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL27", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DET01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "ECT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": true, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "EKM01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "ENI03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "ENO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "EPI01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ค้นกระดาษ"}, {"c": "EUT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FAB02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Enig, LF-HASL, Silver | Aluminum Foil Bag P/N: A217248.., A217249.., A217250.., A217245.., A217346.., A217347.., A216992.., A217124.. | Plastic Vacuum Bag P/N: A216722.., A216347.., A210931.., A211913.., A215921.., A217158.., A216747.., A217265.. | BARCODE ลูกค้า"}, {"c": "FAG01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FII01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "FLE09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Surface ENIG must have siliga gel"}, {"c": "FLE46", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FLE75", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FRD01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FTS01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FUJ15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "FUJ17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "HDK01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "HOG01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "งานทองค้นกระดาษ"}, {"c": "IUS04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB19", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB29", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "JAB36", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "KAG03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "KIM05/06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Backup บน-ล่าง"}, {"c": "KIM08/09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "3DOTของจริง backup(siliga=5/pack) | ติด HIC หน้ากล่อง"}, {"c": "KOS01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "นับ 25 /pack"}, {"c": "KOS07", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "25/PACK"}, {"c": "LAC05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LEA05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LEA06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "LON05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LON11", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MEA01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MIN09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MIN10", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MOTO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "MSL02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MTC", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "NCAB_ABB", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Enig surface use sulfur free paper for separate boards"}, {"c": "NEC08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "NOV01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "PSU01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "PTE01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SCI13", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "นับ 10 set"}, {"c": "SCN04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SII02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SIX", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SLMO1", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SNE05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SNE10", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "3DOTของจริง"}, {"c": "SNE15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE16", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "STB01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SUM03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SVI01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "TAT", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "TEC03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "TIGO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ติด ROHS"}, {"c": "TSE", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "UMC01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "UMC02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "USI08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "USI09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL07", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "VAL13", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL21", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VEXOS", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ไม่เอาโลโก้ E&E"}, {"c": "VID02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "stamp สามเหลี่ยม"}, {"c": "XPP", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "งานทองค้นกระดาษ"}, {"c": "YLT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "NTW 01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "BEN17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 20 set/pack"}, {"c": "SCI40", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 10 set/pack"}, {"c": "PNE01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 10 set/pack"}, {"c": "ALL02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "CEC037227"}, {"c": "EBW01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Add back up board top and bottom side in pack"}, {"c": "ICAPE", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "CEL", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Enig, Gold Finger, Tin Finger | packing 20 set/pack (was 10) | Celestica (End user THYSSENKRUPP) use Aluminum bag."}];
@@ -1199,7 +1230,7 @@ v5.6 BUGFIX BUILD
             return `<span class="spec-chip ${on ? 'spec-chip-on' : ''}" style="${on ? '' : 'opacity:0.25;'}">${on ? '✓' : '—'} ${label}</span>`;
         }
 
-        // v5.31: จำสถานะพับ/กางของแต่ละการ์ด Customer Spec ในเซสชันนี้ (ตาม index ใน CUSTOMER_SPEC_DATA)
+        // v5.56.0: จำสถานะพับ/กางของแต่ละการ์ด Customer Spec ในเซสชันนี้ (ตาม index ใน CUSTOMER_SPEC_DATA)
         let specExpandedIndices = new Set();
         function toggleSpecCardExpand(idx) {
             if (specExpandedIndices.has(idx)) specExpandedIndices.delete(idx);
@@ -1221,7 +1252,7 @@ v5.6 BUGFIX BUILD
             container.innerHTML = list.map(item => {
                 const idx = CUSTOMER_SPEC_DATA.indexOf(item);
                 const hasQty = (item.ut || 0) > 0 || (item.pk || 0) > 0 || (item.tt || 0) > 0 || (item.dc && item.dc !== '-');
-                const expanded = hlQuery ? true : specExpandedIndices.has(idx); // v5.43: ค้นหาอยู่ให้กางอัตโนมัติ จะได้เห็นบริบทที่ match (เช่น match ใน Special Requirement ที่ซ่อนอยู่ตอนพับ)
+                const expanded = hlQuery ? true : specExpandedIndices.has(idx); // v5.56.0: ค้นหาอยู่ให้กางอัตโนมัติ จะได้เห็นบริบทที่ match (เช่น match ใน Special Requirement ที่ซ่อนอยู่ตอนพับ)
                 return `
                 <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm cursor-pointer active:scale-[0.99] transition-transform" onclick="openSpecDetail(${idx})">
                     <div class="flex items-start justify-between gap-2 ${expanded ? 'mb-2' : ''}">
@@ -1281,7 +1312,7 @@ v5.6 BUGFIX BUILD
             }).join('');
         }
 
-        // v5.43: จัดเรียง Customer Spec — Customer (ก-ฮ/A-Z, ค่าเริ่มต้น), Part No, ล่าสุดที่แก้ไข
+        // v5.56.0: จัดเรียง Customer Spec — Customer (ก-ฮ/A-Z, ค่าเริ่มต้น), Part No, ล่าสุดที่แก้ไข
         let currentSpecSort = 'customer'; // customer | partno | newest
         function setSpecSort(mode) {
             currentSpecSort = mode;
@@ -1334,7 +1365,7 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        // ─── Customer Spec Add/Edit/Delete (v5.16) ─────────────────────────────
+        // ─── Customer Spec Add/Edit/Delete (v5.56.0) ─────────────────────────────
         let specFormDirty = false;
         function openSpecModal(index = null) {
             if (!specUnlocked) { requireSpecUnlock(() => openSpecModal(index)); return; }
@@ -1505,7 +1536,7 @@ v5.6 BUGFIX BUILD
             const customerVal = cleanText(document.getElementById('specCustomerInput').value);
             if (!customerVal) { alert('กรุณาระบุ Customer'); return; }
             const partNoVal = cleanText(document.getElementById('specPartNoInput').value);
-            // v5.44: เช็ค Customer + Part No ซ้ำ (ไม่นับรายการที่กำลังแก้ไขอยู่) — เตือนก่อนบันทึกซ้ำ เหมือน Packing List
+            // v5.56.0: เช็ค Customer + Part No ซ้ำ (ไม่นับรายการที่กำลังแก้ไขอยู่) — เตือนก่อนบันทึกซ้ำ เหมือน Packing List
             const dupIdx = CUSTOMER_SPEC_DATA.findIndex((it, idx) =>
                 String(idx) !== String(index) &&
                 cleanText(it.c).toLowerCase() === customerVal.toLowerCase() &&
@@ -1545,7 +1576,7 @@ v5.6 BUGFIX BUILD
             showToast('บันทึก Customer Spec สำเร็จ');
         });
 
-        // ─── Customer Spec CSV Batch Import / Export (v5.17) ──────────────────
+        // ─── Customer Spec CSV Batch Import / Export (v5.56.0) ──────────────────
         const SPEC_CSV_HEADERS = ['Customer','PartNo','Unit','Pack','Total','DCFormat','HeatSeal','SilicaGel','HIC3Dot','HIC6Dot','SulfurFreePaper','AluminumFoilBag','PlasticVacuumBag','Surface','RoHSLabel','BarcodeCust','BarcodeEE','FourW','ColorSticker','Note'];
         const SPEC_CSV_KEY_MAP = { Customer:'c', PartNo:'pn', Unit:'ut', Pack:'pk', Total:'tt', DCFormat:'dc', HeatSeal:'hs', SilicaGel:'sg', HIC3Dot:'h3', HIC6Dot:'h6', SulfurFreePaper:'sf', AluminumFoilBag:'af', PlasticVacuumBag:'pv', Surface:'su', RoHSLabel:'rh', BarcodeCust:'bc', BarcodeEE:'ee', FourW:'fw', ColorSticker:'cs', Note:'note' };
         const SPEC_BOOL_KEYS = ['hs','sg','h3','h6','sf','af','pv','rh','bc','ee','fw'];
@@ -1595,7 +1626,7 @@ v5.6 BUGFIX BUILD
                         c: raw['Customer'], pn: raw['PartNo'] || '',
                         ut: parseFloat(raw['Unit']) || 0, pk: parseFloat(raw['Pack']) || 0, tt: parseFloat(raw['Total']) || 0,
                         dc: raw['DCFormat'] || '-', cs: raw['ColorSticker'] || '-', su: raw['Surface'] || '', note: raw['Note'] || '',
-                        mt: Date.now() // v5.38: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
+                        mt: Date.now() // v5.56.0: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
                     };
                     SPEC_BOOL_KEYS.forEach(key => {
                         const header = Object.keys(SPEC_CSV_KEY_MAP).find(h => SPEC_CSV_KEY_MAP[h] === key);
@@ -1657,30 +1688,39 @@ v5.6 BUGFIX BUILD
             return Number.isInteger(n) ? String(n) : n.toFixed(1);
         }
 
-        function toggleTheme() {
+        function applyThemeState(theme, icon) {
             const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                icon.className = 'fas fa-moon text-lg';
-                localStorage.setItem('packing_theme', 'light');
-            } else {
+            if (theme === 'dark') {
                 body.setAttribute('data-theme', 'dark');
-                icon.className = 'fas fa-sun text-lg';
-                localStorage.setItem('packing_theme', 'dark');
+                document.documentElement.style.fontSize = '';
+                if (icon) icon.className = 'fas fa-book-open text-lg';
+            } else if (theme === 'reading') {
+                body.setAttribute('data-theme', 'reading');
+                document.documentElement.style.fontSize = '106%';
+                if (icon) icon.className = 'fas fa-sun text-lg';
+            } else {
+                body.removeAttribute('data-theme');
+                document.documentElement.style.fontSize = '';
+                if (icon) icon.className = 'fas fa-moon text-lg';
             }
+            localStorage.setItem('packing_theme', theme);
+        }
+
+        function toggleTheme() {
+            const icon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+            html.classList.add('theme-transitioning');
+            clearTimeout(window._themeTransTimer);
+            window._themeTransTimer = setTimeout(() => html.classList.remove('theme-transitioning'), 400);
+            const current = document.body.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : (current === 'dark' ? 'reading' : 'light');
+            applyThemeState(next, icon);
         }
 
         function initTheme() {
-            const saved = localStorage.getItem('packing_theme');
+            const saved = localStorage.getItem('packing_theme') || 'light';
             const icon = document.getElementById('themeIcon');
-            if (saved === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                if (icon) icon.className = 'fas fa-sun text-lg';
-            } else {
-                document.body.removeAttribute('data-theme');
-                if (icon) icon.className = 'fas fa-moon text-lg';
-            }
+            applyThemeState(saved, icon);
         }
 
         function calculateTotal() {
@@ -1770,7 +1810,7 @@ v5.6 BUGFIX BUILD
                 
                 const colorHex = colorMap[item.ColorSticker] || 'transparent';
                 const hasQty = (item['Unit Qty'] || 0) > 0 || (item['QtyPack'] || 0) > 0 || (item['QuantityTotal'] || 0) > 0 || (item['DCFormat'] && item['DCFormat'] !== '-');
-                const isExpanded = hlQuery ? true : packingExpandedIndices.has(actualIndex); // v5.43: ค้นหาอยู่ให้กางอัตโนมัติ เห็นบริบทที่ match ครบ (เช่น match ใน Note ที่ซ่อนอยู่ตอนพับ)
+                const isExpanded = hlQuery ? true : packingExpandedIndices.has(actualIndex); // v5.56.0: ค้นหาอยู่ให้กางอัตโนมัติ เห็นบริบทที่ match ครบ (เช่น match ใน Note ที่ซ่อนอยู่ตอนพับ)
                 
                 // ปรับเปลี่ยนโครงสร้าง HTML ให้สเปกด้านบนแยกสีสันด้วยสไตล์ข้อความและน้ำหนักสีที่สวยงามแตกต่างกันอย่างชัดเจน
                 let upperRightSpecHTML = `
@@ -1863,7 +1903,7 @@ v5.6 BUGFIX BUILD
             });
         }
 
-        // v5.32: จำสถานะพับ/กางของแต่ละการ์ด Packing List ในเซสชันนี้ (ตาม actualIndex ใน packingData)
+        // v5.56.0: จำสถานะพับ/กางของแต่ละการ์ด Packing List ในเซสชันนี้ (ตาม actualIndex ใน packingData)
         let packingExpandedIndices = new Set();
         function toggleCardExpand(idx) {
             if (packingExpandedIndices.has(idx)) packingExpandedIndices.delete(idx);
@@ -2071,7 +2111,7 @@ v5.6 BUGFIX BUILD
                 lastQuery   = cleanText(query);
                 const qLow  = lastQuery.toLowerCase();
                 document.getElementById('searchClearBtn').classList.toggle('hidden', !lastQuery);
-                // v5.43: ขยายค้นหาให้ครอบคลุม CustPN, Note, NoteExtra ด้วย (เดิมค้นได้แค่ Part No กับ Customer)
+                // v5.56.0: ขยายค้นหาให้ครอบคลุม CustPN, Note, NoteExtra ด้วย (เดิมค้นได้แค่ Part No กับ Customer)
                 const filtered = lastQuery
                     ? packingData.filter(item =>
                         cleanText(item['Part No']).toLowerCase().includes(qLow) ||
@@ -2146,7 +2186,7 @@ v5.6 BUGFIX BUILD
         document.getElementById('packingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const index = document.getElementById('editIndex').value;
-            // v5.38 #9: Input Validation — Part No และ Customer ห้ามว่าง/เว้นวรรคล้วน
+            // v5.56.0 #9: Input Validation — Part No และ Customer ห้ามว่าง/เว้นวรรคล้วน
             const partNoCheck = cleanText(document.getElementById('partNo').value);
             const customerCheck = cleanText(document.getElementById('customer').value);
             if (!partNoCheck) { alert('กรุณาระบุ Part No'); document.getElementById('partNo').focus(); return; }
@@ -2158,13 +2198,15 @@ v5.6 BUGFIX BUILD
                 alert('ค่า PCB Width / Depth / Weight ต้องไม่ติดลบ');
                 return;
             }
-            // v5.14: เช็ค Part No ซ้ำ (ไม่นับรายการที่กำลังแก้ไขอยู่) — เตือนก่อนบันทึกซ้ำ
+            // v5.56.0: เช็ค Customer + Part No ซ้ำ ให้ตรงกับ Primary Key ของระบบ
             const partNoVal = cleanText(document.getElementById('partNo').value);
+            const customerVal = cleanText(document.getElementById('customer').value);
             const dupIdx = packingData.findIndex((it, idx) =>
-                String(idx) !== String(index) && cleanText(it['Part No']).toLowerCase() === partNoVal.toLowerCase());
+                String(idx) !== String(index) &&
+                cleanText(it['Customer']).toLowerCase() === customerVal.toLowerCase() &&
+                cleanText(it['Part No']).toLowerCase() === partNoVal.toLowerCase());
             if (dupIdx !== -1) {
-                const dupCustomer = packingData[dupIdx]['Customer'] || '-';
-                if (!confirm(`Part No "${partNoVal}" มีอยู่แล้ว (ลูกค้า: ${dupCustomer})\nต้องการบันทึกซ้ำหรือไม่?`)) return;
+                if (!confirm(`Customer "${customerVal}" + Part No "${partNoVal}" มีอยู่แล้ว\nต้องการบันทึกซ้ำหรือไม่?`)) return;
             }
             const newItem = {
                 "Part No": document.getElementById('partNo').value, 
@@ -2211,9 +2253,9 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        // ─── v5.14: สำรองข้อมูลก่อนดำเนินการที่ทับข้อมูลทั้งหมด (Import/Load/Reset) เพื่อให้ Undo ได้ ─
+        // ─── v5.56.0: สำรองข้อมูลก่อนดำเนินการที่ทับข้อมูลทั้งหมด (Import/Load/Reset) เพื่อให้ Undo ได้ ─
         const PREOP_BACKUP_KEY = 'packing_pro_v5_preop_backup';
-        // v5.38 #7: Backup Integrity — เขียนแล้วอ่านกลับมาเทียบจำนวนแถว ถ้าไม่ตรง/เขียนไม่สำเร็จ ถือว่า backup ล้มเหลว
+        // v5.56.0 #7: Backup Integrity — เขียนแล้วอ่านกลับมาเทียบจำนวนแถว ถ้าไม่ตรง/เขียนไม่สำเร็จ ถือว่า backup ล้มเหลว
         function backupBeforeOverwrite(label) {
             try {
                 const payload = JSON.stringify({ ts: Date.now(), label, data: packingData });
@@ -2251,7 +2293,7 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        // v5.38 #6: Customer Spec Undo — เทียบเท่ากับ Packing List ทุกประการ (backup/undo/render แยก key กัน)
+        // v5.56.0 #6: Customer Spec Undo — เทียบเท่ากับ Packing List ทุกประการ (backup/undo/render แยก key กัน)
         const SPEC_PREOP_BACKUP_KEY = 'packing_spec_preop_backup';
         function backupSpecBeforeOverwrite(label) {
             try {
@@ -2289,11 +2331,11 @@ v5.6 BUGFIX BUILD
                 btn.classList.add('hidden');
             }
         }
-        // v5.38 #7: เรียกหลัง backupBeforeOverwrite()/backupSpecBeforeOverwrite() เสมอ — ถ้า backup ล้มเหลว
+        // v5.56.0 #7: เรียกหลัง backupBeforeOverwrite()/backupSpecBeforeOverwrite() เสมอ — ถ้า backup ล้มเหลว
         // แจ้งเตือนให้รู้ตัวว่าย้อนกลับจะใช้ไม่ได้รอบนี้ (ไม่บล็อกการทำงานหลัก แค่ไม่มี safety net)
 // ─── Google Sheets Sync ─────────────────────────────────────────────────
         const SHEETS_URL_KEY = 'packing_sheets_url';
-        // v5.48: ฝัง Web App URL ไว้ในโค้ดแอปโดยตรง ไม่ต้องให้ผู้ใช้ทั่วไปกรอก/เห็นลิงค์เลย
+        // v5.56.0: ฝัง Web App URL ไว้ในโค้ดแอปโดยตรง ไม่ต้องให้ผู้ใช้ทั่วไปกรอก/เห็นลิงค์เลย
         // *** แก้ค่าด้านล่างนี้เป็น Web App URL จริงของคุณ (ที่ลงท้ายด้วย /exec) ก่อนแจกไฟล์นี้ให้คนอื่นใช้งาน ***
         const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzUz6yBmxpoKJcjYl5HwWA1OioLyADfzxVB7UEivS57Danwq-BpB8FvTCbLxjBVSvjp/exec';
         // คืนค่า URL ที่ใช้งานจริง: ใช้ค่าที่เคยบันทึกไว้ในเครื่อง (เผื่อเคยตั้งค่าด้วยตัวเองแบบเก่า) ถ้าไม่มีค่อย fallback ไปใช้ค่าที่ฝังไว้ในโค้ด
@@ -2306,8 +2348,8 @@ v5.6 BUGFIX BUILD
         const SHEETS_LASTFAIL_KEY = 'packing_sheets_last_fail';
         let publicRefreshTimer = null;
 
-        // ═══ v5.47: Edit Lock — ต้องใส่รหัส (ใช้รหัสแยกเฉพาะส่วนนี้) ก่อนถึงจะเพิ่ม/แก้/ลบข้อมูลได้ ═══
-        // คนที่เปิดลิงค์เฉยๆ ดูข้อมูลล่าสุดได้ปกติ (v5.46 auto-sync ตอนเปิด) แต่แก้ไขอะไรไม่ได้จนกว่าจะปลดล็อก
+        // ═══ v5.56.0: Edit Lock — ต้องใส่รหัส (ใช้รหัสแยกเฉพาะส่วนนี้) ก่อนถึงจะเพิ่ม/แก้/ลบข้อมูลได้ ═══
+        // คนที่เปิดลิงค์เฉยๆ ดูข้อมูลล่าสุดได้ปกติ (v5.56.0 auto-sync ตอนเปิด) แต่แก้ไขอะไรไม่ได้จนกว่าจะปลดล็อก
         // ปลดล็อกแล้วจะจำไว้ในเครื่อง/เบราว์เซอร์นั้นๆ ไม่ต้องใส่รหัสซ้ำทุกครั้งที่เปิด
         const EDIT_UNLOCK_KEY = 'packing_edit_unlocked';
         let editUnlocked = localStorage.getItem(EDIT_UNLOCK_KEY) === '1';
@@ -2353,7 +2395,7 @@ v5.6 BUGFIX BUILD
             if (!url) { alert('ยังไม่ได้ตั้งค่า Web App URL ในโค้ดแอป — ติดต่อผู้ดูแลระบบ'); return; }
             if (!navigator.onLine) { showToast('ออฟไลน์อยู่ ต้องต่อเน็ตเพื่อตรวจสอบรหัสก่อน', '📡'); return; }
             try {
-                const res = await fetchWithRetry(url + '?action=verifySpecToken&token=' + encodeURIComponent(code.trim()), { method: 'GET' });
+                const res = await fetchWithRetry(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'verifySpecToken', token: code.trim() }) });
                 const json = await res.json();
                 if (json.status === 'ok' && json.valid) {
                     specUnlocked = true;
@@ -2389,7 +2431,7 @@ v5.6 BUGFIX BUILD
             if (!navigator.onLine) { showToast('ออฟไลน์อยู่ ต้องต่อเน็ตเพื่อตรวจสอบรหัสก่อน', '📡'); return; }
             showToast('กำลังตรวจสอบรหัส...', '🔒');
             try {
-                const res = await fetchWithRetry(url + '?action=verifyToken&token=' + encodeURIComponent(code.trim()), { method: 'GET' });
+                const res = await fetchWithRetry(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'verifyToken', token: code.trim() }) });
                 const json = await res.json();
                 if (json.status === 'ok' && json.valid) {
                     editUnlocked = true;
@@ -2407,7 +2449,7 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        // ═══ v5.38: Sync Engine — state machine, online/offline, retry, debounce queue, diagnostics ═══
+        // ═══ v5.56.0: Sync Engine — state machine, online/offline, retry, debounce queue, diagnostics ═══
         // ใช้ร่วมกันทั้ง Packing List (packing*) และ Customer Spec (spec*)
         const SYNC_STATE = { IDLE: 'IDLE', SYNCING: 'SYNCING', SUCCESS: 'SUCCESS', FAILED: 'FAILED', OFFLINE: 'OFFLINE' };
         let packingSyncState = navigator.onLine ? SYNC_STATE.IDLE : SYNC_STATE.OFFLINE;
@@ -2416,9 +2458,9 @@ v5.6 BUGFIX BUILD
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        const SYNC_DEBOUNCE_MS = 4000; // v5.38 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
+        const SYNC_DEBOUNCE_MS = 4000; // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
-        // v5.39 BUGFIX: ป้องกันการแก้ไขที่เกิดขึ้น "ระหว่าง" ที่ sync กำลังส่งค้างอยู่ (in-flight) หายไป
+        // v5.56.0 BUGFIX: ป้องกันการแก้ไขที่เกิดขึ้น "ระหว่าง" ที่ sync กำลังส่งค้างอยู่ (in-flight) หายไป
         // ปัญหาเดิม: ผลลัพธ์ merge ที่เซิร์ฟเวอร์ส่งกลับมาเป็น snapshot ตอนที่ "ส่งคำขอ" ไม่ใช่ตอนที่ "ได้รับคำตอบ"
         // ถ้าผู้ใช้แก้ไข/เพิ่มข้อมูลใหม่ระหว่างที่ request ยังไม่ตอบกลับ (เครือข่ายช้า/กำลัง retry) แล้วโค้ดเอา
         // ผลลัพธ์จากเซิร์ฟเวอร์ไปทับ packingData/CUSTOMER_SPEC_DATA ตรงๆ การแก้ไขล่าสุดนั้นจะหายไปทันที
@@ -2443,11 +2485,11 @@ v5.6 BUGFIX BUILD
             return result;
         }
 
-        // v5.38 #3: Online / Offline Detection — พอกลับมาออนไลน์ ลองซิงค์ที่ค้างไว้ทันทีถ้าเปิด auto sync
+        // v5.56.0 #3: Online / Offline Detection — พอกลับมาออนไลน์ ลองซิงค์ที่ค้างไว้ทันทีถ้าเปิด auto sync
         window.addEventListener('online',()=>{clearSlowIndicator();if(packingSyncState===SYNC_STATE.OFFLINE)packingSyncState=SYNC_STATE.IDLE;if(specSyncState===SYNC_STATE.OFFLINE)specSyncState=SYNC_STATE.IDLE;renderConnectionStatus('online');renderSyncDiagnostics();showToast('กลับมาออนไลน์แล้ว — ตรวจสอบรายการรอซิงค์','📡');if(localStorage.getItem(SHEETS_AUTOSYNC_KEY)==='1'&&getSheetsUrl()){if(hasPendingSync('packing'))syncToGoogleSheets(true);if(hasPendingSync('spec'))syncSpecToGoogleSheets(true)}});
         window.addEventListener('offline',()=>{clearSlowIndicator();packingSyncState=SYNC_STATE.OFFLINE;specSyncState=SYNC_STATE.OFFLINE;renderConnectionStatus('offline');renderSyncDiagnostics();showToast('ออฟไลน์ — ใช้ข้อมูลในเครื่องได้ การแก้ไขจะรอซิงค์','📡')});
 
-        // v5.38 #2: เรียกแทน syncToGoogleSheets(true) ตรงๆ ใน saveData() — debounce ไว้ก่อนค่อยซิงค์จริง
+        // v5.56.0 #2: เรียกแทน syncToGoogleSheets(true) ตรงๆ ใน saveData() — debounce ไว้ก่อนค่อยซิงค์จริง
         function scheduleAutoSync() {
             if (localStorage.getItem(SHEETS_AUTOSYNC_KEY) !== '1') return;
             packingSyncState = navigator.onLine ? packingSyncState : SYNC_STATE.OFFLINE;
@@ -2463,11 +2505,11 @@ v5.6 BUGFIX BUILD
             specSyncDebounceTimer = setTimeout(() => { if(navigator.onLine) syncSpecToGoogleSheets(true); else renderConnectionStatus('offline'); }, SYNC_DEBOUNCE_MS);
         }
 
-        // v5.38 #4: fetch พร้อม retry อัตโนมัติ 1–3 ครั้ง (เฉพาะตอน fetch ล้มเหลวระดับเครือข่าย เช่น
+        // v5.56.0 #4: fetch พร้อม retry อัตโนมัติ 1–3 ครั้ง (เฉพาะตอน fetch ล้มเหลวระดับเครือข่าย เช่น
         // หลุดเน็ต/DNS/timeout — ไม่ retry ตอน error ระดับแอป เช่น token ผิด เพราะลองใหม่ไปก็ไม่ช่วย)
         async function fetchWithRetry(url, options={}, maxRetries=2, timeoutMs=SYNC_FETCH_TIMEOUT_MS){let lastErr;for(let a=1;a<=maxRetries;a++){const c=new AbortController(),tm=setTimeout(()=>c.abort(),timeoutMs);try{scheduleSlowIndicator();const r=await fetch(url,Object.assign({},options,{signal:c.signal}));clearSlowIndicator();return r}catch(e){clearSlowIndicator();lastErr=e.name==='AbortError'?new Error('เชื่อมต่อช้า/หมดเวลา'):e;if(a<maxRetries&&navigator.onLine)await new Promise(r=>setTimeout(r,a*900))}finally{clearTimeout(tm)}}throw lastErr||new Error('เชื่อมต่อไม่สำเร็จ')}
 
-        // v5.38 #10: Sync Diagnostics — แสดงสถานะ, ซิงค์ล่าสุด, error ล่าสุด, จำนวนรายการ, รายการค้างซิงค์
+        // v5.56.0 #10: Sync Diagnostics — แสดงสถานะ, ซิงค์ล่าสุด, error ล่าสุด, จำนวนรายการ, รายการค้างซิงค์
         function syncStateBadgeHTML(state) {
             const map = {
                 IDLE: ['bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400', 'IDLE'],
@@ -2504,30 +2546,33 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        // v5.35: Merge-based sync (ปลอดภัยเวลาใช้งานหลายคนพร้อมกัน) ─────────────
+        // v5.56.0: Merge-based sync (ปลอดภัยเวลาใช้งานหลายคนพร้อมกัน) ─────────────
         // แทนที่จะ "เขียนทับทั้งชีท" ทุกครั้ง เปลี่ยนเป็นส่ง _mt (เวลาแก้ไขล่าสุดของแต่ละแถว)
         // + รายการที่ถูกลบ (tombstone) ไปให้ Code.gs รวมข้อมูล (merge) แบบทีละแถวแทน
         const SYNC_FIELD_ORDER = FIELD_ORDER.concat(['_mt']); // ใช้เฉพาะตอนซิงค์ Google Sheets เท่านั้น ไม่ใช้กับ CSV Backup ที่คนอ่านเอง
         const PACKING_TOMBSTONE_KEY = 'packing_deleted_tombstones';
         const SPEC_TOMBSTONE_KEY = 'packing_spec_deleted_tombstones';
-        const PACKING_KEY_FIELDS = ['Part No'];
+        const PACKING_KEY_FIELDS = ['Customer', 'Part No'];
         const SPEC_KEY_FIELDS = ['Customer', 'PartNo'];
 
-        function packingItemKey(item) { return cleanText(item['Part No'] || '').toLowerCase(); }
+        function packingItemKey(item) { return cleanText(item['Customer'] || '').toLowerCase() + '|' + cleanText(item['Part No'] || '').toLowerCase(); }
         function specItemKey(item) { return cleanText(item.c || '').toLowerCase() + '|' + cleanText(item.pn || '').toLowerCase(); }
 
         function addTombstone(storageKey, key) {
             if (!key) return;
             try {
-                const list = JSON.parse(localStorage.getItem(storageKey) || '[]');
-                list.push({ key: key, deletedAt: Date.now() });
-                localStorage.setItem(storageKey, JSON.stringify(list));
+                const list = getTombstones(storageKey);
+                const now = Date.now();
+                // v5.56.0: เก็บเฉพาะ tombstone ล่าสุดของ key เดียวกัน ป้องกันรายการซ้ำสะสม
+                const filtered = list.filter(t => t && t.key !== key);
+                filtered.push({ key: key, deletedAt: now });
+                localStorage.setItem(storageKey, JSON.stringify(filtered));
             } catch(e) { /* ไม่เป็นไรถ้าบันทึก tombstone ไม่สำเร็จ แค่แปลว่าเวลาซิงค์ครั้งหน้าฝั่งอื่นอาจไม่รู้ว่าแถวนี้ถูกลบ */ }
         }
         function getTombstones(storageKey) {
             try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e) { return []; }
         }
-        // v5.39 BUGFIX: เดิม clearTombstones() ล้างทุกอันทิ้งหมดหลังซิงค์สำเร็จ — ถ้าผู้ใช้ลบรายการอื่นเพิ่ม
+        // v5.56.0 BUGFIX: เดิม clearTombstones() ล้างทุกอันทิ้งหมดหลังซิงค์สำเร็จ — ถ้าผู้ใช้ลบรายการอื่นเพิ่ม
         // ระหว่างที่ sync request ก่อนหน้ายังไม่ตอบกลับ (in-flight) tombstone อันใหม่นั้นจะถูกล้างไปด้วยทั้งที่
         // ไม่เคยถูกส่งไปเซิร์ฟเวอร์เลย ทำให้การลบนั้นไม่มีวันซิงค์ขึ้นไป — เปลี่ยนเป็นลบเฉพาะอันที่ "ส่งไปแล้วจริง" แทน
         function removeSentTombstones(storageKey, sentTombstones) {
@@ -2540,7 +2585,7 @@ v5.6 BUGFIX BUILD
             } catch(e) {}
         }
 
-        // v5.40: ซ่อน Web App URL / Token เป็นค่า masked (จุดๆ) โดยดีฟอลต์ เหมือน password — กันหลุดเวลาแคปหน้าจอ/ส่งให้คนอื่นดู
+        // v5.56.0: ซ่อน Web App URL / Token เป็นค่า masked (จุดๆ) โดยดีฟอลต์ เหมือน password — กันหลุดเวลาแคปหน้าจอ/ส่งให้คนอื่นดู
         // กดไอคอนรูปตาเพื่อสลับดู/ซ่อนได้ตามต้องการ
         function toggleFieldVisibility(inputId, btn) {
             const input = document.getElementById(inputId);
@@ -2556,13 +2601,8 @@ v5.6 BUGFIX BUILD
             }
         }
 
-        function saveSheetsUrl() {
-            if (!editUnlocked) { requireEditUnlock(() => saveSheetsUrl()); return; }
-            const token = document.getElementById('sheetsTokenInput').value.trim();
-            localStorage.setItem(SHEETS_TOKEN_KEY, token);
-            showToast(token ? 'บันทึก Token แล้ว' : 'ล้าง Token แล้ว', '💾');
-            renderSheetsSyncStatus();
-        }
+        // (v5.56.0: ฟังก์ชัน saveSheetsUrl()/ช่องกรอก Token ใน Settings ถูกเอาออกไปแล้ว —
+        //  ตอนนี้ตั้ง Token ผ่านการปลดล็อกด้วยรหัส (openEditUnlockPrompt) แทน ไม่ต้องกรอกซ้ำ)
 
         function toggleAutoSync() {
             if (!editUnlocked) { document.getElementById('autoSyncToggle').checked = localStorage.getItem(SHEETS_AUTOSYNC_KEY) === '1'; requireEditUnlock(() => { document.getElementById('autoSyncToggle').checked = true; toggleAutoSync(); }); return; }
@@ -2635,10 +2675,10 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
             }
         }
 
-        // v5.48: pull-only แบบเงียบ ใช้ตอนเปิดแอปสำหรับคนที่ "ล็อกอยู่" (ยังไม่ปลดล็อกแก้ไข) — ดึงข้อมูลล่าสุดมาแทนที่
+        // v5.56.0: pull-only แบบเงียบ ใช้ตอนเปิดแอปสำหรับคนที่ "ล็อกอยู่" (ยังไม่ปลดล็อกแก้ไข) — ดึงข้อมูลล่าสุดมาแทนที่
         // ข้อมูลในเครื่อง "อย่างเดียว" ไม่ส่งอะไรขึ้นไปเลย (ต่างจาก syncToGoogleSheets ที่ส่งขึ้นไปด้วย) จึงไม่มีทางทำให้
         // แถวที่ถูกลบตรงในชีตฟื้นคืนกลับมาได้ ไม่มี confirm() เพราะคนที่ยังล็อกอยู่ไม่มีทางมีข้อมูลที่แก้ไขค้างอยู่ในเครื่อง
-        // v5.48 BUGFIX (ส่วนที่ 2): ข้อ pull-only ด้านบนป้องกันเครื่อง "ล็อกอยู่" ได้ แต่เครื่องที่ "ปลดล็อกแล้ว" (เช่น
+        // v5.56.0 BUGFIX (ส่วนที่ 2): ข้อ pull-only ด้านบนป้องกันเครื่อง "ล็อกอยู่" ได้ แต่เครื่องที่ "ปลดล็อกแล้ว" (เช่น
         // เครื่องของผู้ดูแลระบบเอง) ยัง sync แบบสองทางตามปกติ ซึ่งถ้าเครื่องนั้นมีแคชเก่าของแถวที่เพิ่งลบตรงในชีตค้างอยู่
         // ก็ยังฟื้นคืนชีพได้เหมือนเดิม จุดนี้แก้เพิ่มด้วยการ "ดึงข้อมูลจริงจากชีตมาก่อน" แล้ว reconcile กับข้อมูลในเครื่อง
         // โดยใช้เวลาซิงค์ล่าสุด (lastSyncAt) เป็นเกณฑ์ตัดสิน — แถวไหนในเครื่องที่ไม่ได้แก้ไขมาตั้งแต่ก่อนซิงค์ครั้งล่าสุด
@@ -2685,7 +2725,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 const json = await res.json();
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const records = json.records || [];
-                // v5.55: แม้ชีตว่าง ต้องล้างข้อมูลแคชในเครื่องด้วย เพื่อให้หน้าจอตรงกับข้อมูลจริง
+                // v5.56.0: แม้ชีตว่าง ต้องล้างข้อมูลแคชในเครื่องด้วย เพื่อให้หน้าจอตรงกับข้อมูลจริง
                 packingData = applyMergedResultPreservingInFlightEdits(packingData, records, pullStartedAt, packingItemKey);
                 saveDataLocalOnly();
                 renderTable();
@@ -2718,15 +2758,15 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
             if (!navigator.onLine) {
                 packingSyncState = SYNC_STATE.OFFLINE; renderSyncDiagnostics();
                 if (!silent) 
-                return; // v5.38 #2/#3: การแก้ไขที่ยังไม่ได้ซิงค์จะรอในเครื่อง (มี _mt/tombstone กำกับ) ไม่หายไปไหน
+                return; // v5.56.0 #2/#3: การแก้ไขที่ยังไม่ได้ซิงค์จะรอในเครื่อง (มี _mt/tombstone กำกับ) ไม่หายไปไหน
             }
-            if (packingSyncState === SYNC_STATE.SYNCING) return; // v5.39: กันยิงซ้อนกันตอนมี sync ค้างอยู่แล้ว
+            if (packingSyncState === SYNC_STATE.SYNCING) return; // v5.56.0: กันยิงซ้อนกันตอนมี sync ค้างอยู่แล้ว
             if (!silent) showToast('กำลังซิงค์ไป Google Sheets (แบบ merge)...', '☁️');
             packingSyncState = SYNC_STATE.SYNCING; renderSyncDiagnostics();
             try {
-                const syncStartedAt = Date.now(); // v5.39: ใช้เช็คว่ามีการแก้ไขเกิดขึ้นระหว่าง request นี้ยังไม่ตอบกลับหรือไม่
+                const syncStartedAt = Date.now(); // v5.56.0: ใช้เช็คว่ามีการแก้ไขเกิดขึ้นระหว่าง request นี้ยังไม่ตอบกลับหรือไม่
                 const recordsToSend = getSortedData(packingData).map(item => Object.assign({}, item, { '_mt': item['_mt'] || 0 }));
-                const tombstonesSent = getTombstones(PACKING_TOMBSTONE_KEY); // v5.39: จำไว้ว่าส่งอันไหนไปแล้วบ้าง เผื่อมีลบเพิ่มระหว่าง in-flight
+                const tombstonesSent = getTombstones(PACKING_TOMBSTONE_KEY); // v5.56.0: จำไว้ว่าส่งอันไหนไปแล้วบ้าง เผื่อมีลบเพิ่มระหว่าง in-flight
                 const res = await fetchWithRetry(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ป้องกัน CORS preflight กับ Apps Script
@@ -2745,7 +2785,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                     if (Array.isArray(json.records)) mergedRecords = json.records;
                 } catch(_) { /* Apps Script อาจตอบไม่เป็น JSON เสมอ ไม่เป็นไร */ }
                 if (ok) {
-                    // v5.35: ฝั่งเซิร์ฟเวอร์ merge ข้อมูลของทุกคนที่เคยซิงค์เข้าด้วยกันแล้ว ส่งผลลัพธ์ที่ merge เสร็จกลับมา
+                    // v5.56.0: ฝั่งเซิร์ฟเวอร์ merge ข้อมูลของทุกคนที่เคยซิงค์เข้าด้วยกันแล้ว ส่งผลลัพธ์ที่ merge เสร็จกลับมา
                     // ต้องดึงมาแทนที่ข้อมูลในเครื่อง ไม่งั้นเครื่องนี้จะไม่เห็นรายการที่คนอื่นเพิ่ม/แก้ไว้
                     if (mergedRecords) {
 backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge จาก Google Sheets');
@@ -2774,11 +2814,11 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
             }
         }
 
-        // ─── Google Sheets Sync: Customer Spec (v5.27) ────────────────────────
+        // ─── Google Sheets Sync: Customer Spec (v5.56.0) ────────────────────────
         // ใช้ Web App URL / Token ตัวเดียวกับ Packing List แต่คนละ action + คนละชีท (แท็บ "CustomerSpec")
         const SPEC_SHEETS_LASTSYNC_KEY = 'packing_spec_sheets_last_sync';
         const SPEC_SHEETS_LASTFAIL_KEY = 'packing_spec_sheets_last_fail';
-        // v5.35: เพิ่มคอลัมน์ _mt (เวลาแก้ไขล่าสุด) ต่อท้าย เอาไว้ใช้ merge เท่านั้น ไม่โผล่ในไฟล์ CSV ที่คนดาวน์โหลด
+        // v5.56.0: เพิ่มคอลัมน์ _mt (เวลาแก้ไขล่าสุด) ต่อท้าย เอาไว้ใช้ merge เท่านั้น ไม่โผล่ในไฟล์ CSV ที่คนดาวน์โหลด
         const SPEC_SYNC_HEADERS = SPEC_CSV_HEADERS.concat(['_mt']);
         const SPEC_SYNC_KEY_MAP = Object.assign({}, SPEC_CSV_KEY_MAP, { '_mt': 'mt' });
 
@@ -2827,12 +2867,12 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                 if (!silent) showToast('ออฟไลน์อยู่ — จะซิงค์ Customer Spec ให้อัตโนมัติเมื่อกลับมาออนไลน์', '📡');
                 return;
             }
-            if (specSyncState === SYNC_STATE.SYNCING) return; // v5.39: กันยิงซ้อนกันตอนมี sync ค้างอยู่แล้ว
+            if (specSyncState === SYNC_STATE.SYNCING) return; // v5.56.0: กันยิงซ้อนกันตอนมี sync ค้างอยู่แล้ว
             if (!silent) showToast('กำลังซิงค์ Customer Spec ไป Google Sheets (แบบ merge)...', '☁️');
             specSyncState = SYNC_STATE.SYNCING; renderSyncDiagnostics();
             try {
-                const syncStartedAt = Date.now(); // v5.39: ใช้เช็คว่ามีการแก้ไขเกิดขึ้นระหว่าง request นี้ยังไม่ตอบกลับหรือไม่
-                const tombstonesSent = getTombstones(SPEC_TOMBSTONE_KEY); // v5.39: จำไว้ว่าส่งอันไหนไปแล้วบ้าง เผื่อมีลบเพิ่มระหว่าง in-flight
+                const syncStartedAt = Date.now(); // v5.56.0: ใช้เช็คว่ามีการแก้ไขเกิดขึ้นระหว่าง request นี้ยังไม่ตอบกลับหรือไม่
+                const tombstonesSent = getTombstones(SPEC_TOMBSTONE_KEY); // v5.56.0: จำไว้ว่าส่งอันไหนไปแล้วบ้าง เผื่อมีลบเพิ่มระหว่าง in-flight
                 const res = await fetchWithRetry(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -2920,7 +2960,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             }
         }
 
-        // v5.48: pull-only แบบเงียบ (คู่กับ silentPullPacking) สำหรับ Customer Spec
+        // v5.56.0: pull-only แบบเงียบ (คู่กับ silentPullPacking) สำหรับ Customer Spec
         async function silentPullSpec() {
             const url = getSheetsUrl();
             if (!url || !navigator.onLine) { if (!navigator.onLine) { specSyncState = SYNC_STATE.OFFLINE; renderSyncDiagnostics(); } return; }
@@ -2931,7 +2971,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
                 const json = await res.json();
                 if (json.status === 'error') throw new Error(json.message || 'เซิร์ฟเวอร์ตอบกลับผิดพลาด');
                 const records = json.records || [];
-                // v5.55: แม้ชีตว่าง ต้องล้างข้อมูล Customer Spec ในแคชด้วย
+                // v5.56.0: แม้ชีตว่าง ต้องล้างข้อมูล Customer Spec ในแคชด้วย
                 CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, records.map(sheetRecordToSpecItem), pullStartedAt, specItemKey);
                 saveSpecDataLocalOnly();
                 filterCustomerSpec();
@@ -3102,7 +3142,7 @@ backupBeforeOverwrite('นำเข้า JSON');
             setTimeout(() => document.getElementById('resetModal').classList.remove('visible-modal'), 300);
         }
         
-        // v5.41 BUGFIX: "รีเซ็ตข้อมูล" ต้องเป็นการกระทำ "เฉพาะเครื่องนี้" เท่านั้น ห้าม auto-sync ขึ้นชีทที่ใช้ร่วมกัน
+        // v5.56.0 BUGFIX: "รีเซ็ตข้อมูล" ต้องเป็นการกระทำ "เฉพาะเครื่องนี้" เท่านั้น ห้าม auto-sync ขึ้นชีทที่ใช้ร่วมกัน
         // เดิมเรียก saveData() ซึ่งถ้าเปิด auto-sync ไว้จะยิงซิงค์ initialData (ชุดข้อมูลตั้งต้นของแอป) ขึ้นชีททันที
         // เพราะ merge logic เทียบด้วย _mt (initialData ไม่มี _mt จะถือเป็น 0 คือเก่าสุด) ทำให้แถวที่มีอยู่แล้วในชีทไม่โดนทับ
         // ก็จริง แต่ "แถวที่เคยมีใน initialData แล้วถูกลบออกจากชีทไปแล้วโดยคนอื่น" จะถูกซิงค์กลับเข้าไปใหม่โดยไม่ตั้งใจ
@@ -3113,7 +3153,7 @@ backupBeforeOverwrite('นำเข้า JSON');
             if (document.getElementById('confirmResetInput').value.toUpperCase() === 'RESET') {
 backupBeforeOverwrite('รีเซ็ตข้อมูล');
                 packingData = JSON.parse(JSON.stringify(initialData));
-                saveDataLocalOnly(); renderTable(); renderUndoButton(); closeResetModal(); // v5.41: ใช้ LocalOnly ไม่ให้ reset auto-sync ขึ้นชีทที่ใช้ร่วมกัน (ดูคอมเมนต์ด้านบน)
+                saveDataLocalOnly(); renderTable(); renderUndoButton(); closeResetModal(); // v5.56.0: ใช้ LocalOnly ไม่ให้ reset auto-sync ขึ้นชีทที่ใช้ร่วมกัน (ดูคอมเมนต์ด้านบน)
                 document.getElementById('confirmResetInput').value = '';
                 showToast('รีเซ็ตข้อมูลสำเร็จ (ย้อนกลับได้ที่ Settings) — ยังไม่ได้ซิงค์ขึ้น Google Sheets', '🔄');
             } else { alert('พิมพ์ RESET เพื่อยืนยัน'); }
@@ -3161,7 +3201,7 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
                         if (["PrintAuto", "BcCust", "BcEE", "FourW"].includes(h)) val = val.toUpperCase() === "TRUE" || val === "1";
                         item[h] = val;
                     });
-                    item['_mt'] = Date.now(); // v5.38: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
+                    item['_mt'] = Date.now(); // v5.56.0: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
                     if (item["Part No"]) newData.push(item);
                 }
 
@@ -3182,7 +3222,7 @@ backupBeforeOverwrite('นำเข้า CSV');
             reader.readAsText(file);
         }
         // Initialize on load
-        // v5.49 BUGFIX: v5.48 แก้ให้คนที่ "ล็อกอยู่" (ดูอย่างเดียว) ไม่ push ข้อมูลขึ้นไปตอนเปิดแอปแล้ว ปลอดภัยแล้วสำหรับกลุ่มนั้น
+        // v5.56.0 BUGFIX: v5.56.0 แก้ให้คนที่ "ล็อกอยู่" (ดูอย่างเดียว) ไม่ push ข้อมูลขึ้นไปตอนเปิดแอปแล้ว ปลอดภัยแล้วสำหรับกลุ่มนั้น
         // แต่คนที่ "ปลดล็อกแก้ไข" (เช่น ABOSS เอง) เปิดแอปยังคง sync สองทางเหมือนเดิม (ต้อง push การแก้ไขที่ค้างอยู่จริงๆ)
         // ถ้าลบแถวตรงในชีตโดยตรงแล้วเครื่องที่ปลดล็อกไว้เปิดแอปขึ้นมา เครื่องนั้นจะ push แคชเก่าที่ยังมีแถวนั้นค้างอยู่ขึ้นไป
         // ทำให้แถวฟื้นคืนชีพเหมือนเดิม (ปัญหาเดิมที่ยังไม่ได้แก้จริงสำหรับผู้ปลดล็อก) — แก้โดยให้ "ดึงข้อมูลจริงจากชีตมาเทียบ
@@ -3222,7 +3262,7 @@ backupBeforeOverwrite('นำเข้า CSV');
             syncSpecToGoogleSheets(true);
         }
 
-        // v5.55: Public Read — ดึงข้อมูลล่าสุดครั้งเดียวตอนเปิดหน้า ไม่รบกวนการค้นหา/ใช้งานระหว่างเปิดหน้า
+        // v5.56.0: Public Read — ดึงข้อมูลล่าสุดครั้งเดียวตอนเปิดหน้า ไม่รบกวนการค้นหา/ใช้งานระหว่างเปิดหน้า
         async function refreshPublicData() {
             if (!getSheetsUrl() || !navigator.onLine) return;
             await Promise.allSettled([silentPullPacking(), silentPullSpec()]);
@@ -3230,14 +3270,14 @@ backupBeforeOverwrite('นำเข้า CSV');
 
 
         window.onload = () => {
-            document.title = 'Packing Auto Pack Mobile ' + APP_VERSION; // v5.38 #8: version consistency — title ตาม APP_VERSION เสมอ ไม่ต้องแก้มือ
+            document.title = 'Packing Auto Pack Mobile ' + APP_VERSION; // v5.56.0 #8: version consistency — title ตาม APP_VERSION เสมอ ไม่ต้องแก้มือ
             initTheme();
             renderTable();
             checkBackupReminder();
-            renderSheetsSyncStatus(); // v5.14: โชว์จุดแดงเตือนถ้า sync ล้มเหลวค้างอยู่ ตั้งแต่เปิดแอป
-            renderSpecSheetsSyncStatus(); // v5.27: สถานะซิงค์ Customer Spec
-            renderSyncDiagnostics(); // v5.38 #10: Sync Diagnostics เริ่มต้น
-            renderLockStatus(); // v5.47: สถานะล็อก/ปลดล็อกการแก้ไข
+            renderSheetsSyncStatus(); // v5.56.0: โชว์จุดแดงเตือนถ้า sync ล้มเหลวค้างอยู่ ตั้งแต่เปิดแอป
+            renderSpecSheetsSyncStatus(); // v5.56.0: สถานะซิงค์ Customer Spec
+            renderSyncDiagnostics(); // v5.56.0 #10: Sync Diagnostics เริ่มต้น
+            renderLockStatus(); // v5.56.0: สถานะล็อก/ปลดล็อกการแก้ไข
             renderConnectionStatus(navigator.onLine ? 'online' : 'offline');
             registerPackingServiceWorker();
             document.getElementById('packingForm').addEventListener('input', () => { formDirty = true; });
@@ -3251,23 +3291,23 @@ backupBeforeOverwrite('นำเข้า CSV');
                     if (searchOpen) toggleSearch();
                 }
             });
-            // v5.48 BUGFIX: เดิม v5.46 เรียก syncToGoogleSheets() ตอนเปิดแอปเสมอ ซึ่ง "ส่ง" ข้อมูลในเครื่องขึ้นไปด้วย (ไม่ใช่แค่ดึงลงมา)
+            // v5.56.0 BUGFIX: เดิม v5.56.0 เรียก syncToGoogleSheets() ตอนเปิดแอปเสมอ ซึ่ง "ส่ง" ข้อมูลในเครื่องขึ้นไปด้วย (ไม่ใช่แค่ดึงลงมา)
             // ปัญหา: ถ้าลบแถวตรงในชีตโดยตรง (ไม่ผ่านปุ่มลบในแอป) จะไม่มี tombstone บอกว่า "ตั้งใจลบ" — เครื่องไหนก็ตามที่ยัง
             // มีแถวนั้นค้างอยู่ในเครื่อง (แคชเก่า) พอเปิดแอปแล้วมันส่งข้อมูลขึ้นไป merge logic จะเห็นว่า "มีในเครื่อง ไม่มีในชีต"
             // แล้วเข้าใจว่าเป็นแถวใหม่ที่ยังไม่เคยซิงค์ เลยเพิ่มกลับเข้าไปในชีตอีกรอบ (ข้อมูลที่ลบไปฟื้นคืนชีพ)
             // แก้โดยแยกพฤติกรรมตามสถานะล็อก: คนที่ยัง "ล็อกอยู่" (ดูอย่างเดียว ไม่เคยปลดล็อกแก้ไข) เปิดแอปแล้วจะ "ดึงข้อมูลลงมา
             // อย่างเดียว" (pull-only) ไม่ส่งอะไรขึ้นไปเลย จึงไม่มีทางฟื้นคืนแถวที่ถูกลบได้ — ส่วนคนที่ "ปลดล็อกแล้ว" (มีสิทธิ์แก้ไข)
             // ยังคง sync แบบสองทางเหมือนเดิม เพราะอาจมีการแก้ไขที่ทำผ่านแอปเองรออยู่ ซึ่งจะมี tombstone ถูกต้องกำกับอยู่แล้ว
-            // v5.49: ปิดช่องโหว่ที่เหลือ (คนปลดล็อกแก้ไขเปิดแอปแล้วยัง push แคชเก่าจน resurrect แถวที่ถูกลบตรงในชีต) — ดูฟังก์ชัน
+            // v5.56.0: ปิดช่องโหว่ที่เหลือ (คนปลดล็อกแก้ไขเปิดแอปแล้วยัง push แคชเก่าจน resurrect แถวที่ถูกลบตรงในชีต) — ดูฟังก์ชัน
             // reconcilePackingBeforeAutoSync()/reconcileSpecBeforeAutoSync() ด้านบน: ดึงข้อมูลจริงจากชีตมาเทียบก่อนเสมอ
             // เก็บเฉพาะรายการในเครื่องที่แก้ไข "หลัง" ครั้งล่าสุดที่ซิงค์สำเร็จเท่านั้น แล้วค่อย sync ตามปกติ — ตอนนี้ลบผ่านชีต
             // โดยตรงจะไม่ฟื้นคืนชีพอีกแล้วไม่ว่าเครื่องไหนเปิดแอปก่อน (แต่ยังแนะนำให้ลบผ่านปุ่มลบ 🗑️ ในแอปเป็นหลักอยู่ดี
             // เพราะชัดเจน มี undo ได้ และไม่ต้องพึ่ง auto-open reconcile)
             if (getSheetsUrl()) {
                 // ทุกคน: ดึงข้อมูลจาก Google Sheets แบบ read-only ก่อนเสมอ
-                // v5.55: ดึงข้อมูลครั้งเดียวตอนเปิดหน้าเท่านั้น
+                // v5.56.0: ดึงข้อมูลครั้งเดียวตอนเปิดหน้าเท่านั้น
                 setTimeout(() => refreshPublicData(), 0);
-                // v5.55: เปิดหน้า/รีโหลด = ดึงข้อมูลล่าสุดครั้งเดียวเท่านั้น
+                // v5.56.0: เปิดหน้า/รีโหลด = ดึงข้อมูลล่าสุดครั้งเดียวเท่านั้น
                 // ห้าม auto-sync/auto-write ตอนเปิดหน้า แม้ผู้ใช้จะปลดล็อกแล้ว
                 // การเขียนข้อมูลทำได้เมื่อผู้ใช้กดบันทึก/ซิงค์เองเท่านั้น
             }
@@ -3281,7 +3321,6 @@ function openSettingsModal(){
    document.getElementById('settingsOverlay').classList.add('opacity-100');
    document.getElementById('settingsContent').classList.add('modal-visible');
  }, 10);
- const tokenInput = document.getElementById('sheetsTokenInput'); if (tokenInput) tokenInput.value = localStorage.getItem(SHEETS_TOKEN_KEY) || '';
  document.getElementById('autoSyncToggle').checked = localStorage.getItem(SHEETS_AUTOSYNC_KEY) === '1';
  renderSheetsSyncStatus();
  renderSpecSheetsSyncStatus();
