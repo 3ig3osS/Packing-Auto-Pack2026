@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Packing Auto Pack Mobile v5.56.1</title>
+    <title>Packing Auto Pack Mobile v5.56.2</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1106,7 +1106,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.1';
+        const APP_VERSION = 'v5.56.2';
         document.querySelectorAll('#appVersion, #settingsVersion').forEach(el => {
             if (el.id === 'appVersion') el.textContent = APP_VERSION;
             else el.textContent = 'Packing Auto Pack ' + APP_VERSION;
@@ -2352,7 +2352,9 @@ v5.56.0 BUGFIX BUILD
         const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzUz6yBmxpoKJcjYl5HwWA1OioLyADfzxVB7UEivS57Danwq-BpB8FvTCbLxjBVSvjp/exec';
         // คืนค่า URL ที่ใช้งานจริง: ใช้ค่าที่เคยบันทึกไว้ในเครื่อง (เผื่อเคยตั้งค่าด้วยตัวเองแบบเก่า) ถ้าไม่มีค่อย fallback ไปใช้ค่าที่ฝังไว้ในโค้ด
         function getSheetsUrl() {
-            return localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL;
+            // v5.56.2: ไม่ใช้ URL ที่เคยเก็บไว้ในเครื่องอีก (ไม่มีช่องใน Settings ให้ล้าง) — ล้างค่าเก่าทิ้ง แล้วใช้ค่าในโค้ดเสมอ
+            try { localStorage.removeItem(SHEETS_URL_KEY); } catch (e) {}
+            return DEFAULT_SHEETS_URL;
         }
         const SHEETS_AUTOSYNC_KEY = 'packing_sheets_autosync';
         const SHEETS_LASTSYNC_KEY = 'packing_sheets_last_sync';
@@ -2495,6 +2497,40 @@ v5.56.0 BUGFIX BUILD
                 if (!seenKeys.has(k)) result.push(inFlightEdits[k]); // รายการใหม่ที่เพิ่งเพิ่มระหว่าง in-flight ยังไม่เคยอยู่ในผล merge เลย
             });
             return result;
+        }
+
+        // v5.56.2 BUGFIX (ข้อมูลที่ยังไม่ได้ซิงค์หายตอนเปิดแอป): เดิมการดึงข้อมูลตอนเปิดแอปใช้ "เวลาที่เริ่มดึง" เป็นเกณฑ์เก็บรายการในเครื่อง
+        // ทำให้รายการที่แก้ไว้ก่อนหน้า (ออฟไลน์/ปิด auto-sync/ซิงค์ล้มเหลว) ถูกชีตทับหมดทั้งที่ยังไม่เคยถูกส่งขึ้นไป และยังอัปเดต "ซิงค์ล่าสุด" ทั้งที่ไม่ได้ส่งอะไร
+        // ตอนนี้เครื่องที่ "ปลดล็อกแก้ไข" ใช้ reconcileOnPull(): เก็บเฉพาะรายการที่แก้หลังซิงค์ล่าสุด "และ" ชีตยังไม่มีเวอร์ชันเดียวกัน/ใหม่กว่า
+        // + เคารพ tombstone ที่ลบไว้ในเครื่องแต่ยังไม่ได้ส่ง (ไม่ให้แถวที่เพิ่งลบโผล่กลับมา) ส่วนเครื่องที่ล็อกอยู่ (ดูอย่างเดียว) ยึดชีตเป็นความจริงเสมอเหมือนเดิม
+        function getItemMt(item) {
+            if (!item) return 0;
+            return Number(item['_mt'] !== undefined ? item['_mt'] : item.mt) || 0;
+        }
+        function reconcileOnPull(currentArray, serverArray, keyFn, lastSyncAt, tombstoneKey) {
+            const serverByKey = new Map();
+            serverArray.forEach(it => serverByKey.set(keyFn(it), it));
+            const tombs = getTombstones(tombstoneKey);
+            const tombMap = {};
+            tombs.forEach(t => { if (t && t.key) tombMap[t.key] = Number(t.deletedAt) || 0; });
+            const keep = {}; // รายการในเครื่องที่ยังไม่ถึงชีต (รอซิงค์จริง)
+            currentArray.forEach(it => {
+                const k = keyFn(it), mt = getItemMt(it);
+                if (mt > lastSyncAt) {
+                    const srv = serverByKey.get(k);
+                    if (!srv || getItemMt(srv) < mt) keep[k] = it;
+                }
+            });
+            const seen = new Set(), out = [];
+            serverArray.forEach(srv => {
+                const k = keyFn(srv);
+                seen.add(k);
+                if (keep[k]) { out.push(keep[k]); return; }
+                if (k in tombMap && tombMap[k] >= getItemMt(srv)) return; // ลบในเครื่องไว้แล้ว รอส่ง tombstone ขึ้นชีต
+                out.push(srv);
+            });
+            Object.keys(keep).forEach(k => { if (!seen.has(k)) out.push(keep[k]); });
+            return { data: out, pending: Object.keys(keep).length > 0 || tombs.length > 0 };
         }
 
         // v5.56.0 #3: Online / Offline Detection — พอกลับมาออนไลน์ ลองซิงค์ที่ค้างไว้ทันทีถ้าเปิด auto sync
@@ -2738,10 +2774,18 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const records = json.records || [];
                 // v5.56.0: แม้ชีตว่าง ต้องล้างข้อมูลแคชในเครื่องด้วย เพื่อให้หน้าจอตรงกับข้อมูลจริง
-                packingData = applyMergedResultPreservingInFlightEdits(packingData, records, pullStartedAt, packingItemKey);
+                let pendingLocal = false;
+                if (editUnlocked) {
+                    const r = reconcileOnPull(packingData, records, packingItemKey, parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10), PACKING_TOMBSTONE_KEY);
+                    packingData = r.data; pendingLocal = r.pending;
+                } else {
+                    packingData = applyMergedResultPreservingInFlightEdits(packingData, records, pullStartedAt, packingItemKey);
+                }
                 saveDataLocalOnly();
                 renderTable();
-                localStorage.setItem(SHEETS_LASTSYNC_KEY, String(Date.now()));
+                if (editUnlocked) setPendingSync('packing', pendingLocal);
+                // v5.56.2: การดึงอย่างเดียวไม่ใช่การซิงค์ — ถ้ายังมีของค้างส่ง ห้ามขยับเวลา "ซิงค์ล่าสุด" (ไม่งั้นรอบหน้าของค้างจะถูกมองว่าซิงค์แล้วแล้วโดนทับ)
+                if (!pendingLocal) localStorage.setItem(SHEETS_LASTSYNC_KEY, String(Date.now()));
                 packingSyncState = SYNC_STATE.SUCCESS; packingLastErrorMsg = '';
             } catch(e) {
                 localStorage.setItem(SHEETS_LASTFAIL_KEY, String(Date.now()));
@@ -2769,8 +2813,8 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
             }
             if (!navigator.onLine) {
                 packingSyncState = SYNC_STATE.OFFLINE; renderSyncDiagnostics();
-                if (!silent) 
-                return; // v5.56.0 #2/#3: การแก้ไขที่ยังไม่ได้ซิงค์จะรอในเครื่อง (มี _mt/tombstone กำกับ) ไม่หายไปไหน
+                if (!silent) showToast('ออฟไลน์อยู่ — จะซิงค์ให้อัตโนมัติเมื่อกลับมาออนไลน์', '📡');
+                return; // v5.56.2: เดิม return เฉพาะตอน !silent ทำให้ auto-sync ยิงต่อทั้งที่ออฟไลน์ → ขึ้น FAILED/จุดแดงโดยไม่จำเป็น
             }
             if (packingSyncState === SYNC_STATE.SYNCING) return; // v5.56.0: กันยิงซ้อนกันตอนมี sync ค้างอยู่แล้ว
             if (!silent) showToast('กำลังซิงค์ไป Google Sheets (แบบ merge)...', '☁️');
@@ -2984,10 +3028,18 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
                 if (json.status === 'error') throw new Error(json.message || 'เซิร์ฟเวอร์ตอบกลับผิดพลาด');
                 const records = json.records || [];
                 // v5.56.0: แม้ชีตว่าง ต้องล้างข้อมูล Customer Spec ในแคชด้วย
-                CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, records.map(sheetRecordToSpecItem), pullStartedAt, specItemKey);
-                saveSpecDataLocalOnly();
-                filterCustomerSpec();
-                localStorage.setItem(SPEC_SHEETS_LASTSYNC_KEY, String(Date.now()));
+                let pendingLocal = false;
+            const serverSpecItems = records.map(sheetRecordToSpecItem);
+            if (specUnlocked) {
+                const r = reconcileOnPull(CUSTOMER_SPEC_DATA, serverSpecItems, specItemKey, parseInt(localStorage.getItem(SPEC_SHEETS_LASTSYNC_KEY) || '0', 10), SPEC_TOMBSTONE_KEY);
+                CUSTOMER_SPEC_DATA = r.data; pendingLocal = r.pending;
+            } else {
+                CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, serverSpecItems, pullStartedAt, specItemKey);
+            }
+            saveSpecDataLocalOnly();
+            filterCustomerSpec();
+            if (specUnlocked) setPendingSync('spec', pendingLocal);
+            if (!pendingLocal) localStorage.setItem(SPEC_SHEETS_LASTSYNC_KEY, String(Date.now()));
                 specSyncState = SYNC_STATE.SUCCESS; specLastErrorMsg = '';
             } catch(e) {
                 localStorage.setItem(SPEC_SHEETS_LASTFAIL_KEY, String(Date.now()));
