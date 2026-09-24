@@ -1,4 +1,4 @@
-const CACHE_NAME='packing-auto-pack-v5-56-1-shell';
+const CACHE_NAME='packing-auto-pack-v5-56-2-shell';
 const APP_SHELL='./index.html';
 const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdnjs.cloudflare.com','fonts.googleapis.com','fonts.gstatic.com']);
