@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Packing Auto Pack Mobile v5.56.4</title>
+    <title>Packing Auto Pack Mobile v5.56.5</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1149,7 +1149,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.4';
+        const APP_VERSION = 'v5.56.5';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1387,10 +1387,15 @@ v5.56.0 BUGFIX BUILD
                                 ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                                 ${item.fw ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
                                 ${item.cs && item.cs !== '-' ? `<span class="status-pill ${getColorStickerPillStyle(item.cs)}"><span class="color-dot mr-1.5" style="background-color:${colorMap[item.cs] || 'transparent'}"></span>สติ๊กเกอร์สี: ${escapeHtml(item.cs)}</span>` : ''}
-                                ${!(item.rh || item.bc || item.ee || item.fw || (item.cs && item.cs !== '-')) ? `<span class="text-slate-400 text-xs">— ไม่มีรายการที่ต้องติด —</span>` : ''}
+                                ${!(item.rh || item.bc || item.ee || item.fw || (item.cs && item.cs !== '-')) ? `<span class="text-slate-400 text-xs">ไม่มีรายการที่ต้องติด</span>` : ''}
                             </div>
                         </div>
-                        ${item.note ? `<div class="text-[11px] font-semibold text-red-500 dark:text-red-400 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-2 mt-2">${highlight(item.note, hlQuery)}</div>` : ''}
+                        ${item.note ? `<div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+                            <div class="text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner">
+                                <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
+                            </div>
+                            <div class="p-2.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed">${highlight(item.note, hlQuery)}</div>
+                        </div>` : ''}
                     </div>
                 </div>
             `;
@@ -1513,11 +1518,11 @@ v5.56.0 BUGFIX BUILD
         }
 
         function specDetailRow(label, on, onText, offText) {
-            return `<div class="detail-row flex justify-between py-2.5"><span class="label-style">${label}</span><span class="font-semibold ${on ? '' : 'text-slate-400'}">${on ? (onText || '✓ ใส่') : (offText || '— ไม่ใส่')}</span></div>`;
+            return `<div class="detail-row flex justify-between py-2.5"><span class="label-style">${label}</span><span class="font-semibold ${on ? '' : 'text-slate-400'}">${on ? (onText || '✓ ใส่') : (offText || 'ไม่ใส่')}</span></div>`;
         }
 
         function specBadge(on, label, value) {
-            return `<div class="spec-badge ${on ? 'spec-badge-on' : ''}"><span class="opacity-50 text-[9px] mr-1">${label}:</span><span class="${on ? 'font-bold text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : '— ไม่ใส่')}</span></div>`;
+            return `<div class="spec-badge ${on ? 'spec-badge-on' : ''}"><span class="opacity-50 text-[9px] mr-1">${label}:</span><span class="${on ? 'font-bold text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่')}</span></div>`;
         }
 
         function openSpecDetail(index) {
@@ -1559,11 +1564,13 @@ v5.56.0 BUGFIX BUILD
                     ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                     ${item.fw ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
                     ${hasColorSticker ? `<span class="status-pill ${getColorStickerPillStyle(item.cs)}"><span class="color-dot mr-1.5" style="background-color:${colorHex}"></span>สติ๊กเกอร์สี: ${escapeHtml(item.cs)}</span>` : ''}
-                    ${!(item.rh || item.bc || item.ee || item.fw || hasColorSticker) ? `<span class="text-slate-400 text-xs">— ไม่มีรายการที่ต้องติด —</span>` : ''}
+                    ${!(item.rh || item.bc || item.ee || item.fw || hasColorSticker) ? `<span class="text-slate-400 text-xs">ไม่มีรายการที่ต้องติด</span>` : ''}
                 </div>
-                <div class="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                    <div class="label-style mb-1" style="color:#ef4444;">Special Requirement</div>
-                    <div class="text-red-500 dark:text-red-400 text-xs font-medium">${escapeHtml(item.note) || 'ไม่มีหมายเหตุ'}</div>
+                <div class="text-[11px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
+                    <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
+                </div>
+                <div class="mt-0 p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40">
+                    <div class="text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed">${escapeHtml(item.note) || 'ไม่มีหมายเหตุ'}</div>
                 </div>
             `;
             document.getElementById('btnEditSpecDetail').onclick = () => { closeSpecDetailModal(); setTimeout(() => openSpecModal(index), 300); };
@@ -2030,8 +2037,8 @@ v5.56.0 BUGFIX BUILD
                     <div class="detail-row flex justify-between py-2.5 items-center"><span class="label-style">สติ๊กเกอร์สี</span><span class="flex items-center font-semibold"><span class="color-dot mr-2" style="background-color: ${colorHex}"></span>${item['ColorSticker'] === '-' ? 'ไม่ติด' : escapeHtml(item['ColorSticker'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">4-W</span><span class="font-bold ${item.FourW ? 'text-orange-500' : 'text-slate-400'}">${item.FourW ? 'ติด 4-W' : 'ไม่ติด'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Print Auto</span><span class="font-semibold">${item.PrintAuto ? 'เปิด' : 'ปิด'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode ลูกค้า</span><span class="font-semibold">${item.BcCust ? '✓ ใส่' : '— ไม่ใส่'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode E&E</span><span class="font-semibold">${item.BcEE ? '✓ ใส่' : '— ไม่ใส่'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode ลูกค้า</span><span class="font-semibold">${item.BcCust ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode E&E</span><span class="font-semibold">${item.BcEE ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
                 </div>
                 <div class="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
                     <div class="label-style mb-1">หมายเหตุ / คำสั่งพิเศษ</div>
