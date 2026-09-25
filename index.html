@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Packing Auto Pack Mobile v5.56.2</title>
+    <title>Packing Auto Pack Mobile v5.56.4</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -256,11 +256,46 @@ v5.56.0 BUGFIX BUILD
         [data-theme="reading"] .glass-panel {
             background: rgba(255,253,246,0.9) !important;
         }
+        /* v5.56.3: แก้บั๊ก UI แถบบนสุด (เฉพาะธีมอ่านง่าย) — #connectionBar, #headerStats, #appVersion เดิมใช้สี
+           Tailwind ตายตัว (bg-white/90, text-slate-400/300) ซึ่งออกแบบมาสำหรับพื้นหลังขาว/ดำเท่านั้น ไม่มีเวอร์ชัน
+           สำหรับธีมอ่านง่าย (พื้นครีมอุ่น) ทำให้ป้ายสถานะออนไลน์ลอยเป็นกล่องขาวแปลกปลอมกลางแถบ — ผูกกับสีธีมแทน */
+        [data-theme="reading"] #connectionBar {
+            background: rgba(255,253,246,0.95);
+            border-color: rgba(120,108,72,0.3);
+            color: var(--text-main);
+        }
+        [data-theme="reading"] #headerStats,
+        [data-theme="reading"] #appVersion {
+            color: var(--text-sub);
+        }
+        [data-theme="reading"] #pendingSyncText {
+            color: var(--text-sub);
+        }
         /* v5.56.0: ทรานสิชันตอนสลับธีม ให้ทุกองค์ประกอบไล่สีลื่นไหลพร้อมกัน ไม่กระพริบ/สะดุด */
         html { transition: font-size .35s cubic-bezier(0.4,0,0.2,1); }
         .theme-transitioning, .theme-transitioning * {
             transition: background-color .35s ease, background .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease !important;
         }
+
+        /* v5.56.4: โหมดประหยัดพลัง — ปิดจุดที่กินแรง GPU/CPU มากสุดบนเครื่องสเปกต่ำ:
+           1) backdrop-blur บน header/bottomNav ที่ sticky/fixed ค้างอยู่ตลอดการเลื่อนจอ ต้องเบลอทุกเฟรม
+           2) card-enter animation ต่อการ์ด (เยอะพร้อมกันตอน render list ยาวๆ)
+           3) transition แบบ blanket (theme-transitioning *, transition-all) ที่คำนวณทุกพร็อพเพอร์ตี้
+           ไม่กระทบฟังก์ชันใดๆ แค่ตัดเอฟเฟกต์ภาพที่หนักเครื่องออก */
+        .lite-mode #header, .lite-mode #bottomNav {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: var(--card) !important;
+        }
+        .lite-mode #connectionBar,
+        .lite-mode [id$="Overlay"] {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        .lite-mode .card-enter { animation: none !important; opacity: 1 !important; transform: none !important; }
+        .lite-mode .theme-transitioning, .lite-mode .theme-transitioning * { transition: none !important; }
+        .lite-mode * { transition-duration: .1s !important; }
+        .lite-mode .mobile-card:hover { transform: none !important; box-shadow: none !important; }
 
         #connectionBar{transition:opacity .2s ease,transform .2s ease}.connection-offline{border-color:rgba(244,63,94,.3)}.connection-slow{border-color:rgba(245,158,11,.3)}.connection-syncing{border-color:rgba(59,130,246,.3)}
         body { 
@@ -773,6 +808,14 @@ v5.56.0 BUGFIX BUILD
         <div class="text-center font-bold text-lg mb-4">⚙️ Settings</div>
         <div class="text-center text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-3 tracking-widest uppercase" id="settingsVersion"></div>
         <button onclick="editUnlocked ? (confirm('ล็อกการแก้ไขบนเครื่องนี้หรือไม่? ต้องใส่รหัสใหม่ถึงจะแก้ไขได้อีกครั้ง') && lockEditing()) : requireEditUnlock(() => {})" class="edit-lock-badge w-full py-3 rounded-2xl font-bold text-sm mb-3 flex items-center justify-center gap-2"></button>
+        <!-- v5.56.4: โหมดประหยัดพลัง — ปิดเอฟเฟกต์ blur/transition ที่กินแรงเครื่อง ให้เลื่อนลื่นบนมือถือรุ่นเก่า/สเปกต่ำ -->
+        <div class="p-3 mb-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+          <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
+            <input type="checkbox" id="liteModeToggle" onchange="toggleLiteMode()" class="w-4 h-4 rounded">
+            ⚡ โหมดประหยัดพลัง (ปิดเอฟเฟกต์เบลอ/ทรานสิชัน ให้เลื่อนลื่นขึ้นบนเครื่องสเปกต่ำ)
+          </label>
+          <div id="liteModeAutoNote" class="text-[10px] text-slate-400 dark:text-slate-500 mt-1"></div>
+        </div>
         <div class="space-y-3">
           <button onclick="exportToCSV(true)" class="w-full py-3 rounded-2xl bg-indigo-600 text-white font-bold">📤 Export CSV ทั้งหมด</button>
           <button id="btnExportFiltered" onclick="exportToCSV(false)" class="w-full py-3 rounded-2xl bg-violet-600 text-white font-bold hidden">📤 Export CSV เฉพาะที่กรอง</button>
@@ -1106,7 +1149,43 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.2';
+        const APP_VERSION = 'v5.56.4';
+
+        // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
+        // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
+        // ที่ไม่มี deviceMemory ให้เช็ก — กรณีนั้นจะไม่เปิดอัตโนมัติ ต้องกดเองถ้าเจอว่าอืด)
+        const LITE_MODE_KEY = 'packing_lite_mode';
+        function detectWeakDeviceGuess() {
+            try {
+                if (navigator.deviceMemory && navigator.deviceMemory <= 3) return true;
+                if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) return true;
+                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+            } catch (e) {}
+            return false;
+        }
+        function applyLiteMode(on) {
+            document.documentElement.classList.toggle('lite-mode', !!on);
+            const cb = document.getElementById('liteModeToggle');
+            if (cb) cb.checked = !!on;
+        }
+        function toggleLiteMode() {
+            const on = document.getElementById('liteModeToggle').checked;
+            localStorage.setItem(LITE_MODE_KEY, on ? '1' : '0');
+            applyLiteMode(on);
+        }
+        function initLiteMode() {
+            const saved = localStorage.getItem(LITE_MODE_KEY);
+            const note = document.getElementById('liteModeAutoNote');
+            if (saved === '1' || saved === '0') {
+                applyLiteMode(saved === '1');
+                if (note) note.textContent = '';
+            } else {
+                const guess = detectWeakDeviceGuess();
+                applyLiteMode(guess);
+                if (note) note.textContent = guess ? 'เปิดให้อัตโนมัติ เพราะเดาว่าเครื่องนี้สเปกไม่สูง — ปิดได้ถ้าไม่อยากใช้' : '';
+            }
+        }
+        initLiteMode(); // v5.56.4: เรียกทันทีตอนโหลดสคริปต์ (element ในหน้าพร้อมแล้วเพราะ script อยู่ท้าย body) กันเห็นเอฟเฟกต์หนักวาบก่อนโดนปิด
         document.querySelectorAll('#appVersion, #settingsVersion').forEach(el => {
             if (el.id === 'appVersion') el.textContent = APP_VERSION;
             else el.textContent = 'Packing Auto Pack ' + APP_VERSION;
@@ -3386,6 +3465,7 @@ function openSettingsModal(){
    document.getElementById('settingsContent').classList.add('modal-visible');
  }, 10);
  document.getElementById('autoSyncToggle').checked = localStorage.getItem(SHEETS_AUTOSYNC_KEY) === '1';
+ document.getElementById('liteModeToggle').checked = document.documentElement.classList.contains('lite-mode');
  renderSheetsSyncStatus();
  renderSpecSheetsSyncStatus();
  renderUndoButton();
