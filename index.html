@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Packing Auto Pack Mobile v5.56.5</title>
+    <title>Packing Auto Pack Mobile v5.56.6</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1149,7 +1149,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.5';
+        const APP_VERSION = 'v5.56.6';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1342,8 +1342,10 @@ v5.56.0 BUGFIX BUILD
                 <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm cursor-pointer active:scale-[0.99] transition-transform" onclick="openSpecDetail(${idx})">
                     <div class="flex items-start justify-between gap-2 ${expanded ? 'mb-2' : ''}">
                         <div>
-                            <div class="font-extrabold text-sm text-slate-800 dark:text-white">${highlight(item.c, hlQuery)}</div>
-                            ${item.pn ? `<div class="text-[10px] font-bold text-indigo-500 dark:text-indigo-400 mt-0.5">P/N: ${highlight(item.pn, hlQuery)}</div>` : ''}
+                            <div class="flex items-baseline gap-1.5 flex-wrap">
+                                <span class="font-extrabold text-base text-slate-900 dark:text-white">${highlight(item.c, hlQuery)}</span>
+                                ${item.pn ? `<span class="text-slate-300 dark:text-slate-600">•</span><span class="font-bold text-sm text-indigo-600 dark:text-indigo-400">P/N: ${highlight(item.pn, hlQuery)}</span>` : ''}
+                            </div>
                             ${hasQty ? `
                             <div class="mt-1.5">
                                 <span class="px-3 py-1 rounded-xl text-[10px] whitespace-nowrap inline-flex items-center gap-1.5 font-bold premium-chip">
