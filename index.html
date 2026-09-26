@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Packing Auto Pack Mobile v5.56.7</title>
+    <title>Packing Auto Pack Mobile v5.56.10</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -607,6 +607,11 @@ v5.56.0 BUGFIX BUILD
         .section-banner {
             position: relative;
             overflow: hidden;
+            display: block !important;
+            width: fit-content !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
         }
         .section-banner::after{
             content:'';
@@ -1155,7 +1160,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.7';
+        const APP_VERSION = 'v5.56.10';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1347,13 +1352,13 @@ v5.56.0 BUGFIX BUILD
                 return `
                 <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm cursor-pointer active:scale-[0.99] transition-transform" onclick="openSpecDetail(${idx})">
                     <div class="flex items-start justify-between gap-2 ${expanded ? 'mb-2' : ''}">
-                        <div>
-                            <div class="flex items-baseline gap-1.5 flex-wrap">
+                        <div class="flex-1 text-center">
+                            <div class="flex items-baseline justify-center gap-1.5 flex-wrap">
                                 <span class="font-extrabold text-base text-slate-900 dark:text-white">${highlight(item.c, hlQuery)}</span>
                                 ${item.pn ? `<span class="text-slate-300 dark:text-slate-600">•</span><span class="font-bold text-sm text-indigo-600 dark:text-indigo-400">P/N: ${highlight(item.pn, hlQuery)}</span>` : ''}
                             </div>
                             ${hasQty ? `
-                            <div class="mt-1.5">
+                            <div class="mt-1.5 flex justify-center">
                                 <span class="px-3 py-1 rounded-xl text-[10px] whitespace-nowrap inline-flex items-center gap-1.5 font-bold premium-chip">
                                     <span class="text-slate-500 dark:text-slate-400">UNIT: <span class="font-extrabold">${item.ut || 0}</span></span>
                                     <span class="text-slate-300 dark:text-slate-700">|</span>
@@ -1938,12 +1943,12 @@ v5.56.0 BUGFIX BUILD
                 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <div class="font-extrabold text-xl tracking-tight flex items-baseline gap-2 flex-wrap">
+                        <div class="flex-1 text-center">
+                            <div class="font-extrabold text-xl tracking-tight flex items-baseline justify-center gap-2 flex-wrap">
                                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-300 dark:via-violet-300 dark:to-fuchsia-300">${highlight(item['Part No'], hlQuery)}</span><span class="text-slate-400 dark:text-slate-500 text-sm font-semibold">· ${highlight(item['Customer'], hlQuery)}</span>
                             </div>
                             ${hasQty ? `
-                            <div class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 flex-wrap">
+                            <div class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 flex-wrap">
                                 <span class="px-3 py-1 rounded-xl text-[10px] whitespace-nowrap inline-flex items-center gap-1.5 font-bold premium-chip">${upperRightSpecHTML}</span>
                             </div>` : ''}
                         </div>
