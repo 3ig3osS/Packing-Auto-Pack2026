@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Packing Auto Pack Mobile v5.56.10</title>
+    <title>Packing Auto Pack Mobile v5.56.11</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -393,6 +393,7 @@ v5.56.0 BUGFIX BUILD
             border: 1px solid rgba(226,232,240,0.9); 
             display: flex;
             align-items: center;
+            justify-content: center;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
         }
         [data-theme="dark"] .spec-badge {
@@ -791,14 +792,14 @@ v5.56.0 BUGFIX BUILD
 
     <!-- Main Content: Packing List -->
     <div class="p-3" id="packingTabContent">
-        <div id="resultCount" class="text-[11px] font-bold mb-4 uppercase tracking-wider text-slate-400 dark:text-slate-500">กำลังโหลด...</div>
+        <div id="resultCount" class="text-[11px] font-bold mb-4 uppercase tracking-wider text-slate-400 dark:text-slate-500 text-center">กำลังโหลด...</div>
         <div id="cardContainer" class="space-y-1"></div>
     </div>
 
     <!-- Main Content: Customer Packing Spec -->
     <div class="p-3" id="specTabContent" style="display:none;">
         <input type="file" id="importSpecInputCSV" class="hidden" accept=".csv" onchange="importSpecFromCSV(event)">
-        <div id="specResultCount" class="text-[11px] font-bold mb-3 uppercase tracking-wider text-slate-400 dark:text-slate-500"></div>
+        <div id="specResultCount" class="text-[11px] font-bold mb-3 uppercase tracking-wider text-slate-400 dark:text-slate-500 text-center"></div>
         <div id="specCardContainer" class="space-y-2"></div>
     </div>
 
@@ -1160,7 +1161,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.10';
+        const APP_VERSION = 'v5.56.11';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1394,7 +1395,7 @@ v5.56.0 BUGFIX BUILD
                             <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
                                 <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
                             </div>
-                            <div class="flex flex-wrap gap-1.5 items-center">
+                            <div class="flex flex-wrap gap-1.5 items-center justify-center">
                                 ${item.rh ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">RoHS Label</span>` : ''}
                                 ${item.bc ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                                 ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
@@ -1407,7 +1408,7 @@ v5.56.0 BUGFIX BUILD
                             <div class="text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner">
                                 <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
                             </div>
-                            <div class="p-2.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed">${highlight(item.note, hlQuery)}</div>
+                            <div class="p-2.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed text-center">${highlight(item.note, hlQuery)}</div>
                         </div>` : ''}
                     </div>
                 </div>
@@ -1571,7 +1572,7 @@ v5.56.0 BUGFIX BUILD
                 <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
                     <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
                 </div>
-                <div class="flex flex-wrap gap-1.5 mb-4">
+                <div class="flex flex-wrap gap-1.5 mb-4 justify-center">
                     ${item.rh ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">RoHS Label</span>` : ''}
                     ${item.bc ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                     ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
@@ -1583,7 +1584,7 @@ v5.56.0 BUGFIX BUILD
                     <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
                 </div>
                 <div class="mt-0 p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40">
-                    <div class="text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed">${escapeHtml(item.note) || 'ไม่มีหมายเหตุ'}</div>
+                    <div class="text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed text-center">${escapeHtml(item.note) || 'ไม่มีหมายเหตุ'}</div>
                 </div>
             `;
             document.getElementById('btnEditSpecDetail').onclick = () => { closeSpecDetailModal(); setTimeout(() => openSpecModal(index), 300); };
@@ -1982,7 +1983,7 @@ v5.56.0 BUGFIX BUILD
                                     <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
                                 </div>
                             ` : ''}
-                            <div class="flex flex-wrap gap-1 w-full">
+                            <div class="flex flex-wrap gap-1 w-full justify-center">
                                 ${item.PrintAuto ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">Print Auto</span>` : ''}
                                 ${item.BcCust ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                                 ${item.BcEE ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
@@ -1992,7 +1993,7 @@ v5.56.0 BUGFIX BUILD
                         </div>
                         
                         ${item['Note'] || item['NoteExtra'] ? `
-                        <div class="mt-3 p-2 bg-slate-50 dark:bg-slate-800/80 rounded-lg text-[11px] space-y-0.5 border border-transparent dark:border-slate-700">
+                        <div class="mt-3 p-2 bg-slate-50 dark:bg-slate-800/80 rounded-lg text-[11px] space-y-0.5 border border-transparent dark:border-slate-700 text-center">
                             ${item['Note'] ? `<div class="text-slate-600 dark:text-slate-200"><i class="fas fa-sticky-note mr-1 opacity-60 text-slate-400 dark:text-slate-300"></i>${highlight(item['Note'], hlQuery)}</div>` : ''}
                             ${item['NoteExtra'] ? `<div class="text-rose-500 dark:text-rose-400 font-bold"><i class="fas fa-exclamation-circle mr-1"></i>${highlight(item['NoteExtra'], hlQuery)}</div>` : ''}
                         </div>` : ''}
@@ -2465,10 +2466,10 @@ v5.56.0 BUGFIX BUILD
         // คนที่เปิดลิงค์เฉยๆ ดูข้อมูลล่าสุดได้ปกติ (v5.56.0 auto-sync ตอนเปิด) แต่แก้ไขอะไรไม่ได้จนกว่าจะปลดล็อก
         // ปลดล็อกแล้วจะจำไว้ในเครื่อง/เบราว์เซอร์นั้นๆ ไม่ต้องใส่รหัสซ้ำทุกครั้งที่เปิด
         const EDIT_UNLOCK_KEY = 'packing_edit_unlocked';
-        let editUnlocked = localStorage.getItem(EDIT_UNLOCK_KEY) === '1';
+        let editUnlocked = sessionStorage.getItem(EDIT_UNLOCK_KEY) === '1';
         const SPEC_UNLOCK_KEY = 'packing_spec_unlocked';
         const SPEC_TOKEN_KEY = 'packing_spec_token';
-        let specUnlocked = localStorage.getItem(SPEC_UNLOCK_KEY) === '1';
+        let specUnlocked = sessionStorage.getItem(SPEC_UNLOCK_KEY) === '1';
 
         // v5.56.7: deviceId ถาวรต่อเครื่อง/เบราว์เซอร์ ใช้แค่ให้ Code.gs นับจำนวนครั้งที่ลองรหัสผิด
         // เพื่อล็อกกันเดาสุ่ม (ดูฝั่ง Code.gs: checkRateLimit_/recordFailedAttempt_) — ไม่ใช่ข้อมูลระบุตัวตน
@@ -2504,7 +2505,7 @@ v5.56.0 BUGFIX BUILD
 
         function lockEditing() {
             editUnlocked = false;
-            localStorage.removeItem(EDIT_UNLOCK_KEY);
+            sessionStorage.removeItem(EDIT_UNLOCK_KEY);
             renderLockStatus();
             showToast('ล็อกการแก้ไขแล้ว', '🔒');
         }
@@ -2528,7 +2529,7 @@ v5.56.0 BUGFIX BUILD
                 const json = await res.json();
                 if (json.status === 'ok' && json.valid) {
                     specUnlocked = true;
-                    localStorage.setItem(SPEC_UNLOCK_KEY, '1');
+                    sessionStorage.setItem(SPEC_UNLOCK_KEY, '1');
                     localStorage.setItem(SPEC_TOKEN_KEY, code.trim());
                     showToast('ปลดล็อก Customer Spec สำเร็จ', '🔓');
                     if (onSuccess) onSuccess();
@@ -2539,7 +2540,7 @@ v5.56.0 BUGFIX BUILD
 
         function lockSpecEditing() {
             specUnlocked = false;
-            localStorage.removeItem(SPEC_UNLOCK_KEY);
+            sessionStorage.removeItem(SPEC_UNLOCK_KEY);
             localStorage.removeItem(SPEC_TOKEN_KEY);
             showToast('ล็อก Customer Spec แล้ว', '🔒');
         }
@@ -2565,7 +2566,7 @@ v5.56.0 BUGFIX BUILD
                 const json = await res.json();
                 if (json.status === 'ok' && json.valid) {
                     editUnlocked = true;
-                    localStorage.setItem(EDIT_UNLOCK_KEY, '1');
+                    sessionStorage.setItem(EDIT_UNLOCK_KEY, '1');
                     // ถ้ายังไม่เคยตั้ง Sync Token ไว้ ให้ใช้รหัสนี้เป็น token ต่อเลย จะได้ซิงค์ได้ทันทีโดยไม่ต้องกรอกซ้ำ
                     if (!localStorage.getItem(SHEETS_TOKEN_KEY)) localStorage.setItem(SHEETS_TOKEN_KEY, code.trim());
                     renderLockStatus();
@@ -2654,6 +2655,15 @@ v5.56.0 BUGFIX BUILD
         // v5.56.0 #3: Online / Offline Detection — พอกลับมาออนไลน์ ลองซิงค์ที่ค้างไว้ทันทีถ้าเปิด auto sync
         window.addEventListener('online',()=>{clearSlowIndicator();if(packingSyncState===SYNC_STATE.OFFLINE)packingSyncState=SYNC_STATE.IDLE;if(specSyncState===SYNC_STATE.OFFLINE)specSyncState=SYNC_STATE.IDLE;renderConnectionStatus('online');renderSyncDiagnostics();showToast('กลับมาออนไลน์แล้ว — ตรวจสอบรายการรอซิงค์','📡');if(localStorage.getItem(SHEETS_AUTOSYNC_KEY)==='1'&&getSheetsUrl()){if(hasPendingSync('packing'))syncToGoogleSheets(true);if(hasPendingSync('spec'))syncSpecToGoogleSheets(true)}});
         window.addEventListener('offline',()=>{clearSlowIndicator();packingSyncState=SYNC_STATE.OFFLINE;specSyncState=SYNC_STATE.OFFLINE;renderConnectionStatus('offline');renderSyncDiagnostics();showToast('ออฟไลน์ — ใช้ข้อมูลในเครื่องได้ การแก้ไขจะรอซิงค์','📡')});
+
+        // v5.56.10: ล็อกการแก้ไขอัตโนมัติทุกครั้งที่ออกจากแอป (ปิดแท็บ/สลับแอป/ปิดเบราว์เซอร์) —
+        // เข้ามาครั้งหน้าต้องใส่รหัสปลดล็อกใหม่ทั้ง Packing List และ Customer Spec เสมอ ไม่ค้างสถานะ
+        // ปลดล็อกไว้ข้ามเซสชันเหมือนเดิมอีกต่อไป (รหัส/Sync Token ที่เคยกรอกไว้ยังจำอยู่ ไม่ต้องพิมพ์
+        // รหัสตัวอักษรใหม่ทุกครั้ง แค่ต้องกดยืนยัน/ใส่รหัสเพื่อปลดล็อกอีกครั้งก่อนเริ่มแก้ไข)
+        window.addEventListener('pagehide', function () {
+            localStorage.removeItem(EDIT_UNLOCK_KEY);
+            localStorage.removeItem(SPEC_UNLOCK_KEY);
+        });
 
         // v5.56.0 #2: เรียกแทน syncToGoogleSheets(true) ตรงๆ ใน saveData() — debounce ไว้ก่อนค่อยซิงค์จริง
         function scheduleAutoSync() {
