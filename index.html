@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Packing Auto Pack Mobile v5.56.13</title>
+    <title>Packing Auto Pack Mobile v5.56.14</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -787,7 +787,7 @@ v5.56.0 BUGFIX BUILD
     <!-- Main Tabs -->
     <div class="px-3 pt-3 flex gap-2">
         <button id="mainTabBtnPacking" onclick="switchMainTab('packing')" class="main-tab-btn main-tab-active flex-1 py-2 rounded-xl text-xs font-bold transition-all">📦 Packing List</button>
-        <div class="flex-1 flex gap-1"><button id="mainTabBtnSpec" onclick="switchMainTab('spec')" class="main-tab-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all">📋 Customer Spec</button><button id="specLockBtn" onclick="specUnlocked ? (confirm('ล็อก Customer Spec หรือไม่?') && lockSpecEditing()) : requireSpecUnlock(() => {})" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">🔐</button></div>
+        <button id="mainTabBtnSpec" onclick="switchMainTab('spec')" class="main-tab-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all">📋 Customer Spec</button>
     </div>
 
     <!-- Main Content: Packing List -->
@@ -1161,7 +1161,7 @@ v5.56.0 BUGFIX BUILD
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.13';
+        const APP_VERSION = 'v5.56.14';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
