@@ -193,7 +193,7 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Packing Auto Pack Mobile v5.56.16</title>
+    <title>Packing Auto Pack Mobile v5.56.19</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1175,7 +1175,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.16';
+        const APP_VERSION = 'v5.56.19';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1833,7 +1833,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             }
         })();
 
-        let packingData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialData;
+        function toBool(value) {
+            if (value === true || value === 1) return true;
+            if (value === false || value === 0 || value == null) return false;
+            const normalized = String(value).trim().toLowerCase();
+            return ['true', '1', 'yes', 'y', 'on'].includes(normalized);
+        }
+        function normalizePackingFlags(rows) {
+            return (Array.isArray(rows) ? rows : []).map(row => ({ ...row,
+                PrintAuto: toBool(row.PrintAuto), BcCust: toBool(row.BcCust),
+                BcEE: toBool(row.BcEE), FourW: toBool(row.FourW)
+            }));
+        }
+        let packingData = normalizePackingFlags(JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialData);
 
         function formatHumCard(val) {
             if (!val || val === '-') return '-';
@@ -1989,7 +2001,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     `;
                 }
                 
-                const hasActiveStatus = item.PrintAuto || item.BcCust || item.BcEE || (item.ColorSticker && item.ColorSticker !== '-') || item.FourW;
+                const hasActiveStatus = toBool(item.PrintAuto) || toBool(item.BcCust) || toBool(item.BcEE) || (item.ColorSticker && item.ColorSticker !== '-') || item.FourW;
                 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
@@ -2031,11 +2043,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                                 </div>
                             ` : ''}
                             <div class="flex flex-wrap gap-1 w-full justify-center">
-                                ${item.PrintAuto ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">Print Auto</span>` : ''}
-                                ${item.BcCust ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
-                                ${item.BcEE ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
+                                ${toBool(item.PrintAuto) ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">Print Auto</span>` : ''}
+                                ${toBool(item.BcCust) ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
+                                ${toBool(item.BcEE) ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                                 ${item.ColorSticker && item.ColorSticker !== '-' ? `<span class="status-pill ${getColorStickerPillStyle(item.ColorSticker)}">สติ๊กเกอร์สี: ${escapeHtml(item.ColorSticker)}</span>` : ''}
-                                ${item.FourW ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
+                                ${toBool(item.FourW) ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
                             </div>
                         </div>
                         
@@ -2096,10 +2108,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Size Bagging</span><span class="font-semibold">${escapeHtml(item['SizeBagging']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">DC FORMAT</span><span class="font-bold text-emerald-500">${escapeHtml(item['DCFormat']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5 items-center"><span class="label-style">สติ๊กเกอร์สี</span><span class="flex items-center font-semibold"><span class="color-dot mr-2" style="background-color: ${colorHex}"></span>${item['ColorSticker'] === '-' ? 'ไม่ติด' : escapeHtml(item['ColorSticker'])}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">4-W</span><span class="font-bold ${item.FourW ? 'text-orange-500' : 'text-slate-400'}">${item.FourW ? 'ติด 4-W' : 'ไม่ติด'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Print Auto</span><span class="font-semibold">${item.PrintAuto ? 'เปิด' : 'ปิด'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode ลูกค้า</span><span class="font-semibold">${item.BcCust ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode E&E</span><span class="font-semibold">${item.BcEE ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">4-W</span><span class="font-bold ${toBool(item.FourW) ? 'text-orange-500' : 'text-slate-400'}">${toBool(item.FourW) ? 'ติด 4-W' : 'ไม่ติด'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Print Auto</span><span class="font-semibold">${toBool(item.PrintAuto) ? 'เปิด' : 'ปิด'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode ลูกค้า</span><span class="font-semibold">${toBool(item.BcCust) ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode E&E</span><span class="font-semibold">${toBool(item.BcEE) ? '✓ ใส่' : 'ไม่ใส่'}</span></div>
                 </div>
                 <div class="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
                     <div class="label-style mb-1">หมายเหตุ / คำสั่งพิเศษ</div>
@@ -2314,10 +2326,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                         document.getElementById('bagSize').value = item['BagSize'];
                 }, 50);
                 document.getElementById('colorSticker').value = item['ColorSticker'];
-                document.getElementById('fourW').checked = item['FourW'];
-                document.getElementById('printAuto').checked = item['PrintAuto'];
-                document.getElementById('bcCust').checked = item['BcCust'];
-                document.getElementById('bcEE').checked = item['BcEE'];
+                document.getElementById('fourW').checked = toBool(item['FourW']);
+                document.getElementById('printAuto').checked = toBool(item['PrintAuto']);
+                document.getElementById('bcCust').checked = toBool(item['BcCust']);
+                document.getElementById('bcEE').checked = toBool(item['BcEE']);
                 document.getElementById('note').value = item['Note'] || '';
                 document.getElementById('noteExtra').value = item['NoteExtra'] || '';
                 document.getElementById('sizeBagging').value = item['SizeBagging'] || '-';
@@ -2433,7 +2445,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const backup = getPreopBackupInfo();
             if (!backup) { showToast('ไม่มีข้อมูลให้ย้อนกลับ', '⚠️'); return; }
             if (!confirm(`ย้อนกลับไปเป็นข้อมูลก่อน "${backup.label}" (${new Date(backup.ts).toLocaleString('th-TH')}) ใช่หรือไม่?`)) return;
-            packingData = backup.data;
+            packingData = normalizePackingFlags(backup.data);
             localStorage.removeItem(PREOP_BACKUP_KEY);
             saveDataLocalOnly();
             renderTable();
@@ -2879,7 +2891,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 }
                 if (confirm(`พบข้อมูล ${records.length} รายการใน Google Sheets ต้องการนำเข้าและทับข้อมูลในเครื่องหรือไม่?`)) {
 backupBeforeOverwrite('โหลดจาก Google Sheets');
-                    packingData = records;
+                    packingData = normalizePackingFlags(records);
                     saveDataLocalOnly();
                     renderTable();
                     renderUndoButton();
@@ -2916,7 +2928,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 const res = await fetchWithRetry(url + '?action=load', { method: 'GET' });
                 const json = await res.json();
                 if (json.status === 'error' || !Array.isArray(json.records)) return;
-                packingData = applyMergedResultPreservingInFlightEdits(packingData, json.records, lastSyncAt, packingItemKey);
+                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, json.records, lastSyncAt, packingItemKey));
                 saveDataLocalOnly();
                 renderTable();
             } catch(e) { /* reconcile ไม่สำเร็จก็ไม่เป็นไร ปล่อยให้ syncToGoogleSheets() ที่ตามมาทำงานตามปกติ */ }
@@ -2952,9 +2964,9 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 let pendingLocal = false;
                 if (editUnlocked) {
                     const r = reconcileOnPull(packingData, records, packingItemKey, parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10), PACKING_TOMBSTONE_KEY);
-                    packingData = r.data; pendingLocal = r.pending;
+                    packingData = normalizePackingFlags(r.data); pendingLocal = r.pending;
                 } else {
-                    packingData = applyMergedResultPreservingInFlightEdits(packingData, records, pullStartedAt, packingItemKey);
+                    packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, records, pullStartedAt, packingItemKey));
                 }
                 saveDataLocalOnly();
                 renderTable();
@@ -3020,7 +3032,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                     // ต้องดึงมาแทนที่ข้อมูลในเครื่อง ไม่งั้นเครื่องนี้จะไม่เห็นรายการที่คนอื่นเพิ่ม/แก้ไว้
                     if (mergedRecords) {
 backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge จาก Google Sheets');
-                        packingData = applyMergedResultPreservingInFlightEdits(packingData, mergedRecords, syncStartedAt, packingItemKey);
+                        packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, mergedRecords, syncStartedAt, packingItemKey));
                         saveDataLocalOnly();
                         renderTable();
                         renderUndoButton();
@@ -3357,7 +3369,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
                     if (!Array.isArray(data) || data.length === 0) throw new Error('invalid');
                     if (confirm(`พบข้อมูล ${data.length} รายการ ต้องการนำเข้าและทับข้อมูลปัจจุบันหรือไม่?`)) {
 backupBeforeOverwrite('นำเข้า JSON');
-                        packingData = data;
+                        packingData = normalizePackingFlags(data);
                         saveData(); renderTable(); renderUndoButton();
                         showToast(`นำเข้า ${data.length} รายการสำเร็จ (ย้อนกลับได้ที่ Settings)`, '📥');
                     }
@@ -3447,7 +3459,7 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
                 if (newData.length > 0) {
                     if (confirm(`พบข้อมูล ${newData.length} รายการ ต้องการนำเข้าข้อมูลและทับข้อมูลปัจจุบันหรือไม่?`)) {
 backupBeforeOverwrite('นำเข้า CSV');
-                        packingData = newData;
+                        packingData = normalizePackingFlags(newData);
                         saveData();
                         renderTable();
                         renderUndoButton();
