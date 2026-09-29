@@ -2496,7 +2496,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const SHEETS_URL_KEY = 'packing_sheets_url';
         // v5.56.0: ฝัง Web App URL ไว้ในโค้ดแอปโดยตรง ไม่ต้องให้ผู้ใช้ทั่วไปกรอก/เห็นลิงค์เลย
         // *** แก้ค่าด้านล่างนี้เป็น Web App URL จริงของคุณ (ที่ลงท้ายด้วย /exec) ก่อนแจกไฟล์นี้ให้คนอื่นใช้งาน ***
-        const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyXwr1UqB6uI2prZPdtVP5fS8rgZ0GJ6cnL1YlxyZAWcaDQzvigvSFmeToDUmLiR712Zg/exec';
+        const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzUz6yBmxpoKJcjYl5HwWA1OioLyADfzxVB7UEivS57Danwq-BpB8FvTCbLxjBVSvjp/exec';
         // คืนค่า URL ที่ใช้งานจริง: ใช้ค่าที่เคยบันทึกไว้ในเครื่อง (เผื่อเคยตั้งค่าด้วยตัวเองแบบเก่า) ถ้าไม่มีค่อย fallback ไปใช้ค่าที่ฝังไว้ในโค้ด
         function getSheetsUrl() {
             // v5.56.2: ไม่ใช้ URL ที่เคยเก็บไว้ในเครื่องอีก (ไม่มีช่องใน Settings ให้ล้าง) — ล้างค่าเก่าทิ้ง แล้วใช้ค่าในโค้ดเสมอ
