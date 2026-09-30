@@ -1186,7 +1186,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.25';
+        const APP_VERSION = 'v5.56.26';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -2039,7 +2039,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     `;
                 }
                 
-                const hasActiveStatus = toBool(item.PrintAuto) || toBool(item.BcCust) || toBool(item.BcEE) || (item.ColorSticker && item.ColorSticker !== '-') || item.FourW;
+                const hasActiveStatus = toBool(item.PrintAuto) || toBool(item.BcCust) || toBool(item.BcEE) || (item.ColorSticker && item.ColorSticker !== '-') || toBool(item.FourW);
                 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
@@ -2984,7 +2984,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 const json = await res.json();
                 if (json.status === 'error' || !Array.isArray(json.records)) return;
                 const loadedSpecItems = json.records.map(sheetRecordToSpecItem);
-                CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, loadedSpecItems, lastSyncAt, specItemKey);
+                CUSTOMER_SPEC_DATA = normalizeSpecFlags(applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, loadedSpecItems, lastSyncAt, specItemKey));
                 saveSpecDataLocalOnly();
                 filterCustomerSpec();
             } catch(e) { /* reconcile ไม่สำเร็จก็ไม่เป็นไร ปล่อยให้ syncSpecToGoogleSheets() ที่ตามมาทำงานตามปกติ */ }
@@ -3177,7 +3177,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                     if (mergedRecords) {
 backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merge จาก Google Sheets');
                         const mergedSpecItems = mergedRecords.map(sheetRecordToSpecItem);
-                        CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, mergedSpecItems, syncStartedAt, specItemKey);
+                        CUSTOMER_SPEC_DATA = normalizeSpecFlags(applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, mergedSpecItems, syncStartedAt, specItemKey));
                         saveSpecDataLocalOnly();
                         filterCustomerSpec();
                         renderSpecUndoButton();
@@ -3224,7 +3224,7 @@ backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merg
                 }
                 if (confirm(`พบ Customer Spec ${records.length} รายการใน Google Sheets ต้องการนำเข้าและทับข้อมูลในเครื่องหรือไม่?`)) {
 backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
-                    CUSTOMER_SPEC_DATA = records.map(sheetRecordToSpecItem);
+                    CUSTOMER_SPEC_DATA = normalizeSpecFlags(records.map(sheetRecordToSpecItem));
                     saveSpecDataLocalOnly();
                     filterCustomerSpec();
                     renderSpecUndoButton();
@@ -3259,9 +3259,9 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             const serverSpecItems = records.map(sheetRecordToSpecItem);
             if (specUnlocked) {
                 const r = reconcileOnPull(CUSTOMER_SPEC_DATA, serverSpecItems, specItemKey, parseInt(localStorage.getItem(SPEC_SHEETS_LASTSYNC_KEY) || '0', 10), SPEC_TOMBSTONE_KEY);
-                CUSTOMER_SPEC_DATA = r.data; pendingLocal = r.pending;
+                CUSTOMER_SPEC_DATA = normalizeSpecFlags(r.data); pendingLocal = r.pending;
             } else {
-                CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, serverSpecItems, pullStartedAt, specItemKey);
+                CUSTOMER_SPEC_DATA = normalizeSpecFlags(applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, serverSpecItems, pullStartedAt, specItemKey));
             }
             saveSpecDataLocalOnly();
             filterCustomerSpec();
@@ -3505,7 +3505,7 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
                     headers.forEach((h, idx) => {
                         let val = (values[idx] || '').trim();
                         if (["Unit Qty", "QtyPack", "QuantityTotal", "PcbWidth", "PcbLength", "PcbWeight"].includes(h)) val = parseFloat(val) || 0;
-                        if (["PrintAuto", "BcCust", "BcEE", "FourW"].includes(h)) val = val.toUpperCase() === "TRUE" || val === "1";
+                        if (["PrintAuto", "BcCust", "BcEE", "FourW"].includes(h)) val = toBool(val);
                         item[h] = val;
                     });
                     item['_mt'] = Date.now(); // v5.56.0: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
@@ -3547,7 +3547,7 @@ backupBeforeOverwrite('นำเข้า CSV');
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const serverRecords = json.records || [];
                 const lastSyncAt = parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10);
-                packingData = applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey);
+                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey)); // v5.56.26: บังคับ Boolean จริงเสมอ ("FALSE" ห้ามเป็นติ๊ก)
                 saveDataLocalOnly();
                 renderTable();
             } catch(e) { /* โหลดเทียบไม่สำเร็จ ไม่เป็นไร ข้ามไป sync ตามปกติเลย (แค่เสี่ยง resurrect เหมือนเดิมถ้าเน็ตมีปัญหาพอดี) */ }
@@ -3563,7 +3563,7 @@ backupBeforeOverwrite('นำเข้า CSV');
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const serverSpecItems = (json.records || []).map(sheetRecordToSpecItem);
                 const lastSyncAt = parseInt(localStorage.getItem(SPEC_SHEETS_LASTSYNC_KEY) || '0', 10);
-                CUSTOMER_SPEC_DATA = applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, serverSpecItems, lastSyncAt, specItemKey);
+                CUSTOMER_SPEC_DATA = normalizeSpecFlags(applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, serverSpecItems, lastSyncAt, specItemKey));
                 saveSpecDataLocalOnly();
                 filterCustomerSpec();
             } catch(e) { /* โหลดเทียบไม่สำเร็จ ไม่เป็นไร ข้ามไป sync ตามปกติเลย */ }
