@@ -192,8 +192,8 @@ v5.56.0 BUGFIX BUILD
 -->
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Packing Auto Pack Mobile v5.56.19</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Packing Auto Pack Mobile v5.56.20</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -203,6 +203,8 @@ v5.56.0 BUGFIX BUILD
     <meta name="apple-mobile-web-app-title" content="Packing">
     <!-- v5.56.0: Real PWA manifest -->
     <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // v5.56.0: ผูกโหมด dark: ของ Tailwind เข้ากับ data-theme ของแอปเอง (ปุ่มธีมที่กดในแอป)
@@ -540,6 +542,11 @@ v5.56.0 BUGFIX BUILD
         #header { padding-top: max(0.375rem, env(safe-area-inset-top, 0px)); }
         #bottomNav { bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)); }
         body { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+        /* v5.56.20: อนุญาตให้ซูมด้วยสองนิ้ว (เดิมล็อกไว้ด้วย viewport) + กัน iOS ซูมเองตอนแตะช่องกรอก */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea { font-size: max(16px, 1em) !important; }
+        }
 
         /* Smooth scroll inside modals */
         .overflow-y-auto { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
@@ -1175,7 +1182,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.19';
+        const APP_VERSION = 'v5.56.22';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1331,21 +1338,28 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             return styles[color] || 'bg-slate-50 text-slate-600';
         }
 
-        const initialData = [
-            { "Part No": "A217327A", "Customer": "DEL", "CustPN": "-", "Unit Qty": 16, "QtyPack": 20, "QuantityTotal": 320, "PackModel": "PE", "Paper": "TOP", "HumCard": "3.0", "PcbSize": "350*480", "PcbWidth": 350, "PcbLength": 480, "PcbWeight": 0, "BagSize": "480 × 620 mm", "PrintAuto": true, "BcCust": false, "BcEE": true, "ColorSticker": "RED", "FourW": false, "SizeBagging": "-", "Surface": "-", "DCFormat": "-", "Note": "", "NoteExtra": "" }
-        ];
+        const initialData = []; // v5.56.22 BLANK: ไม่มีข้อมูลตั้งต้น — นำเข้าจาก Backup/Google Sheets เอง
 
         
         // ─── Customer Packing Spec (reference data, v5.56.0) ────────────────────
         // c=Customer, hs=Heat Seal, sg=Silica Gel, h3=HIC 3Dot, h6=HIC 6Dot,
         // sf=Sulfur Free Paper, af=Aluminum Foil Bag, pv=Plastic Vacuum Bag, rh=RoHS Label
-        const CUSTOMER_SPEC_DEFAULT = [{"c": "ASL01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "BAR02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "BEN04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "CEC037321 Add HIC 3Dot 1set per pack"}, {"c": "CCP01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "STARTEAM", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "25/PACK , CML02=STARTEAM"}, {"c": "CCN01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "CNT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "CNT02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "CRS", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL12", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "DEL19 DEL08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Gold Plate | All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL20", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL24", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL25", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DEL27", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "All DELTA For P/N ≥ 8L + ≥4 shall be pack by Aluminum Vacuum Pack"}, {"c": "DET01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "ECT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": true, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "EKM01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "ENI03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "ENO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "EPI01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ค้นกระดาษ"}, {"c": "EUT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FAB02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Enig, LF-HASL, Silver | Aluminum Foil Bag P/N: A217248.., A217249.., A217250.., A217245.., A217346.., A217347.., A216992.., A217124.. | Plastic Vacuum Bag P/N: A216722.., A216347.., A210931.., A211913.., A215921.., A217158.., A216747.., A217265.. | BARCODE ลูกค้า"}, {"c": "FAG01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FII01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "FLE09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Surface ENIG must have siliga gel"}, {"c": "FLE46", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FLE75", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FRD01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FTS01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "FUJ15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "FUJ17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "HDK01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "HOG01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "งานทองค้นกระดาษ"}, {"c": "IUS04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB19", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "JAB29", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "JAB36", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "KAG03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "KIM05/06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Backup บน-ล่าง"}, {"c": "KIM08/09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "3DOTของจริง backup(siliga=5/pack) | ติด HIC หน้ากล่อง"}, {"c": "KOS01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "นับ 25 /pack"}, {"c": "KOS07", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "25/PACK"}, {"c": "LAC05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LEA05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LEA06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "LON05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "LON11", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MEA01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MIN09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MIN10", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MOTO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "MSL02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "MTC", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "NCAB_ABB", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Enig surface use sulfur free paper for separate boards"}, {"c": "NEC08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "NOV01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "PSU01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "PTE01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SCI13", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "นับ 10 set"}, {"c": "SCN04", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SII02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SIX", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SLMO1", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SNE05", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE06", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SNE10", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "3DOTของจริง"}, {"c": "SNE15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE16", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SNE17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "STB01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "SUM03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "SVI01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "TAT", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "TEC03", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": false, "h6": true, "sf": false, "af": false, "pv": true, "su": "", "rh": true, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "TIGO", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ติด ROHS"}, {"c": "TSE", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "UMC01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "UMC02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "USI08", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "USI09", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL07", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": true, "ee": false, "fw": false, "cs": "-", "note": "BARCODE ลูกค้า"}, {"c": "VAL13", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": false, "h6": false, "sf": true, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL15", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VAL21", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": false, "h3": false, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "VEXOS", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": false, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "ไม่เอาโลโก้ E&E"}, {"c": "VID02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "stamp สามเหลี่ยม"}, {"c": "XPP", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "งานทองค้นกระดาษ"}, {"c": "YLT01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "NTW 01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": true, "af": false, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "BEN17", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": true, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 20 set/pack"}, {"c": "SCI40", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 10 set/pack"}, {"c": "PNE01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": false, "h3": true, "h6": false, "sf": false, "af": false, "pv": true, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "No siliga gel in pack, packing 10 set/pack"}, {"c": "ALL02", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "CEC037227"}, {"c": "EBW01", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": false, "af": true, "pv": false, "su": "", "rh": false, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Add back up board top and bottom side in pack"}, {"c": "ICAPE", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": true, "sg": true, "h3": true, "h6": false, "sf": false, "af": false, "pv": false, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": ""}, {"c": "CEL", "pn": "", "ut": 0, "pk": 0, "tt": 0, "dc": "-", "hs": false, "sg": true, "h3": true, "h6": false, "sf": true, "af": false, "pv": true, "su": "", "rh": true, "bc": false, "ee": false, "fw": false, "cs": "-", "note": "Sulfur free paper for separate product Enig, Gold Finger, Tin Finger | packing 20 set/pack (was 10) | Celestica (End user THYSSENKRUPP) use Aluminum bag."}];
+        const CUSTOMER_SPEC_DEFAULT = []; // v5.56.22 BLANK: ไม่มีข้อมูลตั้งต้น
 
         const SPEC_STORAGE_KEY = 'packing_customer_spec_v1';
+        // v5.56.20: แปลงค่า flag ของ Customer Spec ให้เป็น boolean จริงเสมอ (สตริง "FALSE" ต้องไม่ถูกมองเป็นติ๊ก) เหมือนฝั่ง Packing List
+        function normalizeSpecFlags(rows) {
+            const keys = ['hs','sg','h3','h6','sf','af','pv','rh','bc','ee','fw'];
+            return (Array.isArray(rows) ? rows : []).map(r => {
+                const o = { ...r };
+                keys.forEach(k => { if (k in o) o[k] = toBool(o[k]); });
+                return o;
+            });
+        }
         let CUSTOMER_SPEC_DATA = (() => {
             try {
                 const saved = JSON.parse(localStorage.getItem(SPEC_STORAGE_KEY));
-                return Array.isArray(saved) ? saved : JSON.parse(JSON.stringify(CUSTOMER_SPEC_DEFAULT));
+                return Array.isArray(saved) ? normalizeSpecFlags(saved) : JSON.parse(JSON.stringify(CUSTOMER_SPEC_DEFAULT));
             } catch(e) {
                 return JSON.parse(JSON.stringify(CUSTOMER_SPEC_DEFAULT));
             }
@@ -1759,6 +1773,27 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             showToast('ส่งออก Customer Spec เป็น CSV สำเร็จ', '📤');
         }
 
+        // v5.56.22 BUGFIX: อ่าน CSV ทั้งไฟล์ทีเดียวโดยเคารพเครื่องหมายคำพูด — เดิมตัดบรรทัดด้วย split(/\r?\n/) ก่อน
+        // ทำให้ช่องที่มีการขึ้นบรรทัดใหม่ในเครื่องหมายคำพูด (เช่น Note ของ KOM08/09) ถูกแยกเป็น "แถวปลอม" เพิ่มอีกแถว
+        function parseCSVRecords(text) {
+            const records = []; let row = [], cur = '', inQ = false;
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                if (inQ) {
+                    if (ch === '"' && text[i+1] === '"') { cur += '"'; i++; }
+                    else if (ch === '"') inQ = false;
+                    else cur += ch;
+                } else if (ch === '"') inQ = true;
+                else if (ch === ',') { row.push(cur); cur = ''; }
+                else if (ch === '\n' || ch === '\r') {
+                    if (ch === '\r' && text[i+1] === '\n') i++;
+                    row.push(cur); cur = ''; records.push(row); row = [];
+                } else cur += ch;
+            }
+            if (cur !== '' || row.length) { row.push(cur); records.push(row); }
+            return records;
+        }
+
         function importSpecFromCSV(event) {
             if (!specUnlocked) { const input = event.target; requireSpecUnlock(() => { if (input.files && input.files[0]) importSpecFromCSV(input); }); return; }
             const file = event.target.files[0];
@@ -1766,14 +1801,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
-                const rows = text.split(/\r?\n/);
+                const rows = parseCSVRecords(text);
                 if (rows.length < 2) { showToast('ไม่พบข้อมูลในไฟล์ CSV', '⚠️'); event.target.value=''; return; }
 
-                const headers = parseCSVLine(rows[0].replace(/^\uFEFF/, '')).map(h => h.trim());
+                const headers = rows[0].map(h => String(h).replace(/^\uFEFF/, '').trim());
                 const parsed = [];
                 for (let i = 1; i < rows.length; i++) {
-                    if (!rows[i].trim()) continue;
-                    const values = parseCSVLine(rows[i]);
+                    const values = rows[i];
+                    if (!values.some(v => String(v).trim())) continue;
                     const raw = {};
                     headers.forEach((h, idx) => { raw[h] = (values[idx] || '').trim(); });
                     if (!raw['Customer']) continue;
@@ -2155,6 +2190,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 const handle = getHandle();
                 const target = e.target;
                 if (!handle || !handle.contains(target)) return;
+                if (e.touches && e.touches.length > 1) return; // v5.56.20: ซูมสองนิ้วไม่ถือเป็นการปัดปิด
                 startY  = e.touches ? e.touches[0].clientY : e.clientY;
                 curY    = startY;
                 dragging = true;
@@ -2163,6 +2199,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             }
             function onMove(e) {
                 if (!dragging) return;
+                if (e.touches && e.touches.length > 1) { onEnd(true); return; } // v5.56.20: ถ้าเปลี่ยนเป็นสองนิ้วระหว่างลาก ให้ยกเลิกการปัด
                 const y = e.touches ? e.touches[0].clientY : e.clientY;
                 const dy = Math.max(0, y - startY);
                 curY = y;
@@ -2173,11 +2210,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 overlay.style.opacity = (0.4 * (1 - pct)).toFixed(3);
                 if (e.cancelable) e.preventDefault();
             }
-            function onEnd() {
+            function onEnd(cancelled) {
                 if (!dragging) return;
                 dragging = false;
                 document.getElementById('handleBar').style.background = '';
-                const dy = curY - startY;
+                const dy = cancelled === true ? 0 : curY - startY;
                 const el = getEl();
                 if (dy > 90) {
                     closeDetailModal();
@@ -2484,7 +2521,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const backup = getSpecPreopBackupInfo();
             if (!backup) { showToast('ไม่มีข้อมูล Customer Spec ให้ย้อนกลับ', '⚠️'); return; }
             if (!confirm(`ย้อนกลับ Customer Spec ไปเป็นข้อมูลก่อน "${backup.label}" (${new Date(backup.ts).toLocaleString('th-TH')}) ใช่หรือไม่?`)) return;
-            CUSTOMER_SPEC_DATA = backup.data;
+            CUSTOMER_SPEC_DATA = normalizeSpecFlags(backup.data);
             localStorage.removeItem(SPEC_PREOP_BACKUP_KEY);
             saveSpecDataLocalOnly();
             filterCustomerSpec();
@@ -3358,6 +3395,17 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             showToast('Export JSON สำเร็จ', '📦');
         }
 
+        // v5.56.21: รวมแถวที่ Customer+Part No ซ้ำกันในไฟล์นำเข้า ให้เหลือแถวเดียว (เก็บแถวที่ _mt ใหม่สุด, เท่ากันเก็บแถวหลัง)
+        function dedupePackingRows(rows) {
+            const map = new Map();
+            rows.forEach(r => {
+                const k = packingItemKey(r);
+                const prev = map.get(k);
+                if (!prev || getItemMt(r) >= getItemMt(prev)) map.set(k, r); // Map คงลำดับตำแหน่งแรกไว้
+            });
+            return { data: Array.from(map.values()), removed: rows.length - map.size };
+        }
+
         function importFromJSON(event) {
             if (!editUnlocked) { const input = event.target; requireEditUnlock(() => { if (input.files && input.files[0]) importFromJSON(input); }); return; }
             const file = event.target.files[0];
@@ -3369,9 +3417,10 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
                     if (!Array.isArray(data) || data.length === 0) throw new Error('invalid');
                     if (confirm(`พบข้อมูล ${data.length} รายการ ต้องการนำเข้าและทับข้อมูลปัจจุบันหรือไม่?`)) {
 backupBeforeOverwrite('นำเข้า JSON');
-                        packingData = normalizePackingFlags(data);
+                        const dd = dedupePackingRows(data);
+                        packingData = normalizePackingFlags(dd.data);
                         saveData(); renderTable(); renderUndoButton();
-                        showToast(`นำเข้า ${data.length} รายการสำเร็จ (ย้อนกลับได้ที่ Settings)`, '📥');
+                        showToast(`นำเข้า ${dd.data.length} รายการสำเร็จ` + (dd.removed ? ` (รวมแถวซ้ำ ${dd.removed} แถว)` : '') + ' (ย้อนกลับได้ที่ Settings)', '📥');
                     }
                 } catch(err) {
                     showToast('ไฟล์ JSON ไม่ถูกต้อง', '⚠️');
@@ -3436,15 +3485,15 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
-                const rows = text.split(/\r?\n/);
+                const rows = parseCSVRecords(text);
                 if (rows.length < 2) return;
 
-                const headers = parseCSVLine(rows[0].replace(/^\uFEFF/, '')).map(h => h.trim());
+                const headers = rows[0].map(h => String(h).replace(/^\uFEFF/, '').trim());
                 const newData = [];
 
                 for (let i = 1; i < rows.length; i++) {
-                    if (!rows[i].trim()) continue;
-                    const values = parseCSVLine(rows[i]);
+                    const values = rows[i];
+                    if (!values.some(v => String(v).trim())) continue;
                     const item = {};
                     headers.forEach((h, idx) => {
                         let val = (values[idx] || '').trim();
@@ -3459,11 +3508,12 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
                 if (newData.length > 0) {
                     if (confirm(`พบข้อมูล ${newData.length} รายการ ต้องการนำเข้าข้อมูลและทับข้อมูลปัจจุบันหรือไม่?`)) {
 backupBeforeOverwrite('นำเข้า CSV');
-                        packingData = normalizePackingFlags(newData);
+                        const dd = dedupePackingRows(newData);
+                        packingData = normalizePackingFlags(dd.data);
                         saveData();
                         renderTable();
                         renderUndoButton();
-                        showToast(`นำเข้า ${newData.length} รายการสำเร็จ (ย้อนกลับได้ที่ Settings)`, '📥');
+                        showToast(`นำเข้า ${dd.data.length} รายการสำเร็จ` + (dd.removed ? ` (รวมแถวซ้ำ ${dd.removed} แถว)` : '') + ' (ย้อนกลับได้ที่ Settings)', '📥');
                     }
                 } else {
                     alert('ไม่พบข้อมูลที่ถูกต้องในไฟล์ CSV');
