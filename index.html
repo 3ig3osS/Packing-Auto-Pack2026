@@ -1182,7 +1182,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.22';
+        const APP_VERSION = 'v5.56.23';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1418,9 +1418,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-3.5 shadow-sm cursor-pointer active:scale-[0.99] transition-transform" onclick="openSpecDetail(${idx})">
                     <div class="flex items-start justify-between gap-2 ${expanded ? 'mb-2' : ''}">
                         <div class="flex-1 text-center">
-                            <div class="flex items-baseline justify-center gap-1.5 flex-wrap">
-                                ${item.cs && item.cs !== '-' ? `<span class="color-dot self-center" style="background-color: ${colorMap[item.cs] || 'transparent'}"></span>` : ''}<span class="font-extrabold text-base text-slate-900 dark:text-white">${highlight(item.c, hlQuery)}</span>
-                                ${item.pn ? `<span class="text-slate-300 dark:text-slate-600">•</span><span class="font-bold text-sm text-indigo-600 dark:text-indigo-400">P/N: ${highlight(item.pn, hlQuery)}</span>` : ''}
+                            <div class="font-extrabold text-xl tracking-tight flex items-baseline justify-center gap-2 flex-wrap">
+                                ${item.cs && item.cs !== '-' ? `<span class="color-dot self-center" style="background-color: ${colorMap[item.cs] || 'transparent'}"></span>` : ''}<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-300 dark:via-violet-300 dark:to-fuchsia-300">${highlight(item.pn || item.c, hlQuery)}</span>${item.pn ? `<span class="text-slate-400 dark:text-slate-500 text-sm font-semibold">· ${highlight(item.c, hlQuery)}</span>` : ''}
                             </div>
                             ${hasQty ? `
                             <div class="mt-1.5 flex justify-center">
