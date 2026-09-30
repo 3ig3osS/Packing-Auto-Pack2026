@@ -404,13 +404,17 @@ v5.56.0 BUGFIX BUILD
             border-color: #475569;
         }
         .spec-badge.spec-badge-on {
-            background: linear-gradient(135deg, rgba(209,250,229,0.9), rgba(167,243,208,0.75));
-            border-color: rgba(16,185,129,0.5);
+            background: linear-gradient(135deg, #fef9c3, #fde047);
+            border-color: #eab308;
         }
+        .spec-badge.spec-badge-on > span:first-child { opacity: 0.8 !important; color: #713f12; }
+        .spec-badge.spec-badge-on .spec-on-text { color: #713f12; }
         [data-theme="dark"] .spec-badge.spec-badge-on {
-            background: rgba(6,95,70,0.35);
-            border-color: rgba(16,185,129,0.5);
+            background: rgba(234,179,8,0.28);
+            border-color: rgba(250,204,21,0.65);
         }
+        [data-theme="dark"] .spec-badge.spec-badge-on > span:first-child { color: #fef08a; }
+        [data-theme="dark"] .spec-badge.spec-badge-on .spec-on-text { color: #fef08a; }
         
         .status-pill { 
             padding: 4px 10px; 
@@ -1146,7 +1150,7 @@ v5.56.0 BUGFIX BUILD
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <h3 class="text-lg font-bold mb-1 text-slate-900 dark:text-white">ล้างข้อมูลทั้งหมด?</h3>
-                <p class="text-slate-400 text-xs mb-4">ข้อมูลที่บันทึกไว้จะหายไปและกลับไปใช้ค่าเริ่มต้น</p>
+                <p class="text-slate-400 text-xs mb-4">ข้อมูล Packing List และ Customer Spec ในเครื่องนี้จะถูกล้างเป็นว่างเปล่าทั้งหมด</p>
                 <input type="text" id="confirmResetInput" placeholder="พิมพ์ RESET เพื่อยืนยัน" class="input-style text-center mb-4 !border-rose-200 dark:!border-rose-900/50 text-sm">
                 <div class="flex gap-2">
                     <button onclick="closeResetModal()" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl font-bold text-xs">ยกเลิก</button>
@@ -1182,7 +1186,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.23';
+        const APP_VERSION = 'v5.56.25';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1598,7 +1602,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         }
 
         function specBadge(on, label, value) {
-            return `<div class="spec-badge ${on ? 'spec-badge-on' : ''}"><span class="opacity-50 text-[9px] mr-1">${label}:</span><span class="${on ? 'font-bold text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่')}</span></div>`;
+            return `<div class="spec-badge ${on ? 'spec-badge-on' : ''}"><span class="opacity-50 text-[9px] mr-1">${label}:</span><span class="${on ? 'font-bold spec-on-text' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่')}</span></div>`;
         }
 
         function openSpecDetail(index) {
@@ -1609,8 +1613,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const hasColorSticker = item.cs && item.cs !== '-';
             body.innerHTML = `
                 <div class="mb-4">
-                    <div class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-300 dark:via-violet-300 dark:to-fuchsia-300 font-extrabold text-2xl tracking-tight">${escapeHtml(item.c)}</div>
-                    ${item.pn ? `<div class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-xs">P/N: ${escapeHtml(item.pn)}</div>` : ''}
+                    <div class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-300 dark:via-violet-300 dark:to-fuchsia-300 font-extrabold text-2xl tracking-tight">${escapeHtml(item.pn || item.c)}</div>
+                    ${item.pn ? `<div class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-xs">${escapeHtml(item.c)}</div>` : ''}
                 </div>
                 <div class="divide-y divide-slate-100 dark:divide-slate-800 text-sm mb-4">
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Unit Qty</span><span class="font-semibold">${item.ut || 0}</span></div>
@@ -3451,10 +3455,14 @@ backupBeforeOverwrite('นำเข้า JSON');
             if (!editUnlocked) { requireEditUnlock(() => executeReset()); return; }
             if (document.getElementById('confirmResetInput').value.toUpperCase() === 'RESET') {
 backupBeforeOverwrite('รีเซ็ตข้อมูล');
+                backupSpecBeforeOverwrite('รีเซ็ตข้อมูล'); // v5.56.24: รีเซ็ต Customer Spec ด้วย (เก็บจุดย้อนกลับไว้ก่อน)
                 packingData = JSON.parse(JSON.stringify(initialData));
-                saveDataLocalOnly(); renderTable(); renderUndoButton(); closeResetModal(); // v5.56.0: ใช้ LocalOnly ไม่ให้ reset auto-sync ขึ้นชีทที่ใช้ร่วมกัน (ดูคอมเมนต์ด้านบน)
+                CUSTOMER_SPEC_DATA = JSON.parse(JSON.stringify(CUSTOMER_SPEC_DEFAULT));
+                packingExpandedIndices = new Set(); specExpandedIndices = new Set();
+                saveDataLocalOnly(); saveSpecDataLocalOnly(); // v5.56.0: ใช้ LocalOnly ไม่ให้ reset auto-sync ขึ้นชีทที่ใช้ร่วมกัน (ดูคอมเมนต์ด้านบน)
+                renderTable(); renderUndoButton(); filterCustomerSpec(); renderSpecUndoButton(); closeResetModal();
                 document.getElementById('confirmResetInput').value = '';
-                showToast('รีเซ็ตข้อมูลสำเร็จ (ย้อนกลับได้ที่ Settings) — ยังไม่ได้ซิงค์ขึ้น Google Sheets', '🔄');
+                showToast('ล้างข้อมูล Packing List และ Customer Spec แล้ว (ย้อนกลับได้ที่ Settings) — ยังไม่ได้ซิงค์ขึ้น Google Sheets', '🔄');
             } else { alert('พิมพ์ RESET เพื่อยืนยัน'); }
         }
 
