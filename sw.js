@@ -1,6 +1,6 @@
-const CACHE_NAME='packing-auto-pack-v5-56-19-shell';
+const CACHE_NAME='packing-auto-pack-v5-56-22-shell';
 const APP_SHELL='./index.html';
-const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdnjs.cloudflare.com','fonts.googleapis.com','fonts.gstatic.com']);
 // v5.56.19: ถ้าเครือข่ายตอบช้าเกินเวลานี้ และมีหน้าแอปในแคชอยู่แล้ว ให้เปิดจากแคชทันที (เครือข่ายยังโหลดต่อเพื่ออัปเดตแคชรอบหน้า)
 const NAV_TIMEOUT_MS=3500;
