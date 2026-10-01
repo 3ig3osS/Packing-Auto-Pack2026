@@ -1186,7 +1186,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.27';
+        const APP_VERSION = 'v5.56.28';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1545,10 +1545,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const form = document.getElementById('specForm');
             form.reset();
             specFormDirty = false;
+            delete form.dataset.editKey;
             if (index !== null && CUSTOMER_SPEC_DATA[index]) {
                 const item = CUSTOMER_SPEC_DATA[index];
                 document.getElementById('specModalTitle').innerText = 'แก้ไข Customer Spec';
                 document.getElementById('specEditIndex').value = index;
+                form.dataset.editKey = specItemKey(item); // v5.56.28
                 document.getElementById('specCustomerInput').value = item.c || '';
                 document.getElementById('specPartNoInput').value = item.pn || '';
                 document.getElementById('specUnit').value = item.ut || '';
@@ -1739,8 +1741,23 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 note: document.getElementById('specNoteInput').value,
                 mt: Date.now()
             };
-            if (index !== '') CUSTOMER_SPEC_DATA[index] = newItem;
-            else CUSTOMER_SPEC_DATA.unshift(newItem);
+            // v5.56.28 BUGFIX: เหมือน Packing List — แก้ Customer/Part No แล้วต้องลบแถวคีย์เดิมออกจากชีตด้วย
+            const specFormEl = document.getElementById('specForm');
+            const oldSpecKey = specFormEl.dataset.editKey || '';
+            let specTarget = -1;
+            if (index !== '') {
+                const byIdx = CUSTOMER_SPEC_DATA[index];
+                if (byIdx && (!oldSpecKey || specItemKey(byIdx) === oldSpecKey)) specTarget = Number(index);
+                else if (oldSpecKey) specTarget = CUSTOMER_SPEC_DATA.findIndex(it => specItemKey(it) === oldSpecKey);
+            }
+            const newSpecKey = specItemKey(newItem);
+            if (specTarget !== -1) {
+                CUSTOMER_SPEC_DATA[specTarget] = newItem;
+                if (oldSpecKey && oldSpecKey !== newSpecKey) addTombstone(SPEC_TOMBSTONE_KEY, oldSpecKey);
+            } else {
+                CUSTOMER_SPEC_DATA.unshift(newItem);
+                if (index !== '' && oldSpecKey) showToast('รายการเดิมถูกเปลี่ยนจากเครื่องอื่นระหว่างแก้ไข — บันทึกเป็นรายการใหม่แทน', '⚠️');
+            }
             specFormDirty = false;
             saveSpecData();
             filterCustomerSpec();
@@ -2343,10 +2360,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const form = document.getElementById('packingForm');
             form.reset();
             formDirty = false;
+            delete form.dataset.editKey;
             if (index !== null) {
                 const item = packingData[index];
                 document.getElementById('modalTitle').innerText = 'แก้ไขสเปคสินค้า';
                 document.getElementById('editIndex').value = index;
+                form.dataset.editKey = packingItemKey(item); // v5.56.28: จำคีย์เดิมไว้ — ใช้หาแถวที่แก้จริงและตรวจว่าคีย์ถูกเปลี่ยนหรือไม่
                 document.getElementById('partNo').value = item['Part No'];
                 document.getElementById('customer').value = item['Customer'];
                 document.getElementById('custPN').value = item['CustPN'] || '';
@@ -2445,8 +2464,28 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 "DCFormat": document.getElementById('dcFormat').value,
                 "_mt": Date.now()
             };
-            if (index !== '') packingData[index] = newItem;
-            else packingData.unshift(newItem);
+            // v5.56.28 BUGFIX (แก้แล้วได้แถวใหม่เพิ่ม): คีย์ของระบบคือ Customer + Part No — ถ้าแก้ค่าใดค่าหนึ่ง คีย์เปลี่ยน
+            // แถวเดิมในชีตยังอยู่และถูกนับเป็นอีกรายการ จึงต้องส่ง tombstone ของ "คีย์เดิม" ไปลบแถวเดิมด้วย
+            // และหาแถวที่กำลังแก้ด้วยคีย์เดิม (ไม่เชื่อ index อย่างเดียว เพราะข้อมูลอาจถูกดึง/เรียงใหม่ระหว่างที่เปิดฟอร์มค้างไว้ ทำให้ index ชี้ผิดแถว)
+            const formEl = document.getElementById('packingForm');
+            const oldKey = formEl.dataset.editKey || '';
+            let targetIdx = -1;
+            if (index !== '') {
+                const byIdx = packingData[index];
+                if (byIdx && (!oldKey || packingItemKey(byIdx) === oldKey)) targetIdx = Number(index);
+                else if (oldKey) targetIdx = packingData.findIndex(it => packingItemKey(it) === oldKey);
+            }
+            const newKey = packingItemKey(newItem);
+            if (targetIdx !== -1) {
+                packingData[targetIdx] = newItem;
+                if (oldKey && oldKey !== newKey) addTombstone(PACKING_TOMBSTONE_KEY, oldKey);
+            } else if (index !== '' && oldKey) {
+                // แถวที่กำลังแก้ถูกลบ/เปลี่ยนไปแล้วจากการซิงค์ระหว่างเปิดฟอร์ม — บันทึกเป็นรายการ (ไม่เขียนทับแถวอื่น)
+                packingData.unshift(newItem);
+                showToast('รายการเดิมถูกเปลี่ยนจากเครื่องอื่นระหว่างแก้ไข — บันทึกเป็นรายการใหม่แทน', '⚠️');
+            } else {
+                packingData.unshift(newItem);
+            }
             formDirty = false;
             saveData(); renderTable(); closeModal();
             showToast('บันทึกข้อมูลสำเร็จ');
@@ -2690,7 +2729,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.27: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
+        const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.28: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
         // // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
         // v5.56.0 BUGFIX: ป้องกันการแก้ไขที่เกิดขึ้น "ระหว่าง" ที่ sync กำลังส่งค้างอยู่ (in-flight) หายไป
@@ -2760,7 +2799,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         // เข้ามาครั้งหน้าต้องใส่รหัสปลดล็อกใหม่ทั้ง Packing List และ Customer Spec เสมอ ไม่ค้างสถานะ
         // ปลดล็อกไว้ข้ามเซสชันเหมือนเดิมอีกต่อไป (รหัส/Sync Token ที่เคยกรอกไว้ยังจำอยู่ ไม่ต้องพิมพ์
         // รหัสตัวอักษรใหม่ทุกครั้ง แค่ต้องกดยืนยัน/ใส่รหัสเพื่อปลดล็อกอีกครั้งก่อนเริ่มแก้ไข)
-        // v5.56.27: ออกจากแท็บ/สลับแอป -> ส่งงานที่ค้างทันที (ไม่รอ debounce) ; กลับมาที่แท็บ -> ดึงข้อมูลล่าสุดของคนอื่น (ไม่ถี่กว่า 60 วิ, ไม่ดึงตอนกำลังแก้ฟอร์ม)
+        // v5.56.28: ออกจากแท็บ/สลับแอป -> ส่งงานที่ค้างทันที (ไม่รอ debounce) ; กลับมาที่แท็บ -> ดึงข้อมูลล่าสุดของคนอื่น (ไม่ถี่กว่า 60 วิ, ไม่ดึงตอนกำลังแก้ฟอร์ม)
         document.addEventListener('visibilitychange', function () {
             try {
                 if (document.visibilityState === 'hidden') {
@@ -3569,7 +3608,7 @@ backupBeforeOverwrite('นำเข้า CSV');
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const serverRecords = json.records || [];
                 const lastSyncAt = parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10);
-                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey)); // v5.56.27: บังคับ Boolean จริงเสมอ ("FALSE" ห้ามเป็นติ๊ก)
+                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey)); // v5.56.28: บังคับ Boolean จริงเสมอ ("FALSE" ห้ามเป็นติ๊ก)
                 saveDataLocalOnly();
                 renderTable();
             } catch(e) { /* โหลดเทียบไม่สำเร็จ ไม่เป็นไร ข้ามไป sync ตามปกติเลย (แค่เสี่ยง resurrect เหมือนเดิมถ้าเน็ตมีปัญหาพอดี) */ }
