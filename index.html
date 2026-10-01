@@ -1186,7 +1186,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.26';
+        const APP_VERSION = 'v5.56.27';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -2690,7 +2690,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        const SYNC_DEBOUNCE_MS = 4000; // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
+        const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.27: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
+        // // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
         // v5.56.0 BUGFIX: ป้องกันการแก้ไขที่เกิดขึ้น "ระหว่าง" ที่ sync กำลังส่งค้างอยู่ (in-flight) หายไป
         // ปัญหาเดิม: ผลลัพธ์ merge ที่เซิร์ฟเวอร์ส่งกลับมาเป็น snapshot ตอนที่ "ส่งคำขอ" ไม่ใช่ตอนที่ "ได้รับคำตอบ"
@@ -2759,6 +2760,23 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         // เข้ามาครั้งหน้าต้องใส่รหัสปลดล็อกใหม่ทั้ง Packing List และ Customer Spec เสมอ ไม่ค้างสถานะ
         // ปลดล็อกไว้ข้ามเซสชันเหมือนเดิมอีกต่อไป (รหัส/Sync Token ที่เคยกรอกไว้ยังจำอยู่ ไม่ต้องพิมพ์
         // รหัสตัวอักษรใหม่ทุกครั้ง แค่ต้องกดยืนยัน/ใส่รหัสเพื่อปลดล็อกอีกครั้งก่อนเริ่มแก้ไข)
+        // v5.56.27: ออกจากแท็บ/สลับแอป -> ส่งงานที่ค้างทันที (ไม่รอ debounce) ; กลับมาที่แท็บ -> ดึงข้อมูลล่าสุดของคนอื่น (ไม่ถี่กว่า 60 วิ, ไม่ดึงตอนกำลังแก้ฟอร์ม)
+        document.addEventListener('visibilitychange', function () {
+            try {
+                if (document.visibilityState === 'hidden') {
+                    if (localStorage.getItem(SHEETS_AUTOSYNC_KEY) !== '1' || !navigator.onLine) return;
+                    if (packingSyncDebounceTimer && editUnlocked) { clearTimeout(packingSyncDebounceTimer); packingSyncDebounceTimer = null; packingFirstDirtyAt = 0; syncToGoogleSheets(true); }
+                    if (specSyncDebounceTimer && specUnlocked) { clearTimeout(specSyncDebounceTimer); specSyncDebounceTimer = null; specFirstDirtyAt = 0; syncSpecToGoogleSheets(true); }
+                } else if (document.visibilityState === 'visible') {
+                    if (!navigator.onLine || !getSheetsUrl()) return;
+                    if (Date.now() - lastPullAt < PULL_MIN_INTERVAL_MS) return;
+                    if (formDirty || specFormDirty) return;
+                    if (packingSyncState === SYNC_STATE.SYNCING || specSyncState === SYNC_STATE.SYNCING) return;
+                    lastPullAt = Date.now();
+                    refreshPublicData();
+                }
+            } catch (e) { /* ไม่ให้ error ตรงนี้กระทบการใช้งานหลัก */ }
+        });
         window.addEventListener('pagehide', function () {
             localStorage.removeItem(EDIT_UNLOCK_KEY);
             localStorage.removeItem(SPEC_UNLOCK_KEY);
@@ -2770,19 +2788,23 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             packingSyncState = navigator.onLine ? packingSyncState : SYNC_STATE.OFFLINE;
             renderSyncDiagnostics();
             clearTimeout(packingSyncDebounceTimer);
-            packingSyncDebounceTimer = setTimeout(() => { if(navigator.onLine) syncToGoogleSheets(true); else renderConnectionStatus('offline'); }, SYNC_DEBOUNCE_MS);
+            if (!packingFirstDirtyAt) packingFirstDirtyAt = Date.now();
+            const wait = Math.max(0, Math.min(SYNC_DEBOUNCE_MS, packingFirstDirtyAt + SYNC_MAXWAIT_MS - Date.now()));
+            packingSyncDebounceTimer = setTimeout(() => { packingFirstDirtyAt = 0; if(navigator.onLine) syncToGoogleSheets(true); else renderConnectionStatus('offline'); }, wait);
         }
         function scheduleSpecAutoSync() {
             if (localStorage.getItem(SHEETS_AUTOSYNC_KEY) !== '1') return;
             specSyncState = navigator.onLine ? specSyncState : SYNC_STATE.OFFLINE;
             renderSyncDiagnostics();
             clearTimeout(specSyncDebounceTimer);
-            specSyncDebounceTimer = setTimeout(() => { if(navigator.onLine) syncSpecToGoogleSheets(true); else renderConnectionStatus('offline'); }, SYNC_DEBOUNCE_MS);
+            if (!specFirstDirtyAt) specFirstDirtyAt = Date.now();
+            const wait = Math.max(0, Math.min(SYNC_DEBOUNCE_MS, specFirstDirtyAt + SYNC_MAXWAIT_MS - Date.now()));
+            specSyncDebounceTimer = setTimeout(() => { specFirstDirtyAt = 0; if(navigator.onLine) syncSpecToGoogleSheets(true); else renderConnectionStatus('offline'); }, wait);
         }
 
         // v5.56.0 #4: fetch พร้อม retry อัตโนมัติ 1–3 ครั้ง (เฉพาะตอน fetch ล้มเหลวระดับเครือข่าย เช่น
         // หลุดเน็ต/DNS/timeout — ไม่ retry ตอน error ระดับแอป เช่น token ผิด เพราะลองใหม่ไปก็ไม่ช่วย)
-        async function fetchWithRetry(url, options={}, maxRetries=2, timeoutMs=SYNC_FETCH_TIMEOUT_MS){let lastErr;for(let a=1;a<=maxRetries;a++){const c=new AbortController(),tm=setTimeout(()=>c.abort(),timeoutMs);try{scheduleSlowIndicator();const r=await fetch(url,Object.assign({},options,{signal:c.signal}));clearSlowIndicator();return r}catch(e){clearSlowIndicator();lastErr=e.name==='AbortError'?new Error('เชื่อมต่อช้า/หมดเวลา'):e;if(a<maxRetries&&navigator.onLine)await new Promise(r=>setTimeout(r,a*900))}finally{clearTimeout(tm)}}throw lastErr||new Error('เชื่อมต่อไม่สำเร็จ')}
+        async function fetchWithRetry(url, options={}, maxRetries=2, timeoutMs=SYNC_FETCH_TIMEOUT_MS){let lastErr;for(let a=1;a<=maxRetries;a++){const c=new AbortController(),tm=setTimeout(()=>c.abort(),timeoutMs);try{scheduleSlowIndicator();const r=await fetch(url,Object.assign({},options,{signal:c.signal}));clearSlowIndicator();return r}catch(e){clearSlowIndicator();lastErr=e.name==='AbortError'?new Error('เชื่อมต่อช้า/หมดเวลา'):e;if(a<maxRetries&&navigator.onLine)await new Promise(r=>setTimeout(r,a*900+Math.floor(Math.random()*700)))}finally{clearTimeout(tm)}}throw lastErr||new Error('เชื่อมต่อไม่สำเร็จ')}
 
         // v5.56.0 #10: Sync Diagnostics — แสดงสถานะ, ซิงค์ล่าสุด, error ล่าสุด, จำนวนรายการ, รายการค้างซิงค์
         function syncStateBadgeHTML(state) {
@@ -3057,7 +3079,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                         action: 'sync', token, fieldOrder: SYNC_FIELD_ORDER, records: recordsToSend,
                         keyFields: PACKING_KEY_FIELDS, deletedKeys: tombstonesSent
                     })
-                });
+                }, 2, SYNC_WRITE_TIMEOUT_MS);
                 let ok = res.ok;
                 let mergedRecords = null;
                 let errMsg = '';
@@ -3163,7 +3185,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                         action: 'syncSpec', token, fieldOrder: SPEC_SYNC_HEADERS, records: CUSTOMER_SPEC_DATA.map(specItemToSheetRecord),
                         keyFields: SPEC_KEY_FIELDS, deletedKeys: tombstonesSent
                     })
-                });
+                }, 2, SYNC_WRITE_TIMEOUT_MS);
                 let ok = res.ok;
                 let mergedRecords = null;
                 let errMsg = '';
@@ -3547,7 +3569,7 @@ backupBeforeOverwrite('นำเข้า CSV');
                 if (json.status === 'error') throw new Error(json.message || 'unknown');
                 const serverRecords = json.records || [];
                 const lastSyncAt = parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10);
-                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey)); // v5.56.26: บังคับ Boolean จริงเสมอ ("FALSE" ห้ามเป็นติ๊ก)
+                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, serverRecords, lastSyncAt, packingItemKey)); // v5.56.27: บังคับ Boolean จริงเสมอ ("FALSE" ห้ามเป็นติ๊ก)
                 saveDataLocalOnly();
                 renderTable();
             } catch(e) { /* โหลดเทียบไม่สำเร็จ ไม่เป็นไร ข้ามไป sync ตามปกติเลย (แค่เสี่ยง resurrect เหมือนเดิมถ้าเน็ตมีปัญหาพอดี) */ }
