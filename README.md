@@ -1,4 +1,4 @@
-Packing-Auto-Pack2026/
+(repo: Packing-Auto-Pack2026)
 ├── index.html
 ├── manifest.webmanifest
 ├── sw.js
