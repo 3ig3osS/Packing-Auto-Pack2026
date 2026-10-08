@@ -193,14 +193,14 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.42</title>
-    <meta name="description" content="Packing Auto Pack v5.56.42 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.43</title>
+    <meta name="description" content="Packing Auto Pack v5.56.43 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.42">
+    <meta property="og:title" content="Packing Auto Pack v5.56.43">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
-    <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/icons/icon-512.png">
+    <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/assets/packing-logo.png">
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1118,7 +1118,15 @@ v5.56.0 BUGFIX BUILD
         [data-theme="cyberpunk"] .spec-badge.spec-badge-on.spec-badge-fit > span.spec-lbl:first-child { color: #fff59a; }
         [data-theme="cyberpunk"] .spec-badge.spec-badge-fit:not(.spec-badge-on) > span.text-slate-400 { color: #b3a6d9; }
 
-    </style>
+    
+        /* v5.56.43: PKG Packing branding */
+        .app-brand-logo {
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
+        }
+        @media (max-width: 420px) {
+            .app-brand-logo { width: 48px !important; height: 34px !important; }
+        }
+</style>
 
 </head>
 <body class="pb-16">
@@ -1127,7 +1135,7 @@ v5.56.0 BUGFIX BUILD
         <div class="flex justify-between items-center">
             
 <div class="flex items-center gap-2">
-    <img src="data:image/webp;base64,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" alt="" style="width:34px;height:34px;object-fit:cover;border-radius:9px;flex-shrink:0;display:block;">
+    <img src="./assets/packing-logo.png" alt="PKG Packing" class="app-brand-logo" style="width:54px;height:36px;object-fit:cover;object-position:center;border-radius:8px;flex-shrink:0;display:block;" loading="eager" decoding="async">
     <div>
         <h1 class="text-slate-900 dark:text-white text-base font-extrabold tracking-tight leading-tight bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent hero-title">Packing Auto Pack</h1>
         <div class="flex items-center gap-1.5 leading-none flex-wrap" style="min-height:12px;">
@@ -1583,7 +1591,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.42';
+        const APP_VERSION = 'v5.56.43';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1898,7 +1906,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             return d;
         }
 
-        // v5.56.42: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
+        // v5.56.43: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
         // - พิมพ์หลายคำได้ (เว้นวรรค) ทุกคำต้องเจอในช่องใดช่องหนึ่งจาก 3 ช่องนี้
         // - Part No / Customer ไม่สนตัวพิมพ์เล็ก-ใหญ่ และไม่สนขีด/ช่องว่าง/จุด/สแลช (เช่น พิมพ์ ABC123 เจอ ABC-123)
         const SPEC_SEP_RE = /[\s\-_./]+/g;
@@ -3194,7 +3202,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        // v5.56.42: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
+        // v5.56.43: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
         const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.28: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
         // // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
@@ -3626,7 +3634,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                         renderUndoButton();
                     }
                     removeSentTombstones(PACKING_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.42: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.43: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพราะข้อมูลเหล่านั้นยังไม่เคยถูกส่งสำเร็จ หากเลื่อน LASTSYNC จะทำให้ reconcileOnPull()
                     // มองข้อมูลค้างเป็นข้อมูลที่ซิงค์แล้วและมีโอกาสถูก server snapshot ทับในรอบถัดไป
                     const pendingAfterSync = packingData.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(PACKING_TOMBSTONE_KEY).length>0;
@@ -3737,7 +3745,7 @@ backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merg
                         renderSpecUndoButton();
                     }
                     removeSentTombstones(SPEC_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.42: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.43: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพื่อไม่ให้ reconcileOnPull() ถือว่าข้อมูลที่ยังไม่ถูกส่งเป็นข้อมูลที่ซิงค์แล้ว
                     const pendingAfterSpecSync = CUSTOMER_SPEC_DATA.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(SPEC_TOMBSTONE_KEY).length>0;
                     setPendingSync('spec', pendingAfterSpecSync);
