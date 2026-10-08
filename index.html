@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.41</title>
-    <meta name="description" content="Packing Auto Pack v5.56.41 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.42</title>
+    <meta name="description" content="Packing Auto Pack v5.56.42 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.41">
+    <meta property="og:title" content="Packing Auto Pack v5.56.42">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/icons/icon-512.png">
@@ -1583,7 +1583,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.41';
+        const APP_VERSION = 'v5.56.42';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1898,7 +1898,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             return d;
         }
 
-        // v5.56.41: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
+        // v5.56.42: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
         // - พิมพ์หลายคำได้ (เว้นวรรค) ทุกคำต้องเจอในช่องใดช่องหนึ่งจาก 3 ช่องนี้
         // - Part No / Customer ไม่สนตัวพิมพ์เล็ก-ใหญ่ และไม่สนขีด/ช่องว่าง/จุด/สแลช (เช่น พิมพ์ ABC123 เจอ ABC-123)
         const SPEC_SEP_RE = /[\s\-_./]+/g;
@@ -3187,14 +3187,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
         // ═══ v5.56.0: Sync Engine — state machine, online/offline, retry, debounce queue, diagnostics ═══
         // ใช้ร่วมกันทั้ง Packing List (packing*) และ Customer Spec (spec*)
-        const SYNC_STATE = { IDLE: 'IDLE', SYNCING: 'SYNCING', SUCCESS: 'SUCCESS', FAILED: 'FAILED', OFFLINE: 'OFFLINE' };
+        const SYNC_STATE = { IDLE: 'IDLE', SYNCING: 'SYNCING', SUCCESS: 'SUCCESS', PENDING: 'PENDING', FAILED: 'FAILED', OFFLINE: 'OFFLINE' };
         let packingSyncState = navigator.onLine ? SYNC_STATE.IDLE : SYNC_STATE.OFFLINE;
         let specSyncState = navigator.onLine ? SYNC_STATE.IDLE : SYNC_STATE.OFFLINE;
         let packingLastErrorMsg = '';
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        // v5.56.41: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
+        // v5.56.42: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
         const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.28: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
         // // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
@@ -3258,7 +3258,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         }
 
         // v5.56.0 #3: Online / Offline Detection — พอกลับมาออนไลน์ ลองซิงค์ที่ค้างไว้ทันทีถ้าเปิด auto sync
-        window.addEventListener('online',()=>{clearSlowIndicator();clearTimeout(offlineRetryTimer);offlineRetryTimer=null;offlineRetryAttempts=0;if(packingSyncState===SYNC_STATE.OFFLINE)packingSyncState=SYNC_STATE.IDLE;if(specSyncState===SYNC_STATE.OFFLINE)specSyncState=SYNC_STATE.IDLE;renderConnectionStatus('online');renderSyncDiagnostics();showToast('กลับมาออนไลน์แล้ว — กำลังตรวจรายการรอซิงค์','📡');if(getSheetsUrl() && localStorage.getItem(SHEETS_AUTOSYNC_KEY)==='1'){if(hasPendingSync('packing'))syncToGoogleSheets(true);if(hasPendingSync('spec'))syncSpecToGoogleSheets(true)}});
+        window.addEventListener('online',()=>{clearSlowIndicator();clearTimeout(offlineRetryTimer);offlineRetryTimer=null;offlineRetryAttempts=0;if(packingSyncState===SYNC_STATE.OFFLINE)packingSyncState=SYNC_STATE.IDLE;if(specSyncState===SYNC_STATE.OFFLINE)specSyncState=SYNC_STATE.IDLE;renderConnectionStatus('online');renderSyncDiagnostics();showToast('กลับมาออนไลน์แล้ว — กำลังตรวจรายการรอซิงค์','📡');if(getSheetsUrl() && localStorage.getItem(SHEETS_AUTOSYNC_KEY)==='1'){if(hasPendingSync('packing') || packingSyncState===SYNC_STATE.FAILED)syncToGoogleSheets(true);if(hasPendingSync('spec') || specSyncState===SYNC_STATE.FAILED)syncSpecToGoogleSheets(true)}});
         window.addEventListener('offline',()=>{clearSlowIndicator();packingSyncState=SYNC_STATE.OFFLINE;specSyncState=SYNC_STATE.OFFLINE;renderConnectionStatus('offline');renderSyncDiagnostics();showToast('ออฟไลน์ — ข้อมูลจะถูกเก็บไว้ในเครื่องและรอซิงค์','📡');});
 
         // v5.56.10: ล็อกการแก้ไขอัตโนมัติทุกครั้งที่ออกจากแอป (ปิดแท็บ/สลับแอป/ปิดเบราว์เซอร์) —
@@ -3317,6 +3317,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 IDLE: ['bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400', 'IDLE'],
                 SYNCING: ['bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400', '⏳ SYNCING'],
                 SUCCESS: ['bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400', '✅ SUCCESS'],
+                PENDING: ['bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400', '🟡 PENDING'],
                 FAILED: ['bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400', '⚠️ FAILED'],
                 OFFLINE: ['bg-orange-100 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400', '📡 OFFLINE']
             };
@@ -3331,8 +3332,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     <div class="flex justify-between items-center py-1"><span class="label-style">สถานะ</span>${syncStateBadgeHTML(packingSyncState)}</div>
                     <div class="flex justify-between py-1"><span class="label-style">ซิงค์ล่าสุด</span><span>${lastSync ? new Date(lastSync).toLocaleString('th-TH') : 'ยังไม่เคยซิงค์'}</span></div>
                     <div class="flex justify-between py-1"><span class="label-style">รายการทั้งหมด</span><span class="font-bold">${packingData.length}</span></div>
+                    <div class="flex justify-between py-1"><span class="label-style">รายการรอซิงค์</span><span class="font-bold">${hasPendingSync('packing') ? 'มี' : 'ไม่มี'}</span></div>
                     <div class="flex justify-between py-1"><span class="label-style">รอลบ (ยังไม่ซิงค์)</span><span class="font-bold">${getTombstones(PACKING_TOMBSTONE_KEY).length}</span></div>
                     ${packingLastErrorMsg ? `<div class="text-rose-500 dark:text-rose-400 text-[10px] pt-1">Error ล่าสุด: ${escapeHtml(packingLastErrorMsg)}</div>` : ''}
+                    ${(packingSyncState === SYNC_STATE.FAILED || packingSyncState === SYNC_STATE.PENDING) && navigator.onLine ? `<button onclick="requireEditUnlock(() => syncToGoogleSheets(false))" class="mt-2 w-full py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[10px]">🔄 ลองซิงค์อีกครั้ง</button>` : ''}
                 `;
             }
             const sEl = document.getElementById('specSyncDiag');
@@ -3342,8 +3345,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     <div class="flex justify-between items-center py-1"><span class="label-style">สถานะ</span>${syncStateBadgeHTML(specSyncState)}</div>
                     <div class="flex justify-between py-1"><span class="label-style">ซิงค์ล่าสุด</span><span>${lastSync ? new Date(lastSync).toLocaleString('th-TH') : 'ยังไม่เคยซิงค์'}</span></div>
                     <div class="flex justify-between py-1"><span class="label-style">รายการทั้งหมด</span><span class="font-bold">${CUSTOMER_SPEC_DATA.length}</span></div>
+                    <div class="flex justify-between py-1"><span class="label-style">รายการรอซิงค์</span><span class="font-bold">${hasPendingSync('spec') ? 'มี' : 'ไม่มี'}</span></div>
                     <div class="flex justify-between py-1"><span class="label-style">รอลบ (ยังไม่ซิงค์)</span><span class="font-bold">${getTombstones(SPEC_TOMBSTONE_KEY).length}</span></div>
                     ${specLastErrorMsg ? `<div class="text-rose-500 dark:text-rose-400 text-[10px] pt-1">Error ล่าสุด: ${escapeHtml(specLastErrorMsg)}</div>` : ''}
+                    ${(specSyncState === SYNC_STATE.FAILED || specSyncState === SYNC_STATE.PENDING) && navigator.onLine ? `<button onclick="requireSpecUnlock(() => syncSpecToGoogleSheets(false))" class="mt-2 w-full py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[10px]">🔄 ลองซิงค์อีกครั้ง</button>` : ''}
                 `;
             }
         }
@@ -3463,7 +3468,8 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                     renderTable();
                     renderUndoButton();
                     localStorage.setItem(SHEETS_LASTSYNC_KEY, String(Date.now()));
-                    packingSyncState = SYNC_STATE.SUCCESS; packingLastErrorMsg = '';
+                    packingSyncState = pendingAfterSync ? SYNC_STATE.PENDING : SYNC_STATE.SUCCESS; packingLastErrorMsg = '';
+                    if (pendingAfterSync) scheduleOfflineRetry();
                     renderSheetsSyncStatus(); renderSyncDiagnostics();
                     
                 } else {
@@ -3473,6 +3479,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                 localStorage.setItem(SHEETS_LASTFAIL_KEY, String(Date.now()));
                 scheduleOfflineRetry();
                 packingSyncState = SYNC_STATE.FAILED; packingLastErrorMsg = e.message || 'เชื่อมต่อไม่สำเร็จ';
+                scheduleOfflineRetry();
                 renderSheetsSyncStatus(); renderSyncDiagnostics();
                 showToast('โหลดไม่สำเร็จ: ตรวจสอบ Web App URL, deploy version หรือการเชื่อมต่อ', '⚠️');
             }
@@ -3566,8 +3573,8 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
             const delay = Math.min(60000, 3000 * Math.pow(2, offlineRetryAttempts - 1));
             offlineRetryTimer = setTimeout(() => {
                 if (!navigator.onLine) return;
-                if (hasPendingSync('packing')) syncToGoogleSheets(true);
-                if (hasPendingSync('spec')) syncSpecToGoogleSheets(true);
+                if (hasPendingSync('packing') || packingSyncState === SYNC_STATE.FAILED) syncToGoogleSheets(true);
+                if (hasPendingSync('spec') || specSyncState === SYNC_STATE.FAILED) syncSpecToGoogleSheets(true);
             }, delay);
         }
 
@@ -3619,13 +3626,14 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                         renderUndoButton();
                     }
                     removeSentTombstones(PACKING_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.41: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.42: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพราะข้อมูลเหล่านั้นยังไม่เคยถูกส่งสำเร็จ หากเลื่อน LASTSYNC จะทำให้ reconcileOnPull()
                     // มองข้อมูลค้างเป็นข้อมูลที่ซิงค์แล้วและมีโอกาสถูก server snapshot ทับในรอบถัดไป
                     const pendingAfterSync = packingData.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(PACKING_TOMBSTONE_KEY).length>0;
                     setPendingSync('packing', pendingAfterSync);
                     if (!pendingAfterSync) localStorage.setItem(SHEETS_LASTSYNC_KEY, String(Date.now()));
-                    packingSyncState = SYNC_STATE.SUCCESS; packingLastErrorMsg = '';
+                    packingSyncState = pendingAfterSync ? SYNC_STATE.PENDING : SYNC_STATE.SUCCESS; packingLastErrorMsg = '';
+                    if (pendingAfterSync) scheduleOfflineRetry();
                     renderSheetsSyncStatus(); renderSyncDiagnostics();
                     if (!silent) showToast('ซิงค์ไป Google Sheets สำเร็จ (รวมข้อมูลทุกคนแล้ว ' + (mergedRecords ? mergedRecords.length : packingData.length) + ' รายการ)', '✅');
                 } else {
@@ -3637,6 +3645,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
             } catch(e) {
                 localStorage.setItem(SHEETS_LASTFAIL_KEY, String(Date.now()));
                 packingSyncState = SYNC_STATE.FAILED; packingLastErrorMsg = e.message || 'เชื่อมต่อไม่สำเร็จ';
+                scheduleOfflineRetry();
                 renderSheetsSyncStatus(); renderSyncDiagnostics();
                 if (!silent) showToast('ซิงค์ไม่สำเร็จ: ' + (e.message || 'ตรวจสอบ URL หรือการเชื่อมต่อ'), '⚠️');
             }
@@ -3728,12 +3737,13 @@ backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merg
                         renderSpecUndoButton();
                     }
                     removeSentTombstones(SPEC_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.41: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.42: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพื่อไม่ให้ reconcileOnPull() ถือว่าข้อมูลที่ยังไม่ถูกส่งเป็นข้อมูลที่ซิงค์แล้ว
                     const pendingAfterSpecSync = CUSTOMER_SPEC_DATA.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(SPEC_TOMBSTONE_KEY).length>0;
                     setPendingSync('spec', pendingAfterSpecSync);
                     if (!pendingAfterSpecSync) localStorage.setItem(SPEC_SHEETS_LASTSYNC_KEY, String(Date.now()));
-                    specSyncState = SYNC_STATE.SUCCESS; specLastErrorMsg = '';
+                    specSyncState = pendingAfterSpecSync ? SYNC_STATE.PENDING : SYNC_STATE.SUCCESS; specLastErrorMsg = '';
+                    if (pendingAfterSpecSync) scheduleOfflineRetry();
                     renderSpecSheetsSyncStatus(); renderSyncDiagnostics();
                     if (!silent) showToast('ซิงค์ Customer Spec สำเร็จ (รวมข้อมูลทุกคนแล้ว ' + (mergedRecords ? mergedRecords.length : CUSTOMER_SPEC_DATA.length) + ' รายการ)', '✅');
                 } else {
@@ -3746,6 +3756,7 @@ backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merg
                 localStorage.setItem(SPEC_SHEETS_LASTFAIL_KEY, String(Date.now()));
                 scheduleOfflineRetry();
                 specSyncState = SYNC_STATE.FAILED; specLastErrorMsg = e.message || 'เชื่อมต่อไม่สำเร็จ';
+                scheduleOfflineRetry();
                 renderSpecSheetsSyncStatus(); renderSyncDiagnostics();
                 if (!silent) showToast('ซิงค์ Customer Spec ไม่สำเร็จ: ' + (e.message || 'ตรวจสอบ URL หรือการเชื่อมต่อ'), '⚠️');
             }
@@ -3778,7 +3789,8 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
                     filterCustomerSpec();
                     renderSpecUndoButton();
                     localStorage.setItem(SPEC_SHEETS_LASTSYNC_KEY, String(Date.now()));
-                    specSyncState = SYNC_STATE.SUCCESS; specLastErrorMsg = '';
+                    specSyncState = pendingAfterSpecSync ? SYNC_STATE.PENDING : SYNC_STATE.SUCCESS; specLastErrorMsg = '';
+                    if (pendingAfterSpecSync) scheduleOfflineRetry();
                     renderSpecSheetsSyncStatus(); renderSyncDiagnostics();
                     
                 } else {
@@ -3787,6 +3799,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             } catch(e) {
                 localStorage.setItem(SPEC_SHEETS_LASTFAIL_KEY, String(Date.now()));
                 specSyncState = SYNC_STATE.FAILED; specLastErrorMsg = e.message || 'เชื่อมต่อไม่สำเร็จ';
+                scheduleOfflineRetry();
                 renderSpecSheetsSyncStatus(); renderSyncDiagnostics();
                 showToast('โหลดไม่สำเร็จ: ' + (e.message || 'ตรวจสอบ Web App URL, deploy version หรือการเชื่อมต่อ'), '⚠️');
             }
