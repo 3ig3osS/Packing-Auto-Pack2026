@@ -1,7 +1,7 @@
 const CACHE_NAME='packing-auto-pack-v5-56-43-shell';
-// v5.56.43: เปลี่ยน cache key เพื่อบังคับ client รับ shell รุ่นใหม่และล้าง cache รุ่นเก่า
+// v5.56.44: เปลี่ยน cache key เพื่อบังคับ client รับ shell รุ่นใหม่และล้าง cache รุ่นเก่า
 const APP_SHELL='./index.html';
-const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png','./assets/packing-logo.png'];
+const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png','./packing-logo.png'];
 // v5.56.39: ไฟล์ภายนอกที่หน้าตาแอปต้องใช้ — เก็บล่วงหน้าตอนติดตั้ง เพื่อให้เปิดออฟไลน์ครั้งแรกได้สไตล์ครบ
 const CDN_PRECACHE=['https://cdn.tailwindcss.com','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css','https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap'];
 const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdnjs.cloudflare.com','fonts.googleapis.com','fonts.gstatic.com']);
