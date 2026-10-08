@@ -193,14 +193,14 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.43</title>
-    <meta name="description" content="Packing Auto Pack v5.56.43 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.44</title>
+    <meta name="description" content="Packing Auto Pack v5.56.44 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.43">
+    <meta property="og:title" content="Packing Auto Pack v5.56.44">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
-    <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/assets/packing-logo.png">
+    <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f5f7ff">
@@ -1119,7 +1119,7 @@ v5.56.0 BUGFIX BUILD
         [data-theme="cyberpunk"] .spec-badge.spec-badge-fit:not(.spec-badge-on) > span.text-slate-400 { color: #b3a6d9; }
 
     
-        /* v5.56.43: PKG Packing branding */
+        /* v5.56.44: PKG Packing branding */
         .app-brand-logo {
             box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
         }
@@ -1135,7 +1135,7 @@ v5.56.0 BUGFIX BUILD
         <div class="flex justify-between items-center">
             
 <div class="flex items-center gap-2">
-    <img src="./assets/packing-logo.png" alt="PKG Packing" class="app-brand-logo" style="width:54px;height:36px;object-fit:cover;object-position:center;border-radius:8px;flex-shrink:0;display:block;" loading="eager" decoding="async">
+    <img src="./packing-logo.png" alt="PKG Packing" class="app-brand-logo" style="width:54px;height:36px;object-fit:cover;object-position:center;border-radius:8px;flex-shrink:0;display:block;" loading="eager" decoding="async">
     <div>
         <h1 class="text-slate-900 dark:text-white text-base font-extrabold tracking-tight leading-tight bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent hero-title">Packing Auto Pack</h1>
         <div class="flex items-center gap-1.5 leading-none flex-wrap" style="min-height:12px;">
@@ -1591,7 +1591,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.43';
+        const APP_VERSION = 'v5.56.44';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1906,7 +1906,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             return d;
         }
 
-        // v5.56.43: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
+        // v5.56.44: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
         // - พิมพ์หลายคำได้ (เว้นวรรค) ทุกคำต้องเจอในช่องใดช่องหนึ่งจาก 3 ช่องนี้
         // - Part No / Customer ไม่สนตัวพิมพ์เล็ก-ใหญ่ และไม่สนขีด/ช่องว่าง/จุด/สแลช (เช่น พิมพ์ ABC123 เจอ ABC-123)
         const SPEC_SEP_RE = /[\s\-_./]+/g;
@@ -3202,7 +3202,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let specLastErrorMsg = '';
         let packingSyncDebounceTimer = null;
         let specSyncDebounceTimer = null;
-        // v5.56.43: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
+        // v5.56.44: Sync Integrity Fix — LASTSYNC จะเลื่อนเฉพาะเมื่อไม่มี pending edit/tombstone เหลือจริง
         const SYNC_DEBOUNCE_MS = 6000, SYNC_MAXWAIT_MS = 30000, SYNC_WRITE_TIMEOUT_MS = 25000, PULL_MIN_INTERVAL_MS = 60000; let packingFirstDirtyAt = 0, specFirstDirtyAt = 0, lastPullAt = Date.now(); // v5.56.28: หน่วง 6 วิ แต่ไม่เกิน 30 วิ (maxWait) กันแก้ต่อเนื่องแล้วไม่ซิงค์สักที; POST sync รอได้ 25 วิ
         // // v5.56.0 #2: รวมการแก้ไขหลายครั้งภายใน 4 วิให้เป็นซิงค์เดียว แทนที่จะยิงทุกครั้งที่บันทึก
 
@@ -3634,7 +3634,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                         renderUndoButton();
                     }
                     removeSentTombstones(PACKING_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.43: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.44: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพราะข้อมูลเหล่านั้นยังไม่เคยถูกส่งสำเร็จ หากเลื่อน LASTSYNC จะทำให้ reconcileOnPull()
                     // มองข้อมูลค้างเป็นข้อมูลที่ซิงค์แล้วและมีโอกาสถูก server snapshot ทับในรอบถัดไป
                     const pendingAfterSync = packingData.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(PACKING_TOMBSTONE_KEY).length>0;
@@ -3745,7 +3745,7 @@ backupSpecBeforeOverwrite('ก่อนรับข้อมูลที่ merg
                         renderSpecUndoButton();
                     }
                     removeSentTombstones(SPEC_TOMBSTONE_KEY, tombstonesSent);
-                    // v5.56.43: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
+                    // v5.56.44: ถ้ายังมี edit/tombstone เกิดระหว่าง request นี้ ห้ามขยับ LASTSYNC
                     // เพื่อไม่ให้ reconcileOnPull() ถือว่าข้อมูลที่ยังไม่ถูกส่งเป็นข้อมูลที่ซิงค์แล้ว
                     const pendingAfterSpecSync = CUSTOMER_SPEC_DATA.some(item => (Number(item['_mt'])||0)>syncStartedAt) || getTombstones(SPEC_TOMBSTONE_KEY).length>0;
                     setPendingSync('spec', pendingAfterSpecSync);
