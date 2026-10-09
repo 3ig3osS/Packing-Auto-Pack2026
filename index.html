@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.46</title>
-    <meta name="description" content="Packing Auto Pack v5.56.46 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.47</title>
+    <meta name="description" content="Packing Auto Pack v5.56.47 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.46">
+    <meta property="og:title" content="Packing Auto Pack v5.56.47">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
@@ -410,18 +410,21 @@ v5.56.0 BUGFIX BUILD
             color: #f1f5f9;
             border-color: #475569;
         }
-        .spec-badge.spec-badge-on {
+        /* v5.56.47: กรอบป้ายไม่ใส่สีเหลืองทั้งอันอีก — ไฮไลต์สีเฉพาะคำว่า "✓ ใส่" (หรือค่าของป้ายนั้น เช่น Surface) */
+        .spec-badge.spec-badge-on > span:first-child { opacity: 1 !important; }
+        .spec-badge.spec-badge-on .spec-on-text {
+            display: inline-block;
             background: linear-gradient(135deg, #fef9c3, #fde047);
-            border-color: #eab308;
+            color: #713f12;
+            border: 1px solid #eab308;
+            border-radius: 8px;
+            padding: 1px 9px;
         }
-        .spec-badge.spec-badge-on > span:first-child { opacity: 0.8 !important; color: #713f12; }
-        .spec-badge.spec-badge-on .spec-on-text { color: #713f12; }
-        [data-theme="dark"] .spec-badge.spec-badge-on {
+        [data-theme="dark"] .spec-badge.spec-badge-on .spec-on-text {
             background: rgba(234,179,8,0.28);
+            color: #fef08a;
             border-color: rgba(250,204,21,0.65);
         }
-        [data-theme="dark"] .spec-badge.spec-badge-on > span:first-child { color: #fef08a; }
-        [data-theme="dark"] .spec-badge.spec-badge-on .spec-on-text { color: #fef08a; }
         
         .status-pill { 
             padding: 4px 10px; 
@@ -1042,13 +1045,12 @@ v5.56.0 BUGFIX BUILD
             border-color: rgba(0,240,255,0.35);
             box-shadow: inset 0 0 10px rgba(0,240,255,0.06);
         }
-        [data-theme="cyberpunk"] .spec-badge.spec-badge-on {
+        [data-theme="cyberpunk"] .spec-badge.spec-badge-on .spec-on-text {
             background: rgba(252,238,10,0.14);
+            color: #fff59a;
             border-color: #fcee0a;
-            box-shadow: 0 0 10px rgba(252,238,10,0.28), inset 0 0 10px rgba(252,238,10,0.08);
+            box-shadow: 0 0 8px rgba(252,238,10,0.28);
         }
-        [data-theme="cyberpunk"] .spec-badge.spec-badge-on > span:first-child { color: #fff59a; }
-        [data-theme="cyberpunk"] .spec-badge.spec-badge-on .spec-on-text { color: #fff59a; }
         [data-theme="cyberpunk"] .spec-chip-on {
             background-color: rgba(252,238,10,0.14);
             color: #fff59a;
@@ -1108,14 +1110,11 @@ v5.56.0 BUGFIX BUILD
             color: #1e293b;
             opacity: 1;
         }
-        .spec-badge.spec-badge-on.spec-badge-fit > span.spec-lbl:first-child { opacity: 1 !important; color: #5c2a05; }
         .spec-badge-fit > span:last-child { line-height: 1.25; }
         .spec-badge.spec-badge-fit:not(.spec-badge-on) > span.text-slate-400 { color: #64748b; }
         [data-theme="dark"] .spec-badge-fit .spec-lbl { color: #e2e8f0; }
-        [data-theme="dark"] .spec-badge.spec-badge-on.spec-badge-fit > span.spec-lbl:first-child { color: #fef08a; }
         [data-theme="dark"] .spec-badge.spec-badge-fit:not(.spec-badge-on) > span.text-slate-400 { color: #94a3b8; }
         [data-theme="cyberpunk"] .spec-badge-fit .spec-lbl { color: #b8f7ff; }
-        [data-theme="cyberpunk"] .spec-badge.spec-badge-on.spec-badge-fit > span.spec-lbl:first-child { color: #fff59a; }
         [data-theme="cyberpunk"] .spec-badge.spec-badge-fit:not(.spec-badge-on) > span.text-slate-400 { color: #b3a6d9; }
 
     
@@ -1183,7 +1182,7 @@ v5.56.0 BUGFIX BUILD
     <div id="specSearchWrapper" class="px-3" style="max-height:0;opacity:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.16,1,0.3,1),opacity 0.25s ease,margin 0.25s ease;">
         <div class="relative" style="padding-top:4px;">
             <i class="fas fa-search absolute left-4 text-slate-400 pointer-events-none" style="top:50%;transform:translateY(-50%);margin-top:2px;"></i>
-            <input type="text" id="specSearchInput" oninput="filterCustomerSpec()" placeholder="ค้นหา Part No, Customer หรือ Special Requirement..."
+            <input type="text" id="specSearchInput" oninput="filterCustomerSpec()" placeholder="ค้นหา Part No, Customer, CUST P/N หรือ Special Requirement..."
                 class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-11 pr-10 text-slate-900 dark:text-white font-medium placeholder-slate-400 outline-none text-sm transition-all focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900">
             <button id="specSearchClearBtn" onclick="clearSpecSearch()" class="absolute right-3 text-slate-400 hidden" style="top:50%;transform:translateY(-50%);margin-top:2px;">
                 <i class="fas fa-times-circle text-base"></i>
@@ -1458,6 +1457,7 @@ v5.56.0 BUGFIX BUILD
                     <div><label class="label-style">CUSTOMER</label><input type="text" id="specCustomerInput" required class="input-style" placeholder="ระบุรหัส/ชื่อลูกค้า"></div>
                     <div><label class="label-style">PART NO</label><input type="text" id="specPartNoInput" class="input-style" placeholder="ระบุ Part No (ถ้ามี)"></div>
                 </div>
+                <div><label class="label-style">CUST P/N</label><input type="text" id="specCustPNInput" class="input-style" placeholder="ระบุ CUST P/N (ถ้ามี)"></div>
                 <div class="grid grid-cols-3 gap-2 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
                     <div><label class="label-style !text-[9px]">UNIT</label><input type="number" id="specUnit" oninput="calculateSpecTotal()" class="input-style !px-2.5 !text-sm" placeholder="0"></div>
                     <div><label class="label-style !text-[9px]">PACK</label><input type="number" id="specPack" oninput="calculateSpecTotal()" class="input-style !px-2.5 !text-sm" placeholder="0"></div>
@@ -1591,7 +1591,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.46';
+        const APP_VERSION = 'v5.56.47';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1863,6 +1863,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                             ${specBadge(item.af, 'Aluminum Foil Bag')}
                             ${specBadge(item.pv, 'Plastic Vacuum Bag')}
                             ${specBadge(!!item.su, 'Surface', item.su ? escapeHtml(item.su) : '-')}
+                            <div class="spec-badge spec-badge-fit col-span-2"><span class="spec-lbl">CUST P/N:</span><span class="font-bold text-indigo-500 dark:text-indigo-400">${item.cp ? highlightSpec(item.cp, hlQuery) : '-'}</span></div>
                         </div>
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
                             <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
@@ -1898,16 +1899,17 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             });
             filterCustomerSpec();
         }
-        // v5.56.46: เทียบข้อความแบบแปลงเป็นสตริงก่อนเสมอ (กันค่าเป็น number แล้ว error) และเรียงเลขตามค่าจริง (2 มาก่อน 10)
+        // v5.56.47: เทียบข้อความแบบแปลงเป็นสตริงก่อนเสมอ (กันค่าเป็น number แล้ว error) และเรียงเลขตามค่าจริง (2 มาก่อน 10)
         function cmpText(a, b) {
             return cleanText(a).localeCompare(cleanText(b), undefined, { numeric: true, sensitivity: 'base' });
         }
+        function specCompare(a, b) {
+            if (currentSpecSort === 'partno') return cmpText(a.pn, b.pn) || cmpText(a.c, b.c);
+            if (currentSpecSort === 'newest') return (Number(b.mt) || 0) - (Number(a.mt) || 0);
+            return cmpText(a.c, b.c);
+        }
         function sortSpecData(list) {
-            const d = list.slice();
-            if (currentSpecSort === 'partno') d.sort((a, b) => cmpText(a.pn, b.pn) || cmpText(a.c, b.c));
-            else if (currentSpecSort === 'newest') d.sort((a, b) => (Number(b.mt) || 0) - (Number(a.mt) || 0));
-            else d.sort((a, b) => cmpText(a.c, b.c));
-            return d;
+            return list.slice().sort(specCompare);
         }
 
         // v5.56.44: ค้นหา Customer Spec จาก Part No / Customer / Special Requirement
@@ -1916,15 +1918,14 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const SPEC_SEP_RE = /[\s\-_./]+/g;
         function specNorm(s) { return cleanText(s).toLowerCase().replace(SPEC_SEP_RE, ''); }
         function specQueryTokens(q) {
-            const thaiDigits = cleanText(q).replace(/[๐-๙]/g, ch => String(ch.charCodeAt(0) - 0x0E50)); // v5.56.46: พิมพ์เลขไทยก็ค้นเจอ
+            const thaiDigits = cleanText(q).replace(/[๐-๙]/g, ch => String(ch.charCodeAt(0) - 0x0E50)); // v5.56.47: พิมพ์เลขไทยก็ค้นเจอ
             return thaiDigits.toLowerCase().split(/\s+/)
                 .map(raw => ({ raw, norm: specNorm(raw) }))
                 .filter(t => t.norm);
         }
-        function specMatches(item, tokens) {
-            const pn = specNorm(item.pn), cu = specNorm(item.c);
-            const note = cleanText(item.note).toLowerCase();
-            return tokens.every(t => pn.includes(t.norm) || cu.includes(t.norm) || note.includes(t.raw));
+        // v5.56.47: ให้คะแนนด้วยตัวเดียวกับ Packing List (Part No → Customer → CUST P/N → Note) คืน null = ไม่ตรง
+        function scoreSpecItem(item, tokens) {
+            return scoreSearchFields(item.pn, item.c, item.cp, item.note, tokens);
         }
         function highlightSpec(text, query) {
             const safe = escapeHtml(cleanText(text));
@@ -1943,10 +1944,17 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const q = searchEl ? cleanText(searchEl.value).trim() : '';
             if (clearBtn) clearBtn.classList.toggle('hidden', !q);
             const tokens = specQueryTokens(q);
-            const base = tokens.length
-                ? CUSTOMER_SPEC_DATA.filter(item => specMatches(item, tokens))
-                : CUSTOMER_SPEC_DATA;
-            renderCustomerSpecCards(sortSpecData(base), tokens.length ? q : '');
+            let result;
+            if (tokens.length) {
+                const scored = [];
+                CUSTOMER_SPEC_DATA.forEach(item => { const sc = scoreSpecItem(item, tokens); if (sc !== null) scored.push({ item, sc }); });
+                // ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน แล้วค่อยใช้ปุ่มเรียงที่เลือกไว้เป็นตัวตัดสินเมื่อคะแนนเท่ากัน
+                scored.sort((x, y) => (x.sc - y.sc) || specCompare(x.item, y.item));
+                result = scored.map(x => x.item);
+            } else {
+                result = sortSpecData(CUSTOMER_SPEC_DATA);
+            }
+            renderCustomerSpecCards(result, tokens.length ? q : '');
         }
 
         function switchMainTab(tab) {
@@ -1990,6 +1998,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 form.dataset.editKey = specItemKey(item); // v5.56.28
                 document.getElementById('specCustomerInput').value = item.c || '';
                 document.getElementById('specPartNoInput').value = item.pn || '';
+                document.getElementById('specCustPNInput').value = item.cp || '';
                 document.getElementById('specUnit').value = item.ut || '';
                 document.getElementById('specPack').value = item.pk || '';
                 document.getElementById('specTotal').value = item.tt || 0;
@@ -2056,6 +2065,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     ${item.pn ? `<div class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-xs">${escapeHtml(item.c)}</div>` : ''}
                 </div>
                 <div class="divide-y divide-slate-100 dark:divide-slate-800 text-sm mb-4">
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">CustP/N</span><span class="font-bold text-indigo-500">${escapeHtml(item.cp) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Unit Qty</span><span class="font-semibold">${item.ut || 0}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Qty / Pack</span><span class="font-semibold">${item.pk || 0}</span></div>
                     <div class="detail-row flex justify-between py-2.5 items-center"><span class="label-style">Total Qty</span><span class="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">${item.tt || 0}</span></div>
@@ -2118,6 +2128,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             document.getElementById('specModalTitle').innerText = 'คัดลอก Customer Spec (แก้ไขก่อนบันทึก)';
             document.getElementById('specCustomerInput').value = copy.c;
             document.getElementById('specPartNoInput').value = copy.pn || '';
+            document.getElementById('specCustPNInput').value = copy.cp || '';
             document.getElementById('specUnit').value = copy.ut || '';
             document.getElementById('specPack').value = copy.pk || '';
             document.getElementById('specTotal').value = copy.tt || 0;
@@ -2158,6 +2169,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const newItem = {
                 c: customerVal,
                 pn: partNoVal,
+                cp: cleanText(document.getElementById('specCustPNInput').value), // v5.56.47
                 ut: parseFloat(document.getElementById('specUnit').value) || 0,
                 pk: parseFloat(document.getElementById('specPack').value) || 0,
                 tt: parseFloat(document.getElementById('specTotal').value) || 0,
@@ -2203,8 +2215,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         });
 
         // ─── Customer Spec CSV Batch Import / Export (v5.56.0) ──────────────────
-        const SPEC_CSV_HEADERS = ['Customer','PartNo','Unit','Pack','Total','DCFormat','HeatSeal','SilicaGel','HIC3Dot','HIC6Dot','SulfurFreePaper','AluminumFoilBag','PlasticVacuumBag','Surface','RoHSLabel','BarcodeCust','BarcodeEE','FourW','ColorSticker','Note'];
-        const SPEC_CSV_KEY_MAP = { Customer:'c', PartNo:'pn', Unit:'ut', Pack:'pk', Total:'tt', DCFormat:'dc', HeatSeal:'hs', SilicaGel:'sg', HIC3Dot:'h3', HIC6Dot:'h6', SulfurFreePaper:'sf', AluminumFoilBag:'af', PlasticVacuumBag:'pv', Surface:'su', RoHSLabel:'rh', BarcodeCust:'bc', BarcodeEE:'ee', FourW:'fw', ColorSticker:'cs', Note:'note' };
+        const SPEC_CSV_HEADERS = ['Customer','PartNo','CustPN','Unit','Pack','Total','DCFormat','HeatSeal','SilicaGel','HIC3Dot','HIC6Dot','SulfurFreePaper','AluminumFoilBag','PlasticVacuumBag','Surface','RoHSLabel','BarcodeCust','BarcodeEE','FourW','ColorSticker','Note'];
+        const SPEC_CSV_KEY_MAP = { Customer:'c', PartNo:'pn', CustPN:'cp', Unit:'ut', Pack:'pk', Total:'tt', DCFormat:'dc', HeatSeal:'hs', SilicaGel:'sg', HIC3Dot:'h3', HIC6Dot:'h6', SulfurFreePaper:'sf', AluminumFoilBag:'af', PlasticVacuumBag:'pv', Surface:'su', RoHSLabel:'rh', BarcodeCust:'bc', BarcodeEE:'ee', FourW:'fw', ColorSticker:'cs', Note:'note' };
         const SPEC_BOOL_KEYS = ['hs','sg','h3','h6','sf','af','pv','rh','bc','ee','fw'];
 
         function csvField(v) {
@@ -2270,7 +2282,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     headers.forEach((h, idx) => { raw[h] = (values[idx] || '').trim(); });
                     if (!raw['Customer']) continue;
                     const item = {
-                        c: raw['Customer'], pn: raw['PartNo'] || '',
+                        c: raw['Customer'], pn: raw['PartNo'] || '', cp: raw['CustPN'] || '',
                         ut: parseFloat(raw['Unit']) || 0, pk: parseFloat(raw['Pack']) || 0, tt: parseFloat(raw['Total']) || 0,
                         dc: raw['DCFormat'] || '-', cs: raw['ColorSticker'] || '-', su: raw['Surface'] || '', note: raw['Note'] || '',
                         mt: Date.now() // v5.56.0: stamp เวลานำเข้า ให้ merge sync รู้ว่าแถวนี้เพิ่งแก้ล่าสุด
@@ -2444,7 +2456,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         }
 
         function renderTable(data = null, hlQuery = '') {
-            // v5.56.46: ไม่ส่งข้อมูลมา = ใช้ตัวกรองค้นหาที่กำลังพิมพ์อยู่เสมอ (ซิงค์เบื้องหลัง/บันทึก/สลับการ์ดจะไม่ล้างผลค้นหาอีก)
+            // v5.56.47: ไม่ส่งข้อมูลมา = ใช้ตัวกรองค้นหาที่กำลังพิมพ์อยู่เสมอ (ซิงค์เบื้องหลัง/บันทึก/สลับการ์ดจะไม่ล้างผลค้นหาอีก)
             if (data === null || data === undefined) { const r = computePackingResult(); data = r.list; hlQuery = r.query; }
             updateHeaderStats();
             const container = document.getElementById('cardContainer');
@@ -2785,20 +2797,21 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[ch]));
         }
-        // v5.56.46: ใช้ตัวไฮไลต์เดียวกับ Customer Spec (หลายคำ ไม่สนขีด/ช่องว่าง/จุด/สแลช)
+        // v5.56.47: ใช้ตัวไฮไลต์เดียวกับ Customer Spec (หลายคำ ไม่สนขีด/ช่องว่าง/จุด/สแลช)
         function highlight(text, query) {
             if (!query) return escapeHtml(cleanText(text));
             return highlightSpec(text, query);
         }
 
-        // v5.56.46: ค้นหา Packing List — หลายคำ (ทุกคำต้องเจอ), ไม่สนตัวพิมพ์/ขีด/ช่องว่าง/จุด/สแลช, เลขไทย, และจัดอันดับความเกี่ยวข้อง
+        // v5.56.47: ค้นหา Packing List — หลายคำ (ทุกคำต้องเจอ), ไม่สนตัวพิมพ์/ขีด/ช่องว่าง/จุด/สแลช, เลขไทย, และจัดอันดับความเกี่ยวข้อง
         // อันดับ (น้อย = ขึ้นก่อน): Part No ตรงเป๊ะ → Part No ขึ้นต้นด้วย → Part No มีคำนั้น → Customer → CUST P/N → Note
         let searchTimeout;
         let lastQuery = '';
         let searchScoreMap = new Map();
-        function scorePackingItem(item, tokens) {
-            const pn = specNorm(item['Part No']), cu = specNorm(item['Customer']), cp = specNorm(item['CustPN']);
-            const note = (cleanText(item['Note']) + ' ' + cleanText(item['NoteExtra'])).toLowerCase();
+        // v5.56.47: ตัวให้คะแนนกลางใช้ร่วมกันทั้ง Packing List และ Customer Spec (ลำดับเดียวกันเป๊ะ) — คืน null ถ้ามีคำที่ไม่เจอเลย
+        function scoreSearchFields(partNo, customer, custPN, noteText, tokens) {
+            const pn = specNorm(partNo), cu = specNorm(customer), cp = specNorm(custPN);
+            const note = cleanText(noteText).toLowerCase();
             let total = 0;
             for (const t of tokens) {
                 let best = Infinity;
@@ -2810,13 +2823,16 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 else if (cu.includes(t.norm)) best = Math.min(best, 4);
                 if (cp.includes(t.norm)) best = Math.min(best, 5);
                 if (note.includes(t.raw)) best = Math.min(best, 6);
-                if (best === Infinity) return null; // มีอย่างน้อย 1 คำที่ไม่เจอเลย → ตัดออก
+                if (best === Infinity) return null;
                 total += best;
             }
             const joined = tokens.map(t => t.norm).join('');
             if (pn === joined) total = -10;            // พิมพ์ทั้งหมดรวมกันตรงกับ Part No พอดี (เช่น "419523 A" = 419523A)
             else if (pn.startsWith(joined)) total = Math.min(total, -5);
             return total;
+        }
+        function scorePackingItem(item, tokens) {
+            return scoreSearchFields(item['Part No'], item['Customer'], item['CustPN'], cleanText(item['Note']) + ' ' + cleanText(item['NoteExtra']), tokens);
         }
         function computePackingResult() {
             const inp = document.getElementById('searchInput');
@@ -3914,7 +3930,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             else if (currentSort === 'customer') tie = (a, b) => cmpText(a['Customer'], b['Customer']);
             // 'newest' = default insertion order (unshift = newest first)
             const searching = searchScoreMap.size > 0 && d.every(x => searchScoreMap.has(x));
-            if (searching) d.sort((a, b) => (searchScoreMap.get(a) - searchScoreMap.get(b)) || (tie ? tie(a, b) : 0)); // v5.56.46: ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน
+            if (searching) d.sort((a, b) => (searchScoreMap.get(a) - searchScoreMap.get(b)) || (tie ? tie(a, b) : 0)); // v5.56.47: ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน
             else if (tie) d.sort(tie);
             return d;
         }
