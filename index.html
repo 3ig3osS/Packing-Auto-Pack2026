@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.45</title>
-    <meta name="description" content="Packing Auto Pack v5.56.45 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.46</title>
+    <meta name="description" content="Packing Auto Pack v5.56.46 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.45">
+    <meta property="og:title" content="Packing Auto Pack v5.56.46">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
@@ -1591,7 +1591,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.45';
+        const APP_VERSION = 'v5.56.46';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1898,11 +1898,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             });
             filterCustomerSpec();
         }
+        // v5.56.46: เทียบข้อความแบบแปลงเป็นสตริงก่อนเสมอ (กันค่าเป็น number แล้ว error) และเรียงเลขตามค่าจริง (2 มาก่อน 10)
+        function cmpText(a, b) {
+            return cleanText(a).localeCompare(cleanText(b), undefined, { numeric: true, sensitivity: 'base' });
+        }
         function sortSpecData(list) {
             const d = list.slice();
-            if (currentSpecSort === 'partno') d.sort((a, b) => cleanText(a.pn).localeCompare(cleanText(b.pn)) || cleanText(a.c).localeCompare(cleanText(b.c)));
+            if (currentSpecSort === 'partno') d.sort((a, b) => cmpText(a.pn, b.pn) || cmpText(a.c, b.c));
             else if (currentSpecSort === 'newest') d.sort((a, b) => (Number(b.mt) || 0) - (Number(a.mt) || 0));
-            else d.sort((a, b) => cleanText(a.c).localeCompare(cleanText(b.c)));
+            else d.sort((a, b) => cmpText(a.c, b.c));
             return d;
         }
 
@@ -1912,7 +1916,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const SPEC_SEP_RE = /[\s\-_./]+/g;
         function specNorm(s) { return cleanText(s).toLowerCase().replace(SPEC_SEP_RE, ''); }
         function specQueryTokens(q) {
-            return cleanText(q).toLowerCase().split(/\s+/)
+            const thaiDigits = cleanText(q).replace(/[๐-๙]/g, ch => String(ch.charCodeAt(0) - 0x0E50)); // v5.56.46: พิมพ์เลขไทยก็ค้นเจอ
+            return thaiDigits.toLowerCase().split(/\s+/)
                 .map(raw => ({ raw, norm: specNorm(raw) }))
                 .filter(t => t.norm);
         }
@@ -2438,7 +2443,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             if (el) el.textContent = hasData ? `${t.parts} parts · ${t.customers} customers` : '';
         }
 
-        function renderTable(data = packingData, hlQuery = '') {
+        function renderTable(data = null, hlQuery = '') {
+            // v5.56.46: ไม่ส่งข้อมูลมา = ใช้ตัวกรองค้นหาที่กำลังพิมพ์อยู่เสมอ (ซิงค์เบื้องหลัง/บันทึก/สลับการ์ดจะไม่ล้างผลค้นหาอีก)
+            if (data === null || data === undefined) { const r = computePackingResult(); data = r.list; hlQuery = r.query; }
             updateHeaderStats();
             const container = document.getElementById('cardContainer');
             const isFiltered = data.length !== packingData.length;
@@ -2589,7 +2596,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         function toggleCardExpand(idx) {
             if (packingExpandedIndices.has(idx)) packingExpandedIndices.delete(idx);
             else packingExpandedIndices.add(idx);
-            renderTable(lastFilteredData || packingData, lastQuery || '');
+            renderTable();
         }
 
         function openDetail(index) {
@@ -2778,35 +2785,58 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[ch]));
         }
+        // v5.56.46: ใช้ตัวไฮไลต์เดียวกับ Customer Spec (หลายคำ ไม่สนขีด/ช่องว่าง/จุด/สแลช)
         function highlight(text, query) {
-            const safe = escapeHtml(cleanText(text));
-            if (!query) return safe;
-            const re = new RegExp('(' + escapeRegex(escapeHtml(cleanText(query))) + ')', 'gi');
-            return safe.replace(re, '<mark style="background:#fde047;color:#1e1b4b;border-radius:3px;padding:0 2px;">$1</mark>');
+            if (!query) return escapeHtml(cleanText(text));
+            return highlightSpec(text, query);
         }
 
+        // v5.56.46: ค้นหา Packing List — หลายคำ (ทุกคำต้องเจอ), ไม่สนตัวพิมพ์/ขีด/ช่องว่าง/จุด/สแลช, เลขไทย, และจัดอันดับความเกี่ยวข้อง
+        // อันดับ (น้อย = ขึ้นก่อน): Part No ตรงเป๊ะ → Part No ขึ้นต้นด้วย → Part No มีคำนั้น → Customer → CUST P/N → Note
         let searchTimeout;
         let lastQuery = '';
+        let searchScoreMap = new Map();
+        function scorePackingItem(item, tokens) {
+            const pn = specNorm(item['Part No']), cu = specNorm(item['Customer']), cp = specNorm(item['CustPN']);
+            const note = (cleanText(item['Note']) + ' ' + cleanText(item['NoteExtra'])).toLowerCase();
+            let total = 0;
+            for (const t of tokens) {
+                let best = Infinity;
+                if (pn === t.norm) best = 0;
+                else if (pn.startsWith(t.norm)) best = 1;
+                else if (pn.includes(t.norm)) best = 2;
+                if (cu === t.norm) best = Math.min(best, 3);
+                else if (cu.startsWith(t.norm)) best = Math.min(best, 3.5);
+                else if (cu.includes(t.norm)) best = Math.min(best, 4);
+                if (cp.includes(t.norm)) best = Math.min(best, 5);
+                if (note.includes(t.raw)) best = Math.min(best, 6);
+                if (best === Infinity) return null; // มีอย่างน้อย 1 คำที่ไม่เจอเลย → ตัดออก
+                total += best;
+            }
+            const joined = tokens.map(t => t.norm).join('');
+            if (pn === joined) total = -10;            // พิมพ์ทั้งหมดรวมกันตรงกับ Part No พอดี (เช่น "419523 A" = 419523A)
+            else if (pn.startsWith(joined)) total = Math.min(total, -5);
+            return total;
+        }
+        function computePackingResult() {
+            const inp = document.getElementById('searchInput');
+            const q = cleanText(inp ? inp.value : '');
+            lastQuery = q;
+            const clr = document.getElementById('searchClearBtn');
+            if (clr) clr.classList.toggle('hidden', !q);
+            searchScoreMap = new Map();
+            const tokens = specQueryTokens(q);
+            if (!tokens.length) return { list: packingData, query: '' };
+            const list = [];
+            packingData.forEach(item => {
+                const sc = scorePackingItem(item, tokens);
+                if (sc !== null) { searchScoreMap.set(item, sc); list.push(item); }
+            });
+            return { list, query: q };
+        }
         function filterTable() {
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = document.getElementById('searchInput').value;
-                lastQuery   = cleanText(query);
-                const qLow  = lastQuery.toLowerCase();
-                const qNorm = qLow.replace(/[^a-z0-9ก-๙]/g, '');
-                document.getElementById('searchClearBtn').classList.toggle('hidden', !lastQuery);
-                // v5.56.0: ขยายค้นหาให้ครอบคลุม CustPN, Note, NoteExtra ด้วย (เดิมค้นได้แค่ Part No กับ Customer)
-                const filtered = lastQuery
-                    ? packingData.filter(item =>
-                        cleanText(item['Part No']).toLowerCase().includes(qLow) ||
-                        cleanText(item['Customer']).toLowerCase().includes(qLow) ||
-                        cleanText(item['CustPN']).toLowerCase().includes(qLow) ||
-                        (qNorm && cleanText(item['CustPN']).toLowerCase().replace(/[^a-z0-9ก-๙]/g, '').includes(qNorm)) || // v5.56.38: พิมพ์ CUST P/N ไม่ใส่ขีด/ช่องว่างก็เจอ (เช่น CP8841 ↔ CP-8841)
-                        cleanText(item['Note']).toLowerCase().includes(qLow) ||
-                        cleanText(item['NoteExtra']).toLowerCase().includes(qLow))
-                    : packingData;
-                renderTable(filtered, lastQuery);
-            }, 80);
+            searchTimeout = setTimeout(() => renderTable(), 80);
         }
 
         function openModal(index = null) {
@@ -3879,9 +3909,13 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
         }
         function getSortedData(data) {
             const d = [...data];
-            if (currentSort === 'partno') d.sort((a,b) => (a['Part No']||'').localeCompare(b['Part No']||''));
-            else if (currentSort === 'customer') d.sort((a,b) => (a['Customer']||'').localeCompare(b['Customer']||''));
+            let tie = null;
+            if (currentSort === 'partno') tie = (a, b) => cmpText(a['Part No'], b['Part No']);
+            else if (currentSort === 'customer') tie = (a, b) => cmpText(a['Customer'], b['Customer']);
             // 'newest' = default insertion order (unshift = newest first)
+            const searching = searchScoreMap.size > 0 && d.every(x => searchScoreMap.has(x));
+            if (searching) d.sort((a, b) => (searchScoreMap.get(a) - searchScoreMap.get(b)) || (tie ? tie(a, b) : 0)); // v5.56.46: ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน
+            else if (tie) d.sort(tie);
             return d;
         }
 
