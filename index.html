@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.47</title>
-    <meta name="description" content="Packing Auto Pack v5.56.47 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.52</title>
+    <meta name="description" content="Packing Auto Pack v5.56.52 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.47">
+    <meta property="og:title" content="Packing Auto Pack v5.56.52">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
@@ -410,7 +410,7 @@ v5.56.0 BUGFIX BUILD
             color: #f1f5f9;
             border-color: #475569;
         }
-        /* v5.56.47: กรอบป้ายไม่ใส่สีเหลืองทั้งอันอีก — ไฮไลต์สีเฉพาะคำว่า "✓ ใส่" (หรือค่าของป้ายนั้น เช่น Surface) */
+        /* v5.56.52: กรอบป้ายไม่ใส่สีเหลืองทั้งอันอีก — ไฮไลต์สีเฉพาะคำว่า "✓ ใส่" (หรือค่าของป้ายนั้น เช่น Surface) */
         .spec-badge.spec-badge-on > span:first-child { opacity: 1 !important; }
         .spec-badge.spec-badge-on .spec-on-text {
             display: inline-block;
@@ -432,6 +432,29 @@ v5.56.0 BUGFIX BUILD
             font-size: 0.72rem; 
             font-weight: 700; 
         }
+        /* v5.56.52: ตัวเลือกใน Packing Details (SIZE BAGGING / HUMCARD / PACKMODEL / PAPER) แสดงเป็นแผ่นสีต่างกันตามค่า */
+        .opt-pill { display: inline-block; padding: 1px 10px; border-radius: 8px; font-weight: 800; border: 1px solid transparent; line-height: 1.35; }
+        .opt-sky { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
+        .opt-violet { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+        .opt-orange { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+        .opt-cyan { background: #cffafe; color: #155e75; border-color: #67e8f9; }
+        .opt-fuchsia { background: #fae8ff; color: #86198f; border-color: #f0abfc; }
+        .opt-slate { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+        .opt-blue { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+        .opt-amber { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+        .opt-green { background: #dcfce7; color: #166534; border-color: #86efac; }
+        .opt-purple { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+        [data-theme="dark"] .opt-sky { background: rgba(14,165,233,.22); color: #bae6fd; border-color: rgba(125,211,252,.55); }
+        [data-theme="dark"] .opt-violet { background: rgba(139,92,246,.26); color: #ddd6fe; border-color: rgba(196,181,253,.55); }
+        [data-theme="dark"] .opt-orange { background: rgba(249,115,22,.26); color: #fed7aa; border-color: rgba(253,186,116,.55); }
+        [data-theme="dark"] .opt-cyan { background: rgba(6,182,212,.22); color: #a5f3fc; border-color: rgba(103,232,249,.55); }
+        [data-theme="dark"] .opt-fuchsia { background: rgba(217,70,239,.24); color: #f5d0fe; border-color: rgba(240,171,252,.55); }
+        [data-theme="dark"] .opt-slate { background: rgba(148,163,184,.18); color: #cbd5e1; border-color: rgba(148,163,184,.5); }
+        [data-theme="dark"] .opt-blue { background: rgba(59,130,246,.26); color: #bfdbfe; border-color: rgba(147,197,253,.55); }
+        [data-theme="dark"] .opt-amber { background: rgba(245,158,11,.26); color: #fde68a; border-color: rgba(252,211,77,.55); }
+        [data-theme="dark"] .opt-green { background: rgba(34,197,94,.22); color: #bbf7d0; border-color: rgba(134,239,172,.55); }
+        [data-theme="dark"] .opt-purple { background: rgba(168,85,247,.26); color: #e9d5ff; border-color: rgba(216,180,254,.55); }
+
         
         /* แอนิเมชัน Modal — smooth spring */
         .modal-animate-up { 
@@ -1090,20 +1113,37 @@ v5.56.0 BUGFIX BUILD
         /* ═══ v5.56.38: ป้ายสเปก Customer Spec (Heat Seal / Silica Gel / HIC / Paper / Bag / Surface)
            ชื่อหัวข้อใหญ่ขึ้น (9px → ~12px) ตัวหนา สีเข้มเต็มความทึบ (เดิมจาง opacity 50%) และอยู่ในกรอบเสมอ:
            ถ้าชื่อ+ค่ากว้างเกินกรอบจะขึ้นบรรทัดใหม่แทนการล้นขอบ — ใช้เฉพาะ .spec-badge-fit (specBadge() ของ Customer Spec และป้ายสเปกในการ์ด Packing List ตั้งแต่ v5.56.38) ═══ */
+        /* v5.56.52: ชื่อ+ค่าอยู่บรรทัดเดียวกันเสมอ (ไม่ตัดขึ้นบรรทัดใหม่) — ป้ายที่ชื่อยาวใน Customer Spec ขยายเต็มแถว; ค่าที่ยาวเกินกรอบตัดด้วย … (ดูเต็มในหน้ารายละเอียด) */
         .spec-badge.spec-badge-fit {
-            flex-wrap: wrap;
-            column-gap: 5px;
+            flex-wrap: nowrap;
+            column-gap: 4px;
             row-gap: 0;
-            padding: 7px 8px;
+            padding: 7px 2px;
             text-align: center;
             min-width: 0;
-            overflow-wrap: anywhere;
+            white-space: nowrap;
+            overflow: hidden;
+            container-type: inline-size;
         }
+        /* v5.56.52: คงตาราง 2 ช่องต่อแถวแบบเดิม — ป้ายไหนชื่อ+ค่ายาว ย่อตัวอักษรเฉพาะป้ายนั้นให้พอดีช่องในบรรทัดเดียว (ใหญ่สุด 0.74rem เล็กสุด 0.62rem; --n = จำนวนตัวอักษรรวม; ปรับสูตรให้ตัวใหญ่ขึ้น) */
+        @supports (width: 1cqw) {
+            .spec-badge-fit[style*="--n"] > .spec-lbl,
+            .spec-badge-fit[style*="--n"] > span:last-child {
+                font-size: min(0.74rem, max(0.62rem, calc((100cqw - 16px) / (var(--n) * 0.5))));
+            }
+        }
+        .spec-badge-fit > span:last-child, .spec-badge-fit > .spec-val { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .spec-badge-fit .opt-pill, .spec-badge-fit .spec-on-text { padding-left: 6px; padding-right: 6px; }
+        /* v5.56.52: กล่องบาร์โค้ด/สติ๊กเกอร์ — เรียงเหมือนเดิม ถ้ายาวเกินความกว้างจอให้ป้ายลงบรรทัดต่อไปในกล่อง (ไม่เลื่อนข้าง) */
+        .spec-badge.bc-box { display: block; padding: 8px 10px; text-align: center; }
+        .bc-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; width: 100%; }
+        .bc-row .status-pill { white-space: nowrap; flex: none; display: inline-flex; align-items: center; }
         .spec-badge.spec-badge-fit { color: #0f172a; }
         [data-theme="dark"] .spec-badge.spec-badge-fit { color: #f1f5f9; }
         [data-theme="cyberpunk"] .spec-badge.spec-badge-fit { color: #f3eeff; }
         .spec-badge-fit .spec-lbl {
-            font-size: 0.78rem;
+            flex: none;
+            font-size: 0.74rem;
             font-weight: 800;
             line-height: 1.25;
             letter-spacing: 0.01em;
@@ -1314,9 +1354,10 @@ v5.56.0 BUGFIX BUILD
             </div>
             <div class="px-6 pb-6">
                 <div id="detailViewBody" class="text-slate-900 dark:text-white"></div>
-                <div class="grid grid-cols-2 gap-3 mt-6">
-                    <button id="btnEditDetail" class="py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm">แก้ไขข้อมูล</button>
-                    <button id="btnDeleteDetail" class="py-3 bg-rose-50 dark:bg-rose-950/40 text-rose-600 rounded-xl font-bold text-sm">ลบรายการ</button>
+                <div class="grid grid-cols-3 gap-2 mt-6">
+                    <button id="btnEditDetail" class="py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm">แก้ไข</button>
+                    <button id="btnDuplicateDetail" class="py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm">คัดลอก</button>
+                    <button id="btnDeleteDetail" class="py-3 bg-rose-50 dark:bg-rose-950/40 text-rose-600 rounded-xl font-bold text-sm">ลบ</button>
                 </div>
                 <button onclick="closeDetailModal()" class="w-full pt-4 pb-2 text-slate-400 font-bold text-[11px] uppercase tracking-widest text-center">ปิดหน้าต่าง</button>
             </div>
@@ -1350,7 +1391,7 @@ v5.56.0 BUGFIX BUILD
                         <div><label class="label-style">PACK MODEL</label>
                             <select id="packModel" class="input-style">
                                 <option value="">-- เลือก --</option>
-                                <option value="AF">AF</option>
+                                <option value="Foil">Foil</option>
                                 <option value="PE">PE</option>
                             </select>
                         </div>
@@ -1369,6 +1410,7 @@ v5.56.0 BUGFIX BUILD
                                 <option value="">-- เลือก --</option>
                                 <option value="3">3</option>
                                 <option value="6">6</option>
+                                <option value="ไม่ใส่">ไม่ใส่</option>
                             </select>
                         </div>
                         <div>
@@ -1591,7 +1633,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.47';
+        const APP_VERSION = 'v5.56.52';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1862,21 +1904,21 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                             ${specBadge(item.sf, 'Sulfur Free Paper')}
                             ${specBadge(item.af, 'Aluminum Foil Bag')}
                             ${specBadge(item.pv, 'Plastic Vacuum Bag')}
-                            ${specBadge(!!item.su, 'Surface', item.su ? escapeHtml(item.su) : '-')}
+                            ${specBadge(!!item.su, 'Surface', item.su ? escapeHtml(item.su) : '-', true)}
                             <div class="spec-badge spec-badge-fit col-span-2"><span class="spec-lbl">CUST P/N:</span><span class="font-bold text-indigo-500 dark:text-indigo-400">${item.cp ? highlightSpec(item.cp, hlQuery) : '-'}</span></div>
                         </div>
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
                             <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
                                 <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
                             </div>
-                            <div class="flex flex-wrap gap-1.5 items-center justify-center">
+                            <div class="spec-badge bc-box w-full"><div class="bc-row">
                                 ${item.rh ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">RoHS Label</span>` : ''}
                                 ${item.bc ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                                 ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                                 ${item.fw ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
                                 ${item.cs && item.cs !== '-' ? `<span class="status-pill ${getColorStickerPillStyle(item.cs)}"><span class="color-dot mr-1.5" style="background-color:${colorMap[item.cs] || 'transparent'}"></span>สติ๊กเกอร์สี: ${escapeHtml(item.cs)}</span>` : ''}
                                 ${!(item.rh || item.bc || item.ee || item.fw || (item.cs && item.cs !== '-')) ? `<span class="text-slate-400 text-xs">ไม่มีรายการที่ต้องติด</span>` : ''}
-                            </div>
+                            </div></div>
                         </div>
                         ${item.note ? `<div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
                             <div class="text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner">
@@ -1899,7 +1941,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             });
             filterCustomerSpec();
         }
-        // v5.56.47: เทียบข้อความแบบแปลงเป็นสตริงก่อนเสมอ (กันค่าเป็น number แล้ว error) และเรียงเลขตามค่าจริง (2 มาก่อน 10)
+        // v5.56.52: เทียบข้อความแบบแปลงเป็นสตริงก่อนเสมอ (กันค่าเป็น number แล้ว error) และเรียงเลขตามค่าจริง (2 มาก่อน 10)
         function cmpText(a, b) {
             return cleanText(a).localeCompare(cleanText(b), undefined, { numeric: true, sensitivity: 'base' });
         }
@@ -1918,12 +1960,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const SPEC_SEP_RE = /[\s\-_./]+/g;
         function specNorm(s) { return cleanText(s).toLowerCase().replace(SPEC_SEP_RE, ''); }
         function specQueryTokens(q) {
-            const thaiDigits = cleanText(q).replace(/[๐-๙]/g, ch => String(ch.charCodeAt(0) - 0x0E50)); // v5.56.47: พิมพ์เลขไทยก็ค้นเจอ
+            const thaiDigits = cleanText(q).replace(/[๐-๙]/g, ch => String(ch.charCodeAt(0) - 0x0E50)); // v5.56.52: พิมพ์เลขไทยก็ค้นเจอ
             return thaiDigits.toLowerCase().split(/\s+/)
                 .map(raw => ({ raw, norm: specNorm(raw) }))
                 .filter(t => t.norm);
         }
-        // v5.56.47: ให้คะแนนด้วยตัวเดียวกับ Packing List (Part No → Customer → CUST P/N → Note) คืน null = ไม่ตรง
+        // v5.56.52: ให้คะแนนด้วยตัวเดียวกับ Packing List (Part No → Customer → CUST P/N → Note) คืน null = ไม่ตรง
         function scoreSpecItem(item, tokens) {
             return scoreSearchFields(item.pn, item.c, item.cp, item.note, tokens);
         }
@@ -2049,8 +2091,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             return `<div class="detail-row flex justify-between py-2.5"><span class="label-style">${label}</span><span class="font-semibold ${on ? '' : 'text-slate-400'}">${on ? (onText || '✓ ใส่') : (offText || 'ไม่ใส่')}</span></div>`;
         }
 
-        function specBadge(on, label, value) {
-            return `<div class="spec-badge spec-badge-fit ${on ? 'spec-badge-on' : ''}"><span class="spec-lbl">${label}:</span><span class="${on ? 'font-bold spec-on-text' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่')}</span></div>`;
+        // v5.56.52: ตัวช่วยคำนวณขนาดตัวอักษรให้ "ชื่อ: ค่า" พอดีหนึ่งบรรทัดในช่องครึ่งแถว
+        function fitStyle(label, valHtml) {
+            const n = String(label).length + 1 + String(valHtml == null ? '' : valHtml).replace(/<[^>]*>/g, '').length + 1;
+            return `style="--n:${n}"`;
+        }
+        function specBadge(on, label, value, plain) {
+            const shown = value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่');
+            if (plain) return `<div class="spec-badge spec-badge-fit" ${fitStyle(label, shown)}><span class="spec-lbl">${label}:</span><span class="font-bold">${shown}</span></div>`; // v5.56.52: Surface ไม่ใส่สีไฮไลต์
+            return `<div class="spec-badge spec-badge-fit ${on ? 'spec-badge-on' : ''}" ${fitStyle(label, shown)}><span class="spec-lbl">${label}:</span><span class="${on ? 'font-bold spec-on-text' : 'text-slate-400'}">${value !== undefined ? value : (on ? '✓ ใส่' : 'ไม่ใส่')}</span></div>`;
         }
 
         function openSpecDetail(index) {
@@ -2082,19 +2131,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     ${specBadge(item.sf, 'Sulfur Free Paper')}
                     ${specBadge(item.af, 'Aluminum Foil Bag')}
                     ${specBadge(item.pv, 'Plastic Vacuum Bag')}
-                    ${specBadge(!!item.su, 'Surface', item.su ? escapeHtml(item.su) : '-')}
+                    ${specBadge(!!item.su, 'Surface', item.su ? escapeHtml(item.su) : '-', true)}
                 </div>
                 <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
                     <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
                 </div>
-                <div class="flex flex-wrap gap-1.5 mb-4 justify-center">
+                <div class="spec-badge bc-box w-full mb-4"><div class="bc-row">
                     ${item.rh ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">RoHS Label</span>` : ''}
                     ${item.bc ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                     ${item.ee ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                     ${item.fw ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
                     ${hasColorSticker ? `<span class="status-pill ${getColorStickerPillStyle(item.cs)}"><span class="color-dot mr-1.5" style="background-color:${colorHex}"></span>สติ๊กเกอร์สี: ${escapeHtml(item.cs)}</span>` : ''}
                     ${!(item.rh || item.bc || item.ee || item.fw || hasColorSticker) ? `<span class="text-slate-400 text-xs">ไม่มีรายการที่ต้องติด</span>` : ''}
-                </div>
+                </div></div>
                 <div class="text-[11px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
                     <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
                 </div>
@@ -2169,7 +2218,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const newItem = {
                 c: customerVal,
                 pn: partNoVal,
-                cp: cleanText(document.getElementById('specCustPNInput').value), // v5.56.47
+                cp: cleanText(document.getElementById('specCustPNInput').value), // v5.56.52
                 ut: parseFloat(document.getElementById('specUnit').value) || 0,
                 pk: parseFloat(document.getElementById('specPack').value) || 0,
                 tt: parseFloat(document.getElementById('specTotal').value) || 0,
@@ -2343,10 +2392,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             const normalized = String(value).trim().toLowerCase();
             return ['true', '1', 'yes', 'y', 'on'].includes(normalized);
         }
+        // v5.56.52: PACKMODEL "AF" เปลี่ยนชื่อเป็น "Foil" — ข้อมูลเดิมที่เป็น AF แปลงให้อัตโนมัติทุกครั้งที่โหลด/ซิงค์/นำเข้า
+        function fmtPackModel(v) { const t = cleanText(v); return t.toUpperCase() === 'AF' ? 'Foil' : t; }
         function normalizePackingFlags(rows) {
             return (Array.isArray(rows) ? rows : []).map(row => ({ ...row,
                 PrintAuto: toBool(row.PrintAuto), BcCust: toBool(row.BcCust),
-                BcEE: toBool(row.BcEE), FourW: toBool(row.FourW)
+                BcEE: toBool(row.BcEE), FourW: toBool(row.FourW),
+                PackModel: fmtPackModel(row.PackModel)
             }));
         }
         let packingData = normalizePackingFlags(JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialData);
@@ -2357,6 +2409,20 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             if (isNaN(n)) return val;
             // แสดงเป็นจำนวนเต็มถ้าไม่มีทศนิยม เช่น "3.0" → "3", "3.5" → "3.5"
             return Number.isInteger(n) ? String(n) : n.toFixed(1);
+        }
+
+        // v5.56.52: สีของแต่ละตัวเลือก (ค่าที่ไม่รู้จักแสดงเป็นข้อความธรรมดา)
+        const OPT_COLORS = {
+            SizeBagging: { S: 'sky', M: 'violet', L: 'orange' },
+            HumCard: { '3': 'cyan', '6': 'fuchsia', 'ไม่ใส่': 'slate' },
+            PackModel: { PE: 'blue', Foil: 'amber' },
+            Paper: { TOP: 'green', ALL: 'purple' }
+        };
+        function optPill(field, raw) {
+            const v = field === 'HumCard' ? formatHumCard(raw) : field === 'PackModel' ? fmtPackModel(raw) : cleanText(raw);
+            if (!v || v === '-') return '-';
+            const c = (OPT_COLORS[field] || {})[v];
+            return c ? `<span class="opt-pill opt-${c}">${escapeHtml(v)}</span>` : escapeHtml(v);
         }
 
         function applyThemeState(theme, icon) {
@@ -2456,7 +2522,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         }
 
         function renderTable(data = null, hlQuery = '') {
-            // v5.56.47: ไม่ส่งข้อมูลมา = ใช้ตัวกรองค้นหาที่กำลังพิมพ์อยู่เสมอ (ซิงค์เบื้องหลัง/บันทึก/สลับการ์ดจะไม่ล้างผลค้นหาอีก)
+            // v5.56.52: ไม่ส่งข้อมูลมา = ใช้ตัวกรองค้นหาที่กำลังพิมพ์อยู่เสมอ (ซิงค์เบื้องหลัง/บันทึก/สลับการ์ดจะไม่ล้างผลค้นหาอีก)
             if (data === null || data === undefined) { const r = computePackingResult(); data = r.list; hlQuery = r.query; }
             updateHeaderStats();
             const container = document.getElementById('cardContainer');
@@ -2555,41 +2621,36 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                         </div>
                         
                         <div class="grid grid-cols-2 gap-1.5 mb-3">
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">SIZE BAGGING:</span>${escapeHtml(item['SizeBagging']) || '-'}</div>
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">HUMCARD:</span><span class="font-bold text-amber-600 dark:text-amber-400">${escapeHtml(formatHumCard(item['HumCard']))}</span></div>
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">PACKMODEL:</span>${escapeHtml(item['PackModel']) || '-'}</div>
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">PAPER:</span>${escapeHtml(item['Paper']) || '-'}</div>
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">SURFACE:</span>${escapeHtml(item['Surface']) || '-'}</div>
-                            <div class="spec-badge spec-badge-fit"><span class="spec-lbl">PCB WEIGHT:</span>${escapeHtml(item['PcbWeight']) || 0} G</div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('SIZE BAGGING:', item['SizeBagging'])}><span class="spec-lbl">SIZE BAGGING:</span>${optPill('SizeBagging', item['SizeBagging'])}</div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('HUMCARD:', formatHumCard(item['HumCard']))}><span class="spec-lbl">HUMCARD:</span>${optPill('HumCard', item['HumCard'])}</div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('PACKMODEL:', fmtPackModel(item['PackModel']))}><span class="spec-lbl">PACKMODEL:</span>${optPill('PackModel', item['PackModel'])}</div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('PAPER:', item['Paper'])}><span class="spec-lbl">PAPER:</span>${optPill('Paper', item['Paper'])}</div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('SURFACE:', item['Surface'])}><span class="spec-lbl">SURFACE:</span><span class="spec-val">${escapeHtml(item['Surface']) || '-'}</span></div>
+                            <div class="spec-badge spec-badge-fit" ${fitStyle('PCB WEIGHT:', (item['PcbWeight'] || 0) + ' G')}><span class="spec-lbl">PCB WEIGHT:</span><span class="spec-val">${escapeHtml(item['PcbWeight']) || 0} G</span></div>
                             <div class="spec-badge spec-badge-fit col-span-2 w-full"><span class="spec-lbl">BAG SIZE:</span><span class="font-bold text-emerald-600 dark:text-emerald-400">${escapeHtml(item['BagSize']) || '-'}</span></div>
                             <div class="spec-badge spec-badge-fit col-span-2"><span class="spec-lbl">CUST P/N:</span><span class="font-bold text-indigo-500 dark:text-indigo-400">${item['CustPN'] ? highlight(item['CustPN'], hlQuery) : '-'}</span></div>
                         </div>
 
+                        ${hasActiveStatus ? `
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
-                            ${hasActiveStatus ? `
-                                <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
-                                    <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
-                                </div>
-                            ` : ''}
-                            <div class="flex flex-wrap gap-1 w-full justify-center">
+                            <div class="text-[11px] font-black text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
+                                <i class="fas fa-tags mr-1"></i> บาร์โค้ด / สติ๊กเกอร์ที่ต้องติดหน้า Pack
+                            </div>
+                            <div class="spec-badge bc-box w-full"><div class="bc-row">
                                 ${toBool(item.PrintAuto) ? `<span class="status-pill bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">Print Auto</span>` : ''}
                                 ${toBool(item.BcCust) ? `<span class="status-pill bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Barcode ลูกค้า</span>` : ''}
                                 ${toBool(item.BcEE) ? `<span class="status-pill bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400">Barcode E&E</span>` : ''}
                                 ${item.ColorSticker && item.ColorSticker !== '-' ? `<span class="status-pill ${getColorStickerPillStyle(item.ColorSticker)}">สติ๊กเกอร์สี: ${escapeHtml(item.ColorSticker)}</span>` : ''}
                                 ${toBool(item.FourW) ? `<span class="status-pill bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400">สติ๊กเกอร์ 4-W</span>` : ''}
-                            </div>
+                            </div></div>
                         </div>
+                        ` : ''}
                         
                         ${item['Note'] || item['NoteExtra'] ? `
                         <div class="mt-3 p-2 bg-slate-50 dark:bg-slate-800/80 rounded-lg text-[11px] space-y-0.5 border border-transparent dark:border-slate-700 text-center">
                             ${item['Note'] ? `<div class="text-slate-600 dark:text-slate-200"><i class="fas fa-sticky-note mr-1 opacity-60 text-slate-400 dark:text-slate-300"></i>${highlight(item['Note'], hlQuery)}</div>` : ''}
                             ${item['NoteExtra'] ? `<div class="text-rose-500 dark:text-rose-400 font-bold"><i class="fas fa-exclamation-circle mr-1"></i>${highlight(item['NoteExtra'], hlQuery)}</div>` : ''}
                         </div>` : ''}
-                        <div class="flex justify-end mt-2">
-                            <button onclick="event.stopPropagation();duplicateItem(${actualIndex})" class="text-[10px] font-bold text-slate-400 dark:text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400 flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-all">
-                                <i class="fas fa-copy"></i> คัดลอก
-                            </button>
-                        </div>
                     </div>
                 `;
                 const expandBtn = card.querySelector('[data-expand-toggle]');
@@ -2626,15 +2687,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Unit Qty</span><span class="font-semibold">${escapeHtml(item['Unit Qty'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Qty / Pack</span><span class="font-semibold">${escapeHtml(item['QtyPack'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5 items-center"><span class="label-style">Total Qty</span><span class="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">${escapeHtml(item['QuantityTotal'])}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Pack Model</span><span class="font-semibold">${escapeHtml(item['PackModel'])}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Paper</span><span class="font-semibold">${escapeHtml(item['Paper'])}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">HumCard</span><span class="font-semibold">${escapeHtml(formatHumCard(item['HumCard']))}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Pack Model</span><span class="font-semibold">${optPill('PackModel', item['PackModel'])}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Paper</span><span class="font-semibold">${optPill('Paper', item['Paper'])}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">HumCard</span><span class="font-semibold">${optPill('HumCard', item['HumCard'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">PCB Width (mm)</span><span class="font-semibold">${escapeHtml(item['PcbWidth']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">PCB Depth (mm)</span><span class="font-semibold">${escapeHtml(item['PcbLength']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">PCB Weight (G)</span><span class="font-semibold">${escapeHtml(item['PcbWeight']) || 0}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Bag Size</span><span class="font-bold text-emerald-600 dark:text-emerald-400">${escapeHtml(item['BagSize']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Surface</span><span class="font-semibold">${escapeHtml(item['Surface']) || '-'}</span></div>
-                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Size Bagging</span><span class="font-semibold">${escapeHtml(item['SizeBagging']) || '-'}</span></div>
+                    <div class="detail-row flex justify-between py-2.5"><span class="label-style">Size Bagging</span><span class="font-semibold">${optPill('SizeBagging', item['SizeBagging'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">DC FORMAT</span><span class="font-bold text-emerald-500">${escapeHtml(item['DCFormat']) || '-'}</span></div>
                     <div class="detail-row flex justify-between py-2.5 items-center"><span class="label-style">สติ๊กเกอร์สี</span><span class="flex items-center font-semibold"><span class="color-dot mr-2" style="background-color: ${colorHex}"></span>${item['ColorSticker'] === '-' ? 'ไม่ติด' : escapeHtml(item['ColorSticker'])}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">4-W</span><span class="font-bold ${toBool(item.FourW) ? 'text-orange-500' : 'text-slate-400'}">${toBool(item.FourW) ? 'ติด 4-W' : 'ไม่ติด'}</span></div>
@@ -2649,6 +2710,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 </div>
             `;
             document.getElementById('btnEditDetail').onclick = () => { closeDetailModal(); setTimeout(() => openModal(index), 300); };
+            document.getElementById('btnDuplicateDetail').onclick = () => { closeDetailModal(); setTimeout(() => duplicateItem(index), 300); }; // v5.56.52: ย้ายปุ่มคัดลอกจากการ์ดมาอยู่หน้ารายละเอียด
             document.getElementById('btnDeleteDetail').onclick = () => { requireEditUnlock(() => { if(confirm('ยืนยันการลบรายการนี้?')) { addTombstone(PACKING_TOMBSTONE_KEY, packingItemKey(packingData[index])); packingData.splice(index, 1); saveData(); renderTable(); closeDetailModal(); showToast('ลบรายการแล้ว', '🗑️'); } }); };
             
             const modal = document.getElementById('detailModal');
@@ -2797,18 +2859,18 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[ch]));
         }
-        // v5.56.47: ใช้ตัวไฮไลต์เดียวกับ Customer Spec (หลายคำ ไม่สนขีด/ช่องว่าง/จุด/สแลช)
+        // v5.56.52: ใช้ตัวไฮไลต์เดียวกับ Customer Spec (หลายคำ ไม่สนขีด/ช่องว่าง/จุด/สแลช)
         function highlight(text, query) {
             if (!query) return escapeHtml(cleanText(text));
             return highlightSpec(text, query);
         }
 
-        // v5.56.47: ค้นหา Packing List — หลายคำ (ทุกคำต้องเจอ), ไม่สนตัวพิมพ์/ขีด/ช่องว่าง/จุด/สแลช, เลขไทย, และจัดอันดับความเกี่ยวข้อง
+        // v5.56.52: ค้นหา Packing List — หลายคำ (ทุกคำต้องเจอ), ไม่สนตัวพิมพ์/ขีด/ช่องว่าง/จุด/สแลช, เลขไทย, และจัดอันดับความเกี่ยวข้อง
         // อันดับ (น้อย = ขึ้นก่อน): Part No ตรงเป๊ะ → Part No ขึ้นต้นด้วย → Part No มีคำนั้น → Customer → CUST P/N → Note
         let searchTimeout;
         let lastQuery = '';
         let searchScoreMap = new Map();
-        // v5.56.47: ตัวให้คะแนนกลางใช้ร่วมกันทั้ง Packing List และ Customer Spec (ลำดับเดียวกันเป๊ะ) — คืน null ถ้ามีคำที่ไม่เจอเลย
+        // v5.56.52: ตัวให้คะแนนกลางใช้ร่วมกันทั้ง Packing List และ Customer Spec (ลำดับเดียวกันเป๊ะ) — คืน null ถ้ามีคำที่ไม่เจอเลย
         function scoreSearchFields(partNo, customer, custPN, noteText, tokens) {
             const pn = specNorm(partNo), cu = specNorm(customer), cp = specNorm(custPN);
             const note = cleanText(noteText).toLowerCase();
@@ -2875,7 +2937,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 document.getElementById('unitQty').value = item['Unit Qty'];
                 document.getElementById('qtyPack').value = item['QtyPack'];
                 document.getElementById('quantityTotal').value = item['QuantityTotal'];
-                document.getElementById('packModel').value = item['PackModel'];
+                document.getElementById('packModel').value = fmtPackModel(item['PackModel']);
                 document.getElementById('paper').value = item['Paper'];
                 document.getElementById('humCard').value = formatHumCard(item['HumCard']) === '-' ? '' : formatHumCard(item['HumCard']);
                 // PcbSize field removed
@@ -3930,7 +3992,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             else if (currentSort === 'customer') tie = (a, b) => cmpText(a['Customer'], b['Customer']);
             // 'newest' = default insertion order (unshift = newest first)
             const searching = searchScoreMap.size > 0 && d.every(x => searchScoreMap.has(x));
-            if (searching) d.sort((a, b) => (searchScoreMap.get(a) - searchScoreMap.get(b)) || (tie ? tie(a, b) : 0)); // v5.56.47: ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน
+            if (searching) d.sort((a, b) => (searchScoreMap.get(a) - searchScoreMap.get(b)) || (tie ? tie(a, b) : 0)); // v5.56.52: ค้นหาอยู่ → เรียงตามความเกี่ยวข้องก่อน
             else if (tie) d.sort(tie);
             return d;
         }
@@ -3955,7 +4017,7 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             document.getElementById('unitQty').value = copy['Unit Qty'];
             document.getElementById('qtyPack').value = copy['QtyPack'];
             document.getElementById('quantityTotal').value = copy['QuantityTotal'];
-            document.getElementById('packModel').value = copy['PackModel'];
+            document.getElementById('packModel').value = fmtPackModel(copy['PackModel']);
             document.getElementById('paper').value = copy['Paper'];
             document.getElementById('humCard').value = formatHumCard(copy['HumCard']) === '-' ? '' : formatHumCard(copy['HumCard']);
             document.getElementById('pcbWidth').value = copy['PcbWidth'] || '';
