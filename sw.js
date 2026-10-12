@@ -1,5 +1,5 @@
-const V='5.56.59';
-const CACHE_NAME='packing-auto-pack-v5-56-59-shell';
+const V='5.56.60';
+const CACHE_NAME='packing-auto-pack-v5-56-60-shell';
 // v5.56.59: ไฟล์ CSS ใน assets/ ผูก ?v=<เวอร์ชัน> เพื่อให้เครื่องที่ยังมี Service Worker รุ่นเก่าไม่หยิบ CSS เก่าจากแคชมาใช้กับหน้าใหม่
 // v5.56.59: ตอนติดตั้ง SW ดึงไฟล์ด้วย cache:'reload' (ข้าม HTTP cache) และลบระบบ precache CDN เดิมที่ไม่ได้ใช้แล้วออก
 const APP_SHELL='./index.html';
