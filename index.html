@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.56</title>
-    <meta name="description" content="Packing Auto Pack v5.56.56 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.59</title>
+    <meta name="description" content="Packing Auto Pack v5.56.59 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.56">
+    <meta property="og:title" content="Packing Auto Pack v5.56.59">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
@@ -212,18 +212,10 @@ v5.56.0 BUGFIX BUILD
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // v5.56.0: ผูกโหมด dark: ของ Tailwind เข้ากับ data-theme ของแอปเอง (ปุ่มธีมที่กดในแอป)
-        // แทนที่จะยึดตามค่า OS/เบราว์เซอร์ (prefers-color-scheme) แบบเดิม — เดิมนี่คือสาเหตุที่ตัวหนังสือ
-        // อาจมองไม่ชัด/มองไม่เห็นได้ เมื่อโหมด OS กับธีมที่เลือกในแอปไม่ตรงกัน (เช่น เลือก Light ในแอป
-        // แต่มือถือตั้ง OS เป็น Dark ไว้ — class dark: จะโดน trigger ทับสีจาก CSS variable ของธีม Light)
-        tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'] };
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="./assets/fontawesome.css?v=5.56.59">
+    <link rel="stylesheet" href="./assets/sarabun.css?v=5.56.59">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
-        
+                
         :root {
             --primary: #6366f1;
             --primary-light: #eef2ff;
@@ -1167,6 +1159,8 @@ v5.56.0 BUGFIX BUILD
         }
 </style>
 
+    <!-- v5.56.57: Tailwind คอมไพล์ไว้ล่วงหน้า (แทน cdn.tailwindcss.com) วางท้าย head เพื่อให้ลำดับ CSS เหมือนเดิม -->
+    <link rel="stylesheet" href="./assets/tailwind.css?v=5.56.59">
 </head>
 <body class="pb-16">
     <!-- Header ดีไซน์คลีน โมเดิร์น ไม่ทึบ -->
@@ -1338,9 +1332,38 @@ v5.56.0 BUGFIX BUILD
             </div>
             <button id="btnUndoSpecOperation" onclick="undoLastSpecOperation()" class="hidden w-full py-3 rounded-2xl bg-amber-500 text-white font-bold text-xs"><span>↩️ ย้อนกลับ Customer Spec</span></button>
           </div>
+          <div class="pt-2 mt-2 border-t border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i> แบ็กอัป &amp; ประวัติการแก้ไข</div>
+            <label for="editorNameInput" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1"><i class="fa-solid fa-user-pen"></i> ชื่อผู้แก้ไข (แสดงในประวัติ)</label>
+            <input id="editorNameInput" type="text" maxlength="30" placeholder="เช่น สมชาย" onchange="saveEditorName(this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 mb-2" style="font-size:16px;">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openBackupModal('packing','restore')" class="py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs">⏪ กู้คืนจากแบ็กอัป</button>
+              <button onclick="openBackupModal('packing','audit')" class="py-2.5 rounded-xl bg-slate-700 text-white font-bold text-xs">🕘 ประวัติการแก้ไข</button>
+            </div>
+            <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">ใช้ได้เมื่อปลดล็อกแก้ไขแล้ว · ต้องออนไลน์ · ต้องใช้ Code.gs v5.56.58</div>
+          </div>
           <button onclick="closeSettingsModal();openResetModal();" class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold">🔴 รีเซ็ตข้อมูล</button>
           <button onclick="closeSettingsModal()" class="w-full py-3 rounded-2xl bg-slate-200 dark:bg-slate-700 font-bold">ปิด</button>
         </div>
+      </div>
+    </div>
+
+    <!-- v5.56.58: Backup / Audit Modal -->
+    <div id="bkModal" class="fixed inset-0 invisible-modal" style="z-index:80;">
+      <div class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300" id="bkOverlay" onclick="closeBackupModal()"></div>
+      <div id="bkContent" class="absolute bottom-0 left-0 right-0 bg-white dark:bg-slate-900 rounded-t-3xl p-5 pb-8 modal-animate-up overflow-y-auto" style="max-height:90vh;">
+        <div class="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-4"></div>
+        <div class="text-center font-bold text-lg mb-3">แบ็กอัป &amp; ประวัติ</div>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <button id="bkTabPacking" onclick="bkSetTarget('packing')" class="py-2 rounded-xl font-bold text-xs">📦 Packing List</button>
+          <button id="bkTabSpec" onclick="bkSetTarget('spec')" class="py-2 rounded-xl font-bold text-xs">📋 Customer Spec</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button id="bkModeRestore" onclick="bkSetMode('restore')" class="py-2 rounded-xl font-bold text-xs">⏪ กู้คืน</button>
+          <button id="bkModeAudit" onclick="bkSetMode('audit')" class="py-2 rounded-xl font-bold text-xs">🕘 ประวัติ</button>
+        </div>
+        <div id="bkBody" class="text-sm"></div>
+        <button onclick="closeBackupModal()" class="w-full mt-4 py-3 rounded-2xl bg-slate-200 dark:bg-slate-700 font-bold">ปิด</button>
       </div>
     </div>
 
@@ -1633,7 +1656,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.56';
+        const APP_VERSION = 'v5.56.59';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1837,10 +1860,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         function handleHeaderSearchToggle() {
             if (currentMainTab === 'spec') toggleSpecSearch();
             else toggleSearch();
-        }
-
-        function specChip(on, label) {
-            return `<span class="spec-chip ${on ? 'spec-chip-on' : ''}" style="${on ? '' : 'opacity:0.25;'}">${on ? '✓' : '—'} ${label}</span>`;
         }
 
         // v5.56.0: จำสถานะพับ/กางของแต่ละการ์ด Customer Spec ในเซสชันนี้ (ตาม index ใน CUSTOMER_SPEC_DATA)
@@ -2085,10 +2104,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             saveSpecData();
             filterCustomerSpec();
             showToast('ลบ Customer Spec แล้ว', '🗑️');
-        }
-
-        function specDetailRow(label, on, onText, offText) {
-            return `<div class="detail-row flex justify-between py-2.5"><span class="label-style">${label}</span><span class="font-semibold ${on ? '' : 'text-slate-400'}">${on ? (onText || 'ใส่') : (offText || 'ไม่ใส่')}</span></div>`;
         }
 
         // v5.56.56: ตัวช่วยคำนวณขนาดตัวอักษรให้ "ชื่อ: ค่า" พอดีหนึ่งบรรทัดในช่องครึ่งแถว
@@ -3164,8 +3179,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const SHEETS_LASTSYNC_KEY = 'packing_sheets_last_sync';
         const SHEETS_TOKEN_KEY = 'packing_sheets_token';
         const SHEETS_LASTFAIL_KEY = 'packing_sheets_last_fail';
-        let publicRefreshTimer = null;
-
+        
         // ═══ v5.56.0: Edit Lock — ต้องใส่รหัส (ใช้รหัสแยกเฉพาะส่วนนี้) ก่อนถึงจะเพิ่ม/แก้/ลบข้อมูลได้ ═══
         // คนที่เปิดลิงค์เฉยๆ ดูข้อมูลล่าสุดได้ปกติ (v5.56.0 auto-sync ตอนเปิด) แต่แก้ไขอะไรไม่ได้จนกว่าจะปลดล็อก
         // ปลดล็อกแล้วจะจำไว้ในเครื่อง/เบราว์เซอร์นั้นๆ ไม่ต้องใส่รหัสซ้ำทุกครั้งที่เปิด
@@ -3249,13 +3263,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                 if (stored && code.trim() === stored) { specUnlocked = true; sessionStorage.setItem(SPEC_UNLOCK_KEY, '1'); showToast('สัญญาณอ่อน — ปลดล็อก Customer Spec ด้วยรหัสที่เคยยืนยันบนเครื่องนี้', '🔓'); if (typeof onSuccess === 'function') onSuccess(); return; }
                 showToast('ตรวจสอบรหัสไม่สำเร็จ: ' + (e.message || 'เชื่อมต่อไม่ได้'), '⚠️');
             }
-        }
-
-        function lockSpecEditing() {
-            specUnlocked = false;
-            sessionStorage.removeItem(SPEC_UNLOCK_KEY);
-            localStorage.removeItem(SPEC_TOKEN_KEY);
-            showToast('ล็อก Customer Spec แล้ว', '🔒');
         }
 
         function requireEditUnlock(callback) {
@@ -3400,8 +3407,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             } catch (e) { /* ไม่ให้ error ตรงนี้กระทบการใช้งานหลัก */ }
         });
         window.addEventListener('pagehide', function () {
-            localStorage.removeItem(EDIT_UNLOCK_KEY);
-            localStorage.removeItem(SPEC_UNLOCK_KEY);
+            // v5.56.57: แก้บั๊ก — เดิมลบจาก localStorage ทั้งที่ค่าอยู่ใน sessionStorage และไม่รีเซ็ตตัวแปรในหน่วยความจำ ทำให้ไม่ล็อกจริง
+            try { sessionStorage.removeItem(EDIT_UNLOCK_KEY); sessionStorage.removeItem(SPEC_UNLOCK_KEY); } catch (e) {}
+            try { localStorage.removeItem(EDIT_UNLOCK_KEY); localStorage.removeItem(SPEC_UNLOCK_KEY); } catch (e) {}
+            editUnlocked = false; specUnlocked = false;
+            try { if (typeof renderLockStatus === 'function') renderLockStatus(); } catch (e) {}
         });
 
         // v5.56.0 #2: เรียกแทน syncToGoogleSheets(true) ตรงๆ ใน saveData() — debounce ไว้ก่อนค่อยซิงค์จริง
@@ -3509,22 +3519,6 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             } catch(e) {}
         }
 
-        // v5.56.0: ซ่อน Web App URL / Token เป็นค่า masked (จุดๆ) โดยดีฟอลต์ เหมือน password — กันหลุดเวลาแคปหน้าจอ/ส่งให้คนอื่นดู
-        // กดไอคอนรูปตาเพื่อสลับดู/ซ่อนได้ตามต้องการ
-        function toggleFieldVisibility(inputId, btn) {
-            const input = document.getElementById(inputId);
-            const icon = btn.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
         // (v5.56.0: ฟังก์ชัน saveSheetsUrl()/ช่องกรอก Token ใน Settings ถูกเอาออกไปแล้ว —
         //  ตอนนี้ตั้ง Token ผ่านการปลดล็อกด้วยรหัส (openEditUnlockPrompt) แทน ไม่ต้องกรอกซ้ำ)
 
@@ -3611,37 +3605,6 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
         // โดยใช้เวลาซิงค์ล่าสุด (lastSyncAt) เป็นเกณฑ์ตัดสิน — แถวไหนในเครื่องที่ไม่ได้แก้ไขมาตั้งแต่ก่อนซิงค์ครั้งล่าสุด
         // (ไม่ใช่ของใหม่ที่เพิ่งเพิ่ม/แก้ในเครื่องนี้) จะถูกแทนที่ด้วยความจริงจากเซิร์ฟเวอร์ทันที (ถ้าถูกลบไปแล้วก็จะหายไปจาก
         // เครื่องด้วย ไม่ push กลับขึ้นไปฟื้นคืนชีพอีก) ส่วนแถวที่เพิ่งแก้ไขในเครื่องนี้เองหลังซิงค์ครั้งล่าสุด จะยังคงอยู่ตามปกติ
-        async function reconcileBeforeAutoSync() {
-            const url = getSheetsUrl();
-            if (!url || !navigator.onLine) return;
-            try {
-                const token = localStorage.getItem(SHEETS_TOKEN_KEY) || '';
-                const lastSyncAt = parseInt(localStorage.getItem(SHEETS_LASTSYNC_KEY) || '0', 10);
-                const res = await fetchWithRetry(url + '?action=load', { method: 'GET' });
-                const json = await res.json();
-                if (json.status === 'error' || !Array.isArray(json.records)) return;
-                packingData = normalizePackingFlags(applyMergedResultPreservingInFlightEdits(packingData, json.records, lastSyncAt, packingItemKey));
-                saveDataLocalOnly();
-                renderTable();
-            } catch(e) { /* reconcile ไม่สำเร็จก็ไม่เป็นไร ปล่อยให้ syncToGoogleSheets() ที่ตามมาทำงานตามปกติ */ }
-        }
-        async function reconcileBeforeAutoSyncSpec() {
-            const url = getSheetsUrl();
-            if (!url || !navigator.onLine) return;
-            try {
-                const token = localStorage.getItem(SHEETS_TOKEN_KEY) || '';
-                const lastSyncAt = parseInt(localStorage.getItem(SPEC_SHEETS_LASTSYNC_KEY) || '0', 10);
-                const pullStartedAt = Date.now();
-                const res = await fetchWithRetry(url + '?action=loadSpec', { method: 'GET' }, 2, STARTUP_PULL_TIMEOUT_MS);
-                const json = await res.json();
-                if (json.status === 'error' || !Array.isArray(json.records)) return;
-                const loadedSpecItems = json.records.map(sheetRecordToSpecItem);
-                CUSTOMER_SPEC_DATA = normalizeSpecFlags(applyMergedResultPreservingInFlightEdits(CUSTOMER_SPEC_DATA, loadedSpecItems, lastSyncAt, specItemKey));
-                saveSpecDataLocalOnly();
-                filterCustomerSpec();
-            } catch(e) { /* reconcile ไม่สำเร็จก็ไม่เป็นไร ปล่อยให้ syncSpecToGoogleSheets() ที่ตามมาทำงานตามปกติ */ }
-        }
-
         async function silentPullPacking() {
             const url = getSheetsUrl();
             if (!url || !navigator.onLine) { if (!navigator.onLine) { packingSyncState = SYNC_STATE.OFFLINE; renderSyncDiagnostics(); } return; }
@@ -3719,7 +3682,7 @@ backupBeforeOverwrite('โหลดจาก Google Sheets');
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ป้องกัน CORS preflight กับ Apps Script
                     body: JSON.stringify({
-                        action: 'sync', token, fieldOrder: SYNC_FIELD_ORDER, records: recordsToSend,
+                        action: 'sync', token, editor: getEditorName(), deviceId: getDeviceId(), fieldOrder: SYNC_FIELD_ORDER, records: recordsToSend,
                         keyFields: PACKING_KEY_FIELDS, deletedKeys: tombstonesSent
                     })
                 }, 2, SYNC_WRITE_TIMEOUT_MS);
@@ -3831,7 +3794,7 @@ backupBeforeOverwrite('ก่อนรับข้อมูลที่ merge �
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
-                        action: 'syncSpec', token, fieldOrder: SPEC_SYNC_HEADERS, records: CUSTOMER_SPEC_DATA.map(specItemToSheetRecord),
+                        action: 'syncSpec', token, editor: getEditorName(), deviceId: getDeviceId(), fieldOrder: SPEC_SYNC_HEADERS, records: CUSTOMER_SPEC_DATA.map(specItemToSheetRecord),
                         keyFields: SPEC_KEY_FIELDS, deletedKeys: tombstonesSent
                     })
                 }, 2, SYNC_WRITE_TIMEOUT_MS);
@@ -4149,25 +4112,6 @@ backupBeforeOverwrite('รีเซ็ตข้อมูล');
             } else { alert('พิมพ์ RESET เพื่อยืนยัน'); }
         }
 
-        function parseCSVLine(line) {
-            const result = [];
-            let cur = '', inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                const ch = line[i];
-                if (inQuotes) {
-                    if (ch === '"' && line[i+1] === '"') { cur += '"'; i++; }
-                    else if (ch === '"') { inQuotes = false; }
-                    else { cur += ch; }
-                } else {
-                    if (ch === '"') { inQuotes = true; }
-                    else if (ch === ',') { result.push(cur); cur = ''; }
-                    else { cur += ch; }
-                }
-            }
-            result.push(cur);
-            return result;
-        }
-
         function importFromCSV(event) {
             if (!editUnlocked) { const input = event.target; requireEditUnlock(() => { if (input.files && input.files[0]) importFromCSV(input); }); return; }
             const file = event.target.files[0];
@@ -4321,6 +4265,7 @@ function openSettingsModal(){
  renderSpecUndoButton();
  renderSyncDiagnostics();
  renderLockStatus();
+ { const en = document.getElementById('editorNameInput'); if (en) en.value = getEditorName(); }
 }
 function closeSettingsModal(){
  document.getElementById('settingsOverlay').classList.remove('opacity-100');
@@ -4330,6 +4275,223 @@ function closeSettingsModal(){
    modal.classList.remove('visible-modal');
    modal.classList.add('invisible-modal');
  }, 350);
+}
+
+// ═══ v5.56.58: กู้คืนจากแบ็กอัป + ประวัติการแก้ไข ═══
+const EDITOR_NAME_KEY = 'packing_editor_name';
+function getEditorName() { try { return cleanText(localStorage.getItem(EDITOR_NAME_KEY) || '').slice(0, 30); } catch (e) { return ''; } }
+function saveEditorName(v) {
+  try { localStorage.setItem(EDITOR_NAME_KEY, cleanText(v || '').slice(0, 30)); } catch (e) {}
+  const el = document.getElementById('editorNameInput'); if (el) el.value = getEditorName();
+  showToast('บันทึกชื่อผู้แก้ไขแล้ว', '✅');
+}
+let bkTarget = 'packing', bkMode = 'restore', bkBusy = false, bkReq = 0;
+const BK_ID_RE = /^(last|daily:\d{8}|pre:\d{8}_\d{6})$/;
+function bkFmtStamp(s) { return s.slice(6, 8) + '/' + s.slice(4, 6) + '/' + s.slice(0, 4) + ' ' + s.slice(9, 11) + ':' + s.slice(11, 13) + ':' + s.slice(13, 15); }
+
+function bkUnlocked(target) { return target === 'spec' ? specUnlocked : editUnlocked; }
+function bkRequireUnlock(target, cb) {
+  if (bkUnlocked(target)) { cb(); return; }
+  (target === 'spec' ? requireSpecUnlock : requireEditUnlock)(cb);
+}
+function bkKeyInfo(target) {
+  return target === 'spec'
+    ? { keyFields: SPEC_KEY_FIELDS, fieldOrder: SPEC_SYNC_HEADERS }
+    : { keyFields: PACKING_KEY_FIELDS, fieldOrder: SYNC_FIELD_ORDER };
+}
+function bkHasPending(target) {
+  return hasPendingSync(target) || getTombstones(target === 'spec' ? SPEC_TOMBSTONE_KEY : PACKING_TOMBSTONE_KEY).length > 0;
+}
+function bkFmtDate(d8) { return d8.slice(6, 8) + '/' + d8.slice(4, 6) + '/' + d8.slice(0, 4); }
+
+async function bkPost(body, retries) {
+  const url = getSheetsUrl();
+  if (!url) throw new Error('ยังไม่ได้ตั้งค่า Web App URL');
+  if (!navigator.onLine) throw new Error('ออฟไลน์อยู่ — ต้องต่ออินเทอร์เน็ตก่อน');
+  const token = localStorage.getItem(body.target === 'spec' ? SPEC_TOKEN_KEY : SHEETS_TOKEN_KEY) || '';
+  const res = await fetchWithRetry(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ token: token, deviceId: getDeviceId(), editor: getEditorName() }, body))
+  }, retries || 2, SYNC_WRITE_TIMEOUT_MS);
+  const json = await res.json();
+  if (json.status === 'error') throw new Error(json.locked ? formatLockoutMsg_(json.remainingMs) : (json.message || 'error'));
+  return json;
+}
+function bkErrorHtml(e) {
+  const m = (e && e.message) || 'error';
+  const old = m === 'OLD_SERVER' || /keyFields/.test(m);
+  const text = old ? 'เซิร์ฟเวอร์ (Code.gs) ยังเป็นรุ่นเก่า — วาง Code_v5_56_58.gs ใน Apps Script แล้ว Deploy เป็น New version ก่อน' : (m === 'invalid token' ? 'รหัสผ่านไม่ถูกต้อง — ปลดล็อกแก้ไขใหม่อีกครั้ง' : m);
+  return '<div class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 text-[12px] text-rose-700 dark:text-rose-300">⚠️ ' + escapeHtml(text) + '</div>';
+}
+function bkLoadingHtml(msg) { return '<div class="py-6 text-center text-xs text-slate-400 dark:text-slate-500"><i class="fa-solid fa-circle-notch fa-spin"></i> ' + escapeHtml(msg || 'กำลังโหลด...') + '</div>'; }
+
+function openBackupModal(target, mode) {
+  bkTarget = target === 'spec' ? 'spec' : 'packing';
+  bkMode = mode === 'audit' ? 'audit' : 'restore';
+  bkRequireUnlock(bkTarget, function () {
+    const modal = document.getElementById('bkModal');
+    modal.classList.remove('invisible-modal'); modal.classList.add('visible-modal');
+    setTimeout(function () {
+      document.getElementById('bkOverlay').classList.add('opacity-100');
+      document.getElementById('bkContent').classList.add('modal-visible');
+    }, 10);
+    bkRender();
+  });
+}
+function closeBackupModal() {
+  bkReq++;
+  document.getElementById('bkOverlay').classList.remove('opacity-100');
+  document.getElementById('bkContent').classList.remove('modal-visible');
+  setTimeout(function () {
+    const modal = document.getElementById('bkModal');
+    modal.classList.remove('visible-modal'); modal.classList.add('invisible-modal');
+  }, 350);
+}
+function bkSetTarget(t) {
+  if (t === bkTarget || bkBusy) return;
+  bkRequireUnlock(t, function () { bkTarget = t; bkRender(); });
+}
+function bkSetMode(m) { if (m === bkMode || bkBusy) return; bkMode = m; bkRender(); }
+
+function bkRender() {
+  const req = ++bkReq;
+  const on = ['bg-indigo-600', 'text-white'], off = ['bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300'];
+  [['bkTabPacking', bkTarget === 'packing'], ['bkTabSpec', bkTarget === 'spec'], ['bkModeRestore', bkMode === 'restore'], ['bkModeAudit', bkMode === 'audit']].forEach(function (x) {
+    const el = document.getElementById(x[0]); if (!el) return;
+    on.forEach(function (c) { el.classList.toggle(c, x[1]); });
+    off.forEach(function (c) { el.classList.toggle(c, !x[1]); });
+  });
+  document.getElementById('bkBody').innerHTML = bkLoadingHtml();
+  if (bkMode === 'audit') bkLoadAudit(req); else bkLoadList(req);
+}
+
+async function bkLoadList(req) {
+  const box = document.getElementById('bkBody');
+  try {
+    const j = await bkPost({ action: 'listBackups', target: bkTarget });
+    if (req !== bkReq) return;
+    if (!Array.isArray(j.backups)) throw new Error('OLD_SERVER');
+    const daily = j.backups.filter(function (b) { return b.kind === 'daily' && BK_ID_RE.test(b.id); });
+    const last = j.backups.find(function (b) { return b.kind === 'last' && BK_ID_RE.test(b.id); });
+    const pres = j.backups.filter(function (b) { return b.kind === 'pre' && BK_ID_RE.test(b.id); });
+    const btn = 'w-full text-left p-3 mb-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 flex items-center justify-between gap-2';
+    let h = '<div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">ข้อมูลปัจจุบันในชีต: <b>' + (Number(j.currentRows) || 0) + '</b> รายการ — เลือกแบ็กอัปเพื่อดูตัวอย่างก่อนกู้คืน (ยังไม่เปลี่ยนอะไรจนกว่าจะกดยืนยัน)</div>';
+    pres.forEach(function (b) {
+      h += '<button onclick="bkPreview(\'' + b.id + '\')" class="' + btn + '"><span><b>↩️ ก่อนกู้คืนเมื่อ ' + escapeHtml(bkFmtStamp(b.stamp)) + '</b><br><span class="text-[10px] text-slate-400">ใช้ย้อนกลับการกู้คืนครั้งนั้น (เก็บ 3 ครั้งล่าสุด)</span></span><span class="text-xs font-bold text-slate-500">' + (Number(b.rows) || 0) + ' รายการ</span></button>';
+    });
+    if (last) {
+      const when = last.savedAt ? new Date(last.savedAt).toLocaleString('th-TH') : '';
+      h += '<button onclick="bkPreview(\'last\')" class="' + btn + '"><span><b>⏪ สถานะก่อนซิงค์ครั้งล่าสุด</b><br><span class="text-[10px] text-slate-400">' + escapeHtml(when) + ' · อาจถูกทับเมื่อมีการซิงค์ใหม่</span></span><span class="text-xs font-bold text-slate-500">' + (Number(last.rows) || 0) + ' รายการ</span></button>';
+    }
+    daily.forEach(function (b) {
+      h += '<button onclick="bkPreview(\'' + b.id + '\')" class="' + btn + '"><span><b>📅 ' + escapeHtml(bkFmtDate(b.date)) + '</b><br><span class="text-[10px] text-slate-400">แบ็กอัปอัตโนมัติ 02:00 น.</span></span><span class="text-xs font-bold text-slate-500">' + (Number(b.rows) || 0) + ' รายการ</span></button>';
+    });
+    if (!daily.length) h += '<div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 text-[11px] text-amber-700 dark:text-amber-300">ยังไม่มีแบ็กอัปรายวัน — เจ้าของชีตต้องรัน <b>installDailyBackupTrigger</b> ใน Apps Script ครั้งเดียว ระบบจะสำรองทุกวัน 02:00 น. และเก็บย้อนหลัง 7 วัน</div>';
+    box.innerHTML = h;
+  } catch (e) { if (req === bkReq) box.innerHTML = bkErrorHtml(e); }
+}
+
+async function bkPreview(id) {
+  if (!BK_ID_RE.test(id)) return;
+  const req = ++bkReq;
+  const box = document.getElementById('bkBody');
+  box.innerHTML = bkLoadingHtml('กำลังเทียบกับข้อมูลปัจจุบัน...');
+  try {
+    const info = bkKeyInfo(bkTarget);
+    const j = await bkPost({ action: 'previewBackup', target: bkTarget, snapshot: id, keyFields: info.keyFields, fieldOrder: info.fieldOrder });
+    if (req !== bkReq) return;
+    if (!j.counts) throw new Error('OLD_SERVER');
+    const c = j.counts;
+    const label = id === 'last' ? 'สถานะก่อนซิงค์ครั้งล่าสุด' : (id.indexOf('pre:') === 0 ? 'สำเนาก่อนกู้คืนเมื่อ ' + bkFmtStamp(id.slice(4)) : 'แบ็กอัปวันที่ ' + bkFmtDate(id.slice(6)));
+    const list = function (arr, icon, title) {
+      if (!arr || !arr.length) return '';
+      return '<div class="mt-2"><div class="font-bold">' + icon + ' ' + title + '</div><div class="text-[11px] text-slate-600 dark:text-slate-300 break-words">' + arr.map(function (x) { return escapeHtml(x); }).join('<br>') + '</div></div>';
+    };
+    const same = (c.restored + c.removed + c.changed) === 0;
+    let h = '<div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 text-[12px] text-slate-700 dark:text-slate-200">'
+      + '<div class="font-bold mb-1">ตัวอย่างการกู้คืนจาก ' + escapeHtml(label) + '</div>'
+      + '<div>แบ็กอัปมี ' + (Number(j.snapshotRows) || 0) + ' รายการ · ปัจจุบันมี ' + (Number(j.currentRows) || 0) + ' รายการ</div>'
+      + '<div class="mt-1">🟢 จะกลับมา <b>' + c.restored + '</b> · 🔴 จะหายไป <b>' + c.removed + '</b> · 🟡 จะถูกแก้กลับ <b>' + c.changed + '</b></div>'
+      + list(j.sample && j.sample.restored, '🟢', 'จะกลับมา (แสดงสูงสุด 10)')
+      + list(j.sample && j.sample.removed, '🔴', 'จะหายไป (แสดงสูงสุด 10)')
+      + list(j.sample && j.sample.changed, '🟡', 'จะถูกแก้กลับ (แสดงสูงสุด 10)')
+      + '</div>';
+    if (same) {
+      h += '<div class="mt-3 text-[12px] text-slate-500">ข้อมูลปัจจุบันเหมือนแบ็กอัปนี้อยู่แล้ว ไม่ต้องกู้คืน</div>';
+    } else if (bkHasPending(bkTarget)) {
+      h += '<div class="mt-3 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 text-[12px] text-rose-700 dark:text-rose-300">⚠️ เครื่องนี้ยังมีรายการที่ไม่ได้ซิงค์ — กด “ซิงค์ขึ้น Google Sheets” ให้เสร็จก่อน แล้วค่อยกู้คืน</div>';
+    } else {
+      h += '<label class="flex items-start gap-2 mt-3 text-[12px] text-slate-600 dark:text-slate-300"><input type="checkbox" id="bkConfirm" onchange="bkToggleConfirm()" class="w-4 h-4 mt-0.5 rounded"><span>ฉันเข้าใจว่าข้อมูลในชีตจะถูกแทนที่ด้วยแบ็กอัปนี้ และมีผลกับทุกเครื่อง (ระบบเก็บสำเนาก่อนกู้คืนไว้ให้ย้อนกลับได้ — 3 ครั้งล่าสุด)</span></label>'
+        + '<button id="bkRestoreBtn" disabled onclick="bkDoRestore(\'' + id + '\')" class="w-full mt-2 py-3 rounded-2xl bg-rose-600 text-white font-bold disabled:opacity-40">⏪ กู้คืนเลย</button>';
+    }
+    h += '<button onclick="bkRender()" class="w-full mt-2 py-2 text-slate-400 font-bold text-xs">← กลับไปเลือกแบ็กอัป</button>';
+    box.innerHTML = h;
+  } catch (e) { if (req === bkReq) box.innerHTML = bkErrorHtml(e) + '<button onclick="bkRender()" class="w-full mt-2 py-2 text-slate-400 font-bold text-xs">← กลับ</button>'; }
+}
+function bkToggleConfirm() {
+  const cb = document.getElementById('bkConfirm'), b = document.getElementById('bkRestoreBtn');
+  if (cb && b) b.disabled = !cb.checked;
+}
+
+function bkApplyRestored(target, records) {
+  if (target === 'spec') {
+    backupSpecBeforeOverwrite('ก่อนกู้คืนจากแบ็กอัป');
+    CUSTOMER_SPEC_DATA = normalizeSpecFlags(records.map(sheetRecordToSpecItem));
+    saveSpecDataLocalOnly(); filterCustomerSpec();
+    setPendingSync('spec', false);
+    localStorage.setItem(SPEC_SHEETS_LASTSYNC_KEY, String(Date.now()));
+    renderSpecSheetsSyncStatus(); renderSpecUndoButton();
+  } else {
+    backupBeforeOverwrite('ก่อนกู้คืนจากแบ็กอัป');
+    packingData = normalizePackingFlags(records.slice());
+    saveDataLocalOnly(); renderTable();
+    setPendingSync('packing', false);
+    localStorage.setItem(SHEETS_LASTSYNC_KEY, String(Date.now()));
+    renderSheetsSyncStatus(); renderUndoButton();
+  }
+  renderSyncDiagnostics();
+}
+
+async function bkDoRestore(id) {
+  if (bkBusy || !BK_ID_RE.test(id)) return;
+  const cb = document.getElementById('bkConfirm');
+  if (!cb || !cb.checked) return;
+  if (bkHasPending(bkTarget)) { showToast('มีรายการที่ยังไม่ซิงค์ — ซิงค์ให้เสร็จก่อน', '⚠️'); return; }
+  const req = ++bkReq, target = bkTarget, box = document.getElementById('bkBody');
+  bkBusy = true;
+  box.innerHTML = bkLoadingHtml('กำลังกู้คืน...');
+  try {
+    const info = bkKeyInfo(target);
+    const j = await bkPost({ action: 'restoreBackup', target: target, snapshot: id, keyFields: info.keyFields, fieldOrder: info.fieldOrder }, 1);
+    if (!j.counts || !Array.isArray(j.records)) throw new Error('OLD_SERVER');
+    bkApplyRestored(target, j.records);
+    showToast('กู้คืนสำเร็จ ' + j.records.length + ' รายการ', '✅');
+    if (req === bkReq) {
+      box.innerHTML = '<div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 text-[12px] text-emerald-700 dark:text-emerald-300">✅ กู้คืนสำเร็จ — ตอนนี้มี ' + j.records.length + ' รายการ (กลับมา ' + j.counts.restored + ' · หายไป ' + j.counts.removed + ' · แก้กลับ ' + j.counts.changed + ')<br><span class="text-[11px]">เครื่องอื่นจะได้ข้อมูลที่กู้คืนเมื่อเปิดแอป/ดึงข้อมูลครั้งถัดไป (เครื่องที่มีรายการค้างซิงค์อาจส่งรายการนั้นกลับเข้ามาได้) · ถ้าเปลี่ยนใจ เลือกรายการ “↩️ ก่อนกู้คืนเมื่อ …” ในรายการแบ็กอัปเพื่อย้อนกลับ</span></div>'
+        + '<button onclick="bkRender()" class="w-full mt-2 py-2 text-slate-400 font-bold text-xs">← กลับไปรายการแบ็กอัป</button>';
+    }
+  } catch (e) {
+    if (req === bkReq) box.innerHTML = bkErrorHtml(e) + '<button onclick="bkRender()" class="w-full mt-2 py-2 text-slate-400 font-bold text-xs">← กลับ</button>';
+  } finally { bkBusy = false; }
+}
+
+async function bkLoadAudit(req) {
+  const box = document.getElementById('bkBody');
+  try {
+    const j = await bkPost({ action: 'getAudit', target: bkTarget, limit: 100 });
+    if (req !== bkReq) return;
+    if (!Array.isArray(j.rows)) throw new Error('OLD_SERVER');
+    if (!j.rows.length) { box.innerHTML = '<div class="py-6 text-center text-xs text-slate-400 dark:text-slate-500">ยังไม่มีประวัติ — จะเริ่มบันทึกตั้งแต่การซิงค์ครั้งถัดไป</div>'; return; }
+    box.innerHTML = '<div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">ล่าสุด ' + j.rows.length + ' รายการ (ใหม่สุดอยู่บน)</div>' + j.rows.map(function (r) {
+      const badge = r.action === 'restore' ? '<span class="px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 font-bold">กู้คืน</span>' : '<span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold">ซิงค์</span>';
+      return '<div class="p-2.5 mb-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">'
+        + '<div class="flex justify-between gap-2 text-[11px]"><b>' + escapeHtml(r.editor) + '</b><span class="text-slate-400">' + escapeHtml(r.time) + '</span></div>'
+        + '<div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">' + badge + ' 🟢 +' + r.added + ' · 🟡 ~' + r.changed + ' · 🔴 −' + r.deleted + ' · รวม ' + escapeHtml(r.total) + (r.device ? ' · เครื่อง …' + escapeHtml(r.device) : '') + '</div>'
+        + (r.details ? '<div class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 break-words">' + escapeHtml(r.details) + '</div>' : '')
+        + '</div>';
+    }).join('');
+  } catch (e) { if (req === bkReq) box.innerHTML = bkErrorHtml(e); }
 }
 </script>
 </body>
