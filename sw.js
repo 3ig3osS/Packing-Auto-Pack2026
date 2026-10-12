@@ -1,35 +1,25 @@
-const CACHE_NAME='packing-auto-pack-v5-56-56-shell';
-// v5.56.56: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.52: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.51: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.50: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.49: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.48: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.47: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.46: cache key เปลี่ยนเพื่อรับ shell รุ่นใหม่ — v5.56.45: เปลี่ยน cache key (v5.56.44 ลืมเปลี่ยนชื่อ) — v5.56.44: เปลี่ยน cache key เพื่อบังคับ client รับ shell รุ่นใหม่และล้าง cache รุ่นเก่า
+const V='5.56.59';
+const CACHE_NAME='packing-auto-pack-v5-56-59-shell';
+// v5.56.59: ไฟล์ CSS ใน assets/ ผูก ?v=<เวอร์ชัน> เพื่อให้เครื่องที่ยังมี Service Worker รุ่นเก่าไม่หยิบ CSS เก่าจากแคชมาใช้กับหน้าใหม่
+// v5.56.59: ตอนติดตั้ง SW ดึงไฟล์ด้วย cache:'reload' (ข้าม HTTP cache) และลบระบบ precache CDN เดิมที่ไม่ได้ใช้แล้วออก
 const APP_SHELL='./index.html';
-const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png','./packing-logo.png'];
-// v5.56.39: ไฟล์ภายนอกที่หน้าตาแอปต้องใช้ — เก็บล่วงหน้าตอนติดตั้ง เพื่อให้เปิดออฟไลน์ครั้งแรกได้สไตล์ครบ
-const CDN_PRECACHE=['https://cdn.tailwindcss.com','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css','https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap'];
-const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdnjs.cloudflare.com','fonts.googleapis.com','fonts.gstatic.com']);
-// ถ้าเครือข่ายตอบช้าเกินเวลานี้ และมีหน้าแอปในแคชอยู่แล้ว ให้เปิดจากแคชทันที (เครือข่ายยังโหลดต่อเพื่ออัปเดตแคชรอบหน้า)
+const STATIC_ASSETS=[APP_SHELL,'./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png','./packing-logo.png','./assets/tailwind.css?v='+V,'./assets/fontawesome.css?v='+V,'./assets/sarabun.css?v='+V,'./assets/fonts/fa-solid-900.woff2','./assets/fonts/sarabun-thai-400-normal.woff2','./assets/fonts/sarabun-thai-500-normal.woff2','./assets/fonts/sarabun-thai-600-normal.woff2','./assets/fonts/sarabun-thai-700-normal.woff2','./assets/fonts/sarabun-thai-800-normal.woff2','./assets/fonts/sarabun-latin-400-normal.woff2','./assets/fonts/sarabun-latin-500-normal.woff2','./assets/fonts/sarabun-latin-600-normal.woff2','./assets/fonts/sarabun-latin-700-normal.woff2','./assets/fonts/sarabun-latin-800-normal.woff2'];
+// เปิดหน้าแอป: ใช้ของใหม่จากเน็ตถ้าตอบทันใน NAV_TIMEOUT_MS ไม่งั้นใช้ของในแคช (ออฟไลน์/สัญญาณอ่อน)
 const NAV_TIMEOUT_MS=3500;
-// ดึงไฟล์ CDN + ไฟล์ฟอนต์ที่ CSS อ้างถึง; ล้มเหลวได้ (ไม่ทำให้ติดตั้ง SW ไม่สำเร็จ) — fetch handler จะเก็บเพิ่มเองตอนใช้งานปกติ
-async function precacheCdn(cache){
- for(const url of CDN_PRECACHE){
-  try{
-   const res=await fetch(url,{mode:'cors'});
-   if(!res.ok)continue;
-   await cache.put(url,res.clone());
-   if(url.endsWith('.css')||url.includes('fonts.googleapis.com')){
-    const css=await res.text();
-    const base=new URL(url);
-    const urls=[...new Set([...css.matchAll(/url\(([^)]+)\)/g)].map(m=>m[1].replace(/['"]/g,'').trim()).filter(u=>!u.startsWith('data:')).map(u=>new URL(u,base).href))];
-    // woff2 เท่านั้น (เบราว์เซอร์ที่รองรับ SW ใช้ woff2 ได้หมด) ลดขนาดแคช
-    await Promise.all(urls.filter(u=>/\.woff2(\?|$)/.test(u)||u.includes('fonts.gstatic.com')).map(async u=>{try{const r=await fetch(u,{mode:'cors'});if(r.ok)await cache.put(u,r)}catch(_){}}));
-   }
-  }catch(_){}
- }
-}
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE_NAME).then(async c=>{await c.addAll(STATIC_ASSETS);await precacheCdn(c)}).then(()=>self.skipWaiting())));
+self.addEventListener('install',e=>e.waitUntil((async()=>{
+ const c=await caches.open(CACHE_NAME);
+ await Promise.all(STATIC_ASSETS.map(async u=>{
+  const res=await fetch(new Request(u,{cache:'reload'}));
+  if(!res.ok)throw new Error('precache failed: '+u+' '+res.status);
+  await c.put(u,res);
+ }));
+ await self.skipWaiting();
+})()));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('packing-auto-pack-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('message',e=>{if(e.data&&e.data.type==='SKIP_WAITING')self.skipWaiting()});
 self.addEventListener('fetch',e=>{
  const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
- if(u.origin!==self.location.origin && !CDN_HOSTS.has(u.host))return;
+ if(u.origin!==self.location.origin)return;
  if(r.mode==='navigate'){
   let done;const keepAlive=new Promise(res=>{done=res});e.waitUntil(keepAlive);
   e.respondWith((async()=>{
@@ -45,5 +35,5 @@ self.addEventListener('fetch',e=>{
   })());
   return;
  }
- e.respondWith(caches.match(r).then(cached=>cached||fetch(r).then(x=>{if(x.ok||x.type==='opaque')caches.open(CACHE_NAME).then(c=>c.put(r,x.clone()));return x}).catch(()=>cached)));
+ e.respondWith(caches.match(r).then(cached=>cached||fetch(r).then(x=>{if(x.ok)caches.open(CACHE_NAME).then(c=>c.put(r,x.clone()));return x}).catch(()=>cached)));
 });
