@@ -193,11 +193,11 @@ v5.56.0 BUGFIX BUILD
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Packing Auto Pack v5.56.60</title>
-    <meta name="description" content="Packing Auto Pack v5.56.60 — ระบบ Packing List และ Customer Spec">
+    <title>Packing Auto Pack v5.56.64</title>
+    <meta name="description" content="Packing Auto Pack v5.56.64 — ระบบ Packing List และ Customer Spec">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Packing Auto Pack">
-    <meta property="og:title" content="Packing Auto Pack v5.56.60">
+    <meta property="og:title" content="Packing Auto Pack v5.56.64">
     <meta property="og:description" content="Packing List และ Customer Spec — เปิดใช้งานผ่านลิงก์">
     <meta property="og:url" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/">
     <meta property="og:image" content="https://3ig3oss.github.io/Packing-Auto-Pack2026/packing-logo.png">
@@ -212,8 +212,8 @@ v5.56.0 BUGFIX BUILD
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-        <link rel="stylesheet" href="./assets/fontawesome.css?v=5.56.60">
-    <link rel="stylesheet" href="./assets/sarabun.css?v=5.56.60">
+        <link rel="stylesheet" href="./assets/fontawesome.css?v=5.56.64">
+    <link rel="stylesheet" href="./assets/sarabun.css?v=5.56.64">
     <style>
                 
         :root {
@@ -650,6 +650,9 @@ v5.56.0 BUGFIX BUILD
             margin-right: auto !important;
             text-align: center !important;
         }
+        /* v5.56.64: ใช้เฉพาะป้าย NOTE / EXTRA / Special Requirement — แผ่นเงาอยู่ใต้ตัวอักษรและเบากว่า (ป้ายอื่นยังเป็นแบบเดิม) */
+        .section-banner.banner-clear { isolation: isolate; }
+        .section-banner.banner-clear::after { z-index: -1; background: linear-gradient(90deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)); }
         .section-banner::after{
             content:'';
             position:absolute;
@@ -1160,7 +1163,7 @@ v5.56.0 BUGFIX BUILD
 </style>
 
     <!-- v5.56.57: Tailwind คอมไพล์ไว้ล่วงหน้า (แทน cdn.tailwindcss.com) วางท้าย head เพื่อให้ลำดับ CSS เหมือนเดิม -->
-    <link rel="stylesheet" href="./assets/tailwind.css?v=5.56.60">
+    <link rel="stylesheet" href="./assets/tailwind.css?v=5.56.64">
 </head>
 <body class="pb-16">
     <!-- Header ดีไซน์คลีน โมเดิร์น ไม่ทึบ -->
@@ -1485,8 +1488,8 @@ v5.56.0 BUGFIX BUILD
                         </div>
                     </div>
                     
-                    <div><label class="label-style">หมายเหตุ (NOTE)</label><input type="text" id="note" class="input-style text-sm" placeholder="หมายเหตุทั่วไป"></div>
-                    <div><label class="label-style">คำสั่งพิเศษ (EXTRA)</label><input type="text" id="noteExtra" class="input-style !text-rose-500 !border-rose-200 dark:!border-rose-900/50 text-sm" placeholder="คำสั่งพิเศษ/คำเตือน"></div>
+                    <div><label class="label-style !text-amber-800 dark:!text-amber-300">หมายเหตุ (NOTE)</label><textarea id="note" rows="2" class="input-style text-sm resize-y !text-amber-800 !border-amber-300 dark:!text-amber-300 dark:!border-amber-900/50" style="min-height:64px;max-height:50vh;" enterkeyhint="done" placeholder="หมายเหตุทั่วไป"></textarea></div>
+                    <div><label class="label-style !text-red-700 dark:!text-red-300">คำสั่งพิเศษ (EXTRA)</label><textarea id="noteExtra" rows="2" class="input-style text-sm resize-y !text-red-700 !border-rose-200 dark:!text-red-300 dark:!border-rose-900/50" style="min-height:64px;max-height:50vh;" enterkeyhint="done" placeholder="คำสั่งพิเศษ/คำเตือน"></textarea></div>
                     
                     <div class="grid grid-cols-2 gap-2 pt-2 text-slate-900 dark:text-white">
                         <label class="flex items-center p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 has-[:checked]:border-orange-400 transition-all select-none">
@@ -1656,7 +1659,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         let formDirty = false;
 
         // ─── App Version (แก้ที่นี่จุดเดียวเมื่ออัพเดท) ───────────────────────
-        const APP_VERSION = 'v5.56.60';
+        const APP_VERSION = 'v5.56.64';
 
         // v5.56.4: โหมดประหยัดพลัง — ผู้ใช้สลับเองได้ใน Settings, และเดาให้อัตโนมัติตอนเปิดแอปครั้งแรก
         // จากสัญญาณสเปกเครื่องเท่าที่เบราว์เซอร์ยอมบอก (ไม่รองรับทุกเครื่อง/ทุกเบราว์เซอร์ โดยเฉพาะ iOS Safari
@@ -1940,7 +1943,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                             </div></div>
                         </div>
                         ${item.note ? `<div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-                            <div class="text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner">
+                            <div class="text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-700 to-orange-700 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner banner-clear">
                                 <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
                             </div>
                             <div class="p-2.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed text-center">${highlightSpec(item.note, hlQuery)}</div>
@@ -2160,7 +2163,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                     ${hasColorSticker ? `<span class="status-pill ${getColorStickerPillStyle(item.cs)}"><span class="color-dot mr-1.5" style="background-color:${colorHex}"></span>สติ๊กเกอร์สี: ${escapeHtml(item.cs)}</span>` : ''}
                     ${!(item.rh || item.bc || item.ee || item.fw || hasColorSticker) ? `<span class="text-slate-400 text-xs">ไม่มีรายการที่ต้องติด</span>` : ''}
                 </div></div>
-                <div class="text-[11px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner">
+                <div class="text-[11px] font-black text-white bg-gradient-to-r from-rose-600 via-red-700 to-orange-700 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner banner-clear">
                     <i class="fas fa-triangle-exclamation mr-1"></i> Special Requirement
                 </div>
                 <div class="mt-0 p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40">
@@ -2386,27 +2389,52 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const STORAGE_KEY = 'packing_pro_v5';
         // ลำดับคอลัมน์มาตรฐาน ใช้ร่วมกันทั้ง Export CSV และ Sync Google Sheets
         // เพื่อให้คอลัมน์เรียงตรงกันทั้ง 2 ทาง (ก่อนหน้านี้ sync ใช้ลำดับ key ตามธรรมชาติของ object ซึ่งต่างจาก CSV)
-// v5.56.60: หมายเหตุ (NOTE) / คำสั่งพิเศษ (EXTRA) ของ Packing List แสดงสไตล์เดียวกับ Special Requirement ของ Customer Spec
-//           (ป้ายไล่สีแดง-ส้ม + กล่องแดง) และแสดงเฉพาะเมื่อมีข้อความ — big=true สำหรับหน้ารายละเอียด, false สำหรับการ์ดในลิสต์
-function packingNoteSectionHtml(icon, title, bodyHtml, big) {
-    const wrap = big ? 'mt-4' : 'pt-2 mt-2 border-t border-slate-100 dark:border-slate-800';
-    const banner = big
-        ? 'text-[11px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-3 py-1.5 rounded-xl uppercase tracking-wider mb-2 inline-block shadow-lg section-banner'
-        : 'text-[10px] font-black text-white bg-gradient-to-r from-rose-600 via-red-600 to-orange-500 px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner';
-    const box = big
-        ? 'p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed text-center break-words'
-        : 'p-2.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-100 dark:border-red-900/40 text-red-600 dark:text-red-400 text-xs font-semibold leading-relaxed text-center break-words';
-    return `<div class="${wrap}"><div class="${banner}"><i class="fas ${icon} mr-1"></i> ${title}</div><div class="${box}">${bodyHtml}</div></div>`;
+// v5.56.61: ช่องหมายเหตุ/คำสั่งพิเศษในฟอร์มขยายลงตามข้อความอัตโนมัติ (ไม่ย่อกลับเอง จึงไม่ทับที่ผู้ใช้ลากขยายไว้) และลากมุมขวาล่างขยายเองได้
+function growNoteField(el) {
+    if (!el) return;
+    const max = Math.round(window.innerHeight * 0.5);
+    if (el.scrollHeight > el.clientHeight) el.style.height = Math.min(el.scrollHeight + 2, max) + 'px';
 }
-function packingNotesHtml(item, hlQuery, big) {
+function syncNoteFieldHeights() {
+    ['note', 'noteExtra'].forEach(function (id) { const el = document.getElementById(id); if (!el) return; el.style.height = ''; growNoteField(el); });
+}
+// v5.56.62: ช่องหมายเหตุ/คำสั่งพิเศษขยายลงได้ แต่ไม่ให้ขึ้นบรรทัดใหม่ — Enter ไม่เว้นบรรทัด (ปิดคีย์บอร์ด), วางข้อความหลายบรรทัดจะต่อเป็นบรรทัดเดียว, ข้อความยาวตัดบรรทัดเอง
+function oneLineText(s) { return String(s == null ? '' : s).replace(/\s*[\r\n]+\s*/g, ' '); }
+(function () {
+    const isNoteField = function (el) { return !!el && (el.id === 'note' || el.id === 'noteExtra'); };
+    document.addEventListener('keydown', function (e) { if (isNoteField(e.target) && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+    document.addEventListener('beforeinput', function (e) { if (isNoteField(e.target) && (e.inputType === 'insertLineBreak' || e.inputType === 'insertParagraph')) e.preventDefault(); });
+    document.addEventListener('paste', function (e) {
+        const el = e.target; if (!isNoteField(el)) return;
+        const txt = ((e.clipboardData || window.clipboardData).getData('text')) || '';
+        if (!/[\r\n]/.test(txt)) return;
+        e.preventDefault();
+        el.setRangeText(oneLineText(txt), el.selectionStart, el.selectionEnd, 'end');
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    document.addEventListener('input', function (e) {
+        const el = e.target; if (!isNoteField(el)) return;
+        if (/[\r\n]/.test(el.value)) el.value = el.value.replace(/[\r\n]/g, ' '); // กันหลุดจากคีย์บอร์ดบางรุ่น (แทนที่ 1:1 ตำแหน่งเคอร์เซอร์ไม่เลื่อน)
+        growNoteField(el);
+    });
+})();
+
+// v5.56.62: หมายเหตุ (NOTE) / คำสั่งพิเศษ (EXTRA) แสดงสไตล์เดียวกับ Special Requirement เฉพาะ "การ์ดหน้าแรก" ของ Packing List (แสดงเมื่อมีข้อความ)
+//           NOTE = ป้ายเหลืองอำพัน + ตัวอักษรเข้ม (ตัวอักษรขาวบนเหลืองมองไม่เห็น — ป้าย .section-banner ยังมีแผ่นขาวโปร่งทับอีกชั้น) / EXTRA = ป้ายแดง-ส้มเหมือน Special Requirement
+function packingNoteSectionHtml(kind, icon, title, bodyHtml) {
+    const theme = kind === 'note'
+        ? { banner: 'from-amber-300 via-amber-400 to-yellow-400 text-amber-950 banner-clear', box: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200' }
+        : { banner: 'from-rose-600 via-red-700 to-orange-700 text-white banner-clear', box: 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/40 text-red-700 dark:text-red-300' };
+    return `<div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800"><div class="text-[10px] font-black bg-gradient-to-r px-2.5 py-1 rounded-lg uppercase tracking-wider mb-1.5 inline-block shadow section-banner ${theme.banner}"><i class="fas ${icon} mr-1"></i> ${title}</div><div class="p-2.5 rounded-xl border text-xs font-semibold leading-relaxed text-center break-words ${theme.box}">${bodyHtml}</div></div>`;
+}
+function packingNotesHtml(item, hlQuery) {
     const note = String(item['Note'] == null ? '' : item['Note']).trim();
     const extra = String(item['NoteExtra'] == null ? '' : item['NoteExtra']).trim();
-    const body = (s) => big ? escapeHtml(s) : highlight(s, hlQuery);
-    return (note ? packingNoteSectionHtml('fa-sticky-note', 'หมายเหตุ (NOTE)', body(note), big) : '')
-         + (extra ? packingNoteSectionHtml('fa-triangle-exclamation', 'คำสั่งพิเศษ (EXTRA)', body(extra), big) : '');
+    return (note ? packingNoteSectionHtml('note', 'fa-sticky-note', 'หมายเหตุ (NOTE)', highlight(note, hlQuery)) : '')
+         + (extra ? packingNoteSectionHtml('extra', 'fa-triangle-exclamation', 'คำสั่งพิเศษ (EXTRA)', highlight(extra, hlQuery)) : '');
 }
 
-        const FIELD_ORDER = ["Part No", "Customer", "CustPN", "Unit Qty", "QtyPack", "QuantityTotal", "PackModel", "Paper", "HumCard", "PcbWidth", "PcbLength", "PcbWeight", "BagSize", "PrintAuto", "BcCust", "BcEE", "ColorSticker", "FourW", "SizeBagging", "Surface", "DCFormat", "Note", "NoteExtra"];
+const FIELD_ORDER = ["Part No", "Customer", "CustPN", "Unit Qty", "QtyPack", "QuantityTotal", "PackModel", "Paper", "HumCard", "PcbWidth", "PcbLength", "PcbWeight", "BagSize", "PrintAuto", "BcCust", "BcEE", "ColorSticker", "FourW", "SizeBagging", "Surface", "DCFormat", "Note", "NoteExtra"];
         // Migration: ย้ายข้อมูลจาก key เก่าทุก version
         (function migrateStorage() {
             const oldKeys = ['packing_pro_v3_4', 'packing_pro_v3', 'packing_pro_v4', 'packing_pro_v4_0'];
@@ -2682,7 +2710,7 @@ function packingNotesHtml(item, hlQuery, big) {
                         </div>
                         ` : ''}
                         
-                        ${packingNotesHtml(item, hlQuery, false)}
+                        ${packingNotesHtml(item, hlQuery)}
                     </div>
                 `;
                 const expandBtn = card.querySelector('[data-expand-toggle]');
@@ -2735,7 +2763,11 @@ function packingNotesHtml(item, hlQuery, big) {
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode ลูกค้า</span><span class="font-semibold">${toBool(item.BcCust) ? 'ใส่' : 'ไม่ใส่'}</span></div>
                     <div class="detail-row flex justify-between py-2.5"><span class="label-style">Barcode E&E</span><span class="font-semibold">${toBool(item.BcEE) ? 'ใส่' : 'ไม่ใส่'}</span></div>
                 </div>
-                ${packingNotesHtml(item, '', true)}
+                <div class="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+                    <div class="label-style mb-1">หมายเหตุ / คำสั่งพิเศษ</div>
+                    <div class="text-slate-600 dark:text-slate-300 text-xs font-medium">${escapeHtml(item['Note']) || 'ไม่มีหมายเหตุ'}</div>
+                    ${item['NoteExtra'] ? `<div class="text-rose-500 text-xs font-bold border-t border-slate-200 dark:border-slate-700 mt-2 pt-2">${escapeHtml(item['NoteExtra'])}</div>` : ''}
+                </div>
             `;
             document.getElementById('btnEditDetail').onclick = () => { closeDetailModal(); setTimeout(() => openModal(index), 300); };
             document.getElementById('btnDuplicateDetail').onclick = () => { closeDetailModal(); setTimeout(() => duplicateItem(index), 300); }; // v5.56.56: ย้ายปุ่มคัดลอกจากการ์ดมาอยู่หน้ารายละเอียด
@@ -2982,8 +3014,8 @@ function packingNotesHtml(item, hlQuery, big) {
                 document.getElementById('printAuto').checked = toBool(item['PrintAuto']);
                 document.getElementById('bcCust').checked = toBool(item['BcCust']);
                 document.getElementById('bcEE').checked = toBool(item['BcEE']);
-                document.getElementById('note').value = item['Note'] || '';
-                document.getElementById('noteExtra').value = item['NoteExtra'] || '';
+                document.getElementById('note').value = oneLineText(item['Note']);
+                document.getElementById('noteExtra').value = oneLineText(item['NoteExtra']);
                 document.getElementById('sizeBagging').value = item['SizeBagging'] || '-';
                 document.getElementById('surface').value = item['Surface'] || '';
                 document.getElementById('dcFormat').value = item['DCFormat'] || '-';
@@ -2996,6 +3028,7 @@ function packingNotesHtml(item, hlQuery, big) {
             }
             modal.classList.add('visible-modal');
             setTimeout(() => { overlay.classList.add('opacity-100'); content.classList.add('opacity-100', 'scale-100'); }, 10);
+            setTimeout(syncNoteFieldHeights, 80); // v5.56.61
         }
 
         function closeModal() {
@@ -3050,8 +3083,8 @@ function packingNotesHtml(item, hlQuery, big) {
                 "PrintAuto": document.getElementById('printAuto').checked, 
                 "BcCust": document.getElementById('bcCust').checked,
                 "BcEE": document.getElementById('bcEE').checked, 
-                "Note": document.getElementById('note').value, 
-                "NoteExtra": document.getElementById('noteExtra').value,
+                "Note": oneLineText(document.getElementById('note').value), 
+                "NoteExtra": oneLineText(document.getElementById('noteExtra').value),
                 "SizeBagging": document.getElementById('sizeBagging').value,
                 "Surface": document.getElementById('surface').value,
                 "DCFormat": document.getElementById('dcFormat').value,
@@ -4009,13 +4042,14 @@ backupSpecBeforeOverwrite('โหลดจาก Google Sheets');
             document.getElementById('printAuto').checked = copy['PrintAuto'];
             document.getElementById('bcCust').checked = copy['BcCust'];
             document.getElementById('bcEE').checked = copy['BcEE'];
-            document.getElementById('note').value = copy['Note'] || '';
-            document.getElementById('noteExtra').value = copy['NoteExtra'] || '';
+            document.getElementById('note').value = oneLineText(copy['Note']);
+            document.getElementById('noteExtra').value = oneLineText(copy['NoteExtra']);
             document.getElementById('sizeBagging').value = copy['SizeBagging'] || '-';
             document.getElementById('surface').value = copy['Surface'] || '';
             document.getElementById('dcFormat').value = copy['DCFormat'] || '-';
             modal.classList.add('visible-modal');
             setTimeout(() => { overlay.classList.add('opacity-100'); content.classList.add('opacity-100', 'scale-100'); }, 10);
+            setTimeout(syncNoteFieldHeights, 80); // v5.56.61
         }
 
         // ─── Export filtered ──────────────────────────────────────────────────
@@ -4230,7 +4264,7 @@ backupBeforeOverwrite('นำเข้า CSV');
             document.getElementById('packingForm').addEventListener('input', () => { formDirty = true; });
             // Keyboard shortcut: / to open search, Esc to close
             document.addEventListener('keydown', (e) => {
-                if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
+                if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT' && document.activeElement.tagName !== 'TEXTAREA' && !document.activeElement.isContentEditable) { // v5.56.61: พิมพ์ "/" ในช่องหลายบรรทัดได้ (เช่น N/A)
                     e.preventDefault();
                     if (!searchOpen) toggleSearch();
                 }
